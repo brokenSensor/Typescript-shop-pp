@@ -1,9 +1,11 @@
 import express from 'express'
+import DBConnect from './config/DBConnect'
 
 class App {
 	private express
 	constructor() {
 		this.express = express()
+		DBConnect()
 		this.loadRoutes()
 	}
 
