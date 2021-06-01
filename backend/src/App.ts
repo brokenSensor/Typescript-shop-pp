@@ -1,7 +1,7 @@
 import express from 'express'
 
 class App {
-	public express
+	private express
 	constructor() {
 		this.express = express()
 		this.loadRoutes()
@@ -16,6 +16,12 @@ class App {
 		})
 		this.express.use('/', router)
 	}
+
+	public start(port: number): void {
+		this.express.listen(port, () => {
+			console.log(`Server is running on port: ${port}!`)
+		})
+	}
 }
 
-export default new App().express
+export default new App()

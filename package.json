@@ -1,20 +1,11 @@
 {
-	"name": "myshop",
+	"name": "try",
 	"version": "1.0.0",
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"start": "node dist/server",
-		"server": "nodemon dist/server ",
-		"dev": "concurrently \"tsc -w\" \"npm run server\""
+		"start": "concurrently \"npm start --prefix backend\" \"npm start --prefix frontend\""
 	},
-	"keywords": [],
 	"author": "",
-	"license": "ISC",
-	"dependencies": {
-		"express": "^4.17.1"
-	},
-	"devDependencies": {
-		"@types/express": "^4.17.12"
-	}
+	"license": "ISC"
 }

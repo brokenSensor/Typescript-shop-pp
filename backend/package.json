@@ -1,0 +1,20 @@
+{
+	"name": "backend",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"build": "tsc",
+		"start": "concurrently \"tsc -w\" \"nodemon dist/js/server.js\""
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"@types/express": "^4.17.12",
+		"@types/mongoose": "^5.10.5",
+		"@types/node": "^15.6.1",
+		"express": "^4.17.1",
+		"mongoose": "^5.12.12"
+	}
+}
