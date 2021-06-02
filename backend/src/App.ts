@@ -1,11 +1,10 @@
 import express from 'express'
-import DBConnect from './config/DBConnect'
+import sequelize from './config/DBConnect'
 
 class App {
 	private express
 	constructor() {
 		this.express = express()
-		DBConnect()
 		this.loadRoutes()
 	}
 
@@ -19,10 +18,16 @@ class App {
 		this.express.use('/', router)
 	}
 
-	public start(port: number): void {
-		this.express.listen(port, () => {
-			console.log(`Server is running on port: ${port}!`)
-		})
+	public async start(port: number): Promise<void> {
+		try {
+			await sequelize.authenticate()
+			await sequelize.sync()
+			this.express.listen(port, () => {
+				console.log(`Server is running on port: ${port}!`)
+			})
+		} catch (error) {
+			console.log((error as Error).message)
+		}
 	}
 }
 
