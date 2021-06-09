@@ -1,11 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
 interface UserCreationAttrs {
   name: string;
@@ -43,4 +45,9 @@ export class User {
 
   @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt: Date;
+
+  @BeforeInsert()
+  private async hashPassword() {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
 }
