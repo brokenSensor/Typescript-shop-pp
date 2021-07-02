@@ -30,4 +30,12 @@ export class UsersService {
   async getUserByEmail(email: string) {
     return await this.userRepository.findOne({ email });
   }
+  async deleteUser(id: number) {
+    if (await this.getUserById(id)) {
+      await this.userRepository.delete({ id });
+      return { message: 'User deleted' };
+    }
+
+    return { message: 'User not found' };
+  }
 }
