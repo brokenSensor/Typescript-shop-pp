@@ -9,12 +9,6 @@ import {
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
-interface UserCreationAttrs {
-  name: string;
-  email: string;
-  password: string;
-}
-
 @Entity()
 export class User {
   @ApiProperty({ example: '1', description: 'Unique identifier' })

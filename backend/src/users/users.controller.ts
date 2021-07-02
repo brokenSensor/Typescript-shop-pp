@@ -17,13 +17,6 @@ export class UsersController {
     return this.usersService.createUser(userDto);
   }
 
-  @ApiOperation({ summary: 'Update user' })
-  @ApiResponse({ status: 200, type: User })
-  @Put()
-  update(@Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.updateUser(updateUserDto);
-  }
-
   @ApiOperation({ summary: 'Get all users' })
   @ApiResponse({ status: 200, type: [User] })
   @Get()
@@ -31,10 +24,24 @@ export class UsersController {
     return this.usersService.getAllUsers();
   }
 
-  @ApiOperation({ summary: 'Get user' })
+  @ApiOperation({ summary: 'Get user by id' })
   @ApiResponse({ status: 200, type: User })
-  @Get('/:id')
-  getOne(@Param('id') id: number) {
-    return this.usersService.getOneUser(id);
+  @Get('/id/:id')
+  getUserById(@Param('id') id: number) {
+    return this.usersService.getUserById(id);
+  }
+
+  @ApiOperation({ summary: 'Get user by email' })
+  @ApiResponse({ status: 200, type: User })
+  @Get('/email/:email')
+  getUserByEmail(@Param('email') email: string) {
+    return this.usersService.getUserByEmail(email);
+  }
+
+  @ApiOperation({ summary: 'Update user' })
+  @ApiResponse({ status: 200, type: User })
+  @Put()
+  update(@Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.updateUser(updateUserDto);
   }
 }

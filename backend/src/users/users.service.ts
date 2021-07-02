@@ -16,14 +16,18 @@ export class UsersService {
 
   async updateUser(dto: UpdateUserDto) {
     await this.userRepository.update(dto.id, dto);
-    return this.getOneUser(dto.id);
+    return this.getUserById(dto.id);
   }
 
   async getAllUsers() {
     return await this.userRepository.find();
   }
 
-  async getOneUser(id: number) {
+  async getUserById(id: number) {
     return await this.userRepository.findOne(id);
+  }
+
+  async getUserByEmail(email: string) {
+    return await this.userRepository.findOne({ email });
   }
 }
