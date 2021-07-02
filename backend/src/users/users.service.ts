@@ -15,10 +15,15 @@ export class UsersService {
   }
 
   async updateUser(dto: UpdateUserDto) {
-    return await this.userRepository.update(dto.id, dto);
+    await this.userRepository.update(dto.id, dto);
+    return this.getOneUser(dto.id);
   }
 
   async getAllUsers() {
-    return this.userRepository.find();
+    return await this.userRepository.find();
+  }
+
+  async getOneUser(id: number) {
+    return await this.userRepository.findOne(id);
   }
 }
