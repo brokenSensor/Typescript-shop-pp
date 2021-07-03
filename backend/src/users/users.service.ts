@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './users.model';
@@ -10,7 +11,19 @@ export class UsersService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
-  async createUser(dto: CreateUserDto) {
+  async createUser(dto: CreateUserDto): Promise<User> {
+    const user = await this.userRepository.findOne({ email: dto.email });
+
+    if (user) {
+      throw new HttpException(
+        {
+          statusCode: HttpStatus.BAD_REQUEST,
+          message: ['Email must be uniqe.'],
+          error: 'Bad Request',
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     return await this.userRepository.save(this.userRepository.create(dto));
   }
 
@@ -31,11 +44,7 @@ export class UsersService {
     return await this.userRepository.findOne({ email });
   }
   async deleteUser(id: number) {
-    if (await this.getUserById(id)) {
-      await this.userRepository.delete({ id });
-      return { message: 'User deleted' };
-    }
-
-    return { message: 'User not found' };
+    await this.userRepository.delete({ id });
+    return { message: 'User deleted' };
   }
 }
