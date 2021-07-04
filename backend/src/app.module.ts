@@ -4,6 +4,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/users.model';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { ProductModule } from './product/product.module';
+import { Product } from './product/product.model';
+import { ReviewModule } from './review/review.module';
+import { Review } from './review/review.model';
 
 @Module({
   imports: [
@@ -17,13 +21,15 @@ import { AuthModule } from './auth/auth.module';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      entities: [User],
+      entities: [User, Product, Review],
       synchronize: true,
       autoLoadEntities: true,
     }),
     UsersModule,
     AuthModule,
     ConfigModule,
+    ProductModule,
+    ReviewModule,
   ],
   controllers: [],
   providers: [],

@@ -4,10 +4,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Product } from 'src/product/product.model';
 
 @Entity()
 export class User {
@@ -33,6 +35,9 @@ export class User {
   })
   @Column({ default: false })
   isAdmin: boolean;
+
+  @OneToMany(() => Product, (product) => product.user)
+  products: Product[];
 
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;
