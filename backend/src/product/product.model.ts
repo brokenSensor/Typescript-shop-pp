@@ -2,10 +2,12 @@ import { Review } from 'src/review/review.model';
 import { User } from 'src/users/users.model';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
@@ -34,6 +36,21 @@ export class Product {
   @OneToMany(() => Review, (review) => review.product)
   reviews: Review[];
 
-  @Column()
-  rating: string;
+  @Column({ default: 0 })
+  rating: number;
+
+  @Column({ default: 0 })
+  numReviews: number;
+
+  @Column({ default: 0 })
+  price: number;
+
+  @Column({ default: 0 })
+  countInStock: number;
+
+  @CreateDateColumn({ type: 'timestamptz' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamptz' })
+  updatedAt: Date;
 }

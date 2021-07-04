@@ -1,4 +1,14 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Post, UseGuards } from '@nestjs/common';
+import { IsAdminGuard } from 'src/auth/isAdmin.guard';
+import { ProductService } from './product.service';
 
 @Controller('product')
-export class ProductController {}
+export class ProductController {
+  constructor(private productService: ProductService) {}
+
+  @UseGuards(IsAdminGuard)
+  @Post()
+  createProduct() {
+    return 'True';
+  }
+}
