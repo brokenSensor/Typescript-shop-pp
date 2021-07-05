@@ -65,7 +65,13 @@ export class UsersController {
   @ApiOperation({ summary: 'Delete user' })
   @ApiResponse({ status: HttpStatus.OK, type: User })
   @Delete('/:id')
-  deleteUser(@Param('id') id: number) {
+  deleteUser(
+    @Param(
+      'id',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    id: number,
+  ) {
     return this.usersService.deleteUser(id);
   }
 }

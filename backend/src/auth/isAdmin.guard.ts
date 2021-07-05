@@ -23,6 +23,8 @@ export class IsAdminGuard implements CanActivate {
 
       const user = this.jwtService.verify(token);
 
+      req.user = user;
+
       if (user.isAdmin) return true;
 
       throw new UnauthorizedException();
