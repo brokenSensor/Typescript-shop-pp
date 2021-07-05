@@ -8,6 +8,16 @@ import { ProductModule } from './product/product.module';
 import { Product } from './product/product.model';
 import { ReviewModule } from './review/review.module';
 import { Review } from './review/review.model';
+import { OrderModule } from './order/order.module';
+import { Order } from './order/order.model';
+import { OrderItemController } from './order-item/order-item.controller';
+import { OrderItemService } from './order-item/order-item.service';
+import { OrderItem } from './order-item/order-item.model';
+import { OrderItemModule } from './order-item/order-item.module';
+import { ShippingAddress } from './shipping-addres/shipping-address.model';
+import { ShippingAddressModule } from './shipping-addres/shipping-address.module';
+import { PaymentResultModule } from './payment-result/payment-result.module';
+import { PaymentResult } from './payment-result/payment-result.model';
 
 @Module({
   imports: [
@@ -21,7 +31,15 @@ import { Review } from './review/review.model';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      entities: [User, Product, Review],
+      entities: [
+        User,
+        Product,
+        Review,
+        Order,
+        OrderItem,
+        ShippingAddress,
+        PaymentResult,
+      ],
       synchronize: true,
       autoLoadEntities: true,
     }),
@@ -30,8 +48,12 @@ import { Review } from './review/review.model';
     ConfigModule,
     ProductModule,
     ReviewModule,
+    OrderModule,
+    OrderItemModule,
+    ShippingAddressModule,
+    PaymentResultModule,
   ],
-  controllers: [],
-  providers: [],
+  controllers: [OrderItemController],
+  providers: [OrderItemService],
 })
 export class AppModule {}
