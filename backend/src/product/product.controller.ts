@@ -64,6 +64,6 @@ export class ProductController {
     )
     id: number,
   ) {
-    return 'True';
+    return this.productService.deleteProduct(id);
   }
 }

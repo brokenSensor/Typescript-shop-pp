@@ -27,7 +27,7 @@ export class UsersService {
     return await this.userRepository.save(this.userRepository.create(dto));
   }
 
-  async updateUser(dto: UpdateUserDto) {
+  async updateUser(dto: UpdateUserDto): Promise<User> {
     const user = await this.getUserById(dto.id);
     if (!user) {
       throw new HttpException(
@@ -44,19 +44,32 @@ export class UsersService {
     }
   }
 
-  async getAllUsers() {
+  async getAllUsers(): Promise<User[]> {
     return await this.userRepository.find();
   }
 
-  async getUserById(id: number) {
+  async getUserById(id: number): Promise<User> {
     return await this.userRepository.findOne(id);
   }
 
-  async getUserByEmail(email: string) {
+  async getUserByEmail(email: string): Promise<User> {
     return await this.userRepository.findOne({ email });
   }
-  async deleteUser(id: number) {
-    await this.userRepository.delete({ id });
-    return { message: 'User deleted' };
+  async deleteUser(id: number): Promise<{ message: string }> {
+    const user = await this.userRepository.findOne(id);
+
+    if (!user || !id) {
+      throw new HttpException(
+        {
+          statusCode: HttpStatus.NOT_FOUND,
+          message: ['Product not found.'],
+          error: 'Not Found',
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    } else {
+      this.userRepository.delete(id);
+      return { message: 'User deleted' };
+    }
   }
 }

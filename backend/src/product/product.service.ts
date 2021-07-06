@@ -20,7 +20,7 @@ export class ProductService {
     return await this.productRepository.find({ relations: ['reviews'] });
   }
 
-  async getProductById(id): Promise<Product> {
+  async getProductById(id: number): Promise<Product> {
     return await this.productRepository.findOne(id, {
       relations: ['reviews'],
     });
@@ -41,6 +41,24 @@ export class ProductService {
     } else {
       this.productRepository.update(dto.id, dto);
       return this.getProductById(dto.id);
+    }
+  }
+
+  async deleteProduct(id: number): Promise<{ message: string }> {
+    const product = await this.productRepository.findOne(id);
+
+    if (!product || !id) {
+      throw new HttpException(
+        {
+          statusCode: HttpStatus.NOT_FOUND,
+          message: ['Product not found.'],
+          error: 'Not Found',
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    } else {
+      this.productRepository.delete(id);
+      return { message: 'Product deleted' };
     }
   }
 }
