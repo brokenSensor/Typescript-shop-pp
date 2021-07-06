@@ -34,7 +34,7 @@ export class ProductController {
 
   @Get()
   getAllProducts() {
-    return 'True';
+    return this.productService.getAllProducts();
   }
 
   @Get('/:id')
@@ -45,7 +45,7 @@ export class ProductController {
     )
     id: number,
   ) {
-    return 'True';
+    return this.productService.getProductById(id);
   }
 
   @UseGuards(IsAdminGuard)

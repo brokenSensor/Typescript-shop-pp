@@ -14,4 +14,14 @@ export class ProductService {
 
     return await this.productRepository.save(newProduct);
   }
+
+  async getAllProducts(): Promise<Product[]> {
+    return await this.productRepository.find({ relations: ['reviews'] });
+  }
+
+  async getProductById(id): Promise<Product> {
+    return await this.productRepository.findOne(id, {
+      relations: ['reviews'],
+    });
+  }
 }
