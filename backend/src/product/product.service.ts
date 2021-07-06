@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './product.model';
 
 @Injectable()
@@ -23,5 +24,23 @@ export class ProductService {
     return await this.productRepository.findOne(id, {
       relations: ['reviews'],
     });
+  }
+
+  async updateProduct(dto: UpdateProductDto): Promise<Product> {
+    const product = await this.productRepository.findOne(dto.id);
+
+    if (!product || !dto.id) {
+      throw new HttpException(
+        {
+          statusCode: HttpStatus.NOT_FOUND,
+          message: ['Product not found.'],
+          error: 'Not Found',
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    } else {
+      this.productRepository.update(dto.id, dto);
+      return this.getProductById(dto.id);
+    }
   }
 }

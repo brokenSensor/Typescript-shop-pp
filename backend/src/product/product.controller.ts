@@ -14,6 +14,7 @@ import {
 } from '@nestjs/common';
 import { IsAdminGuard } from 'src/auth/isAdmin.guard';
 import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductService } from './product.service';
 
 @Controller('product')
@@ -49,15 +50,9 @@ export class ProductController {
   }
 
   @UseGuards(IsAdminGuard)
-  @Put('/:id')
-  updateProduct(
-    @Param(
-      'id',
-      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
-    )
-    id: number,
-  ) {
-    return 'True';
+  @Put()
+  updateProduct(@Body() updateProductDto: UpdateProductDto) {
+    return this.productService.updateProduct(updateProductDto);
   }
 
   @UseGuards(IsAdminGuard)

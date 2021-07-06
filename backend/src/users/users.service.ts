@@ -28,8 +28,20 @@ export class UsersService {
   }
 
   async updateUser(dto: UpdateUserDto) {
-    await this.userRepository.update(dto.id, dto);
-    return this.getUserById(dto.id);
+    const user = await this.getUserById(dto.id);
+    if (!user) {
+      throw new HttpException(
+        {
+          statusCode: HttpStatus.NOT_FOUND,
+          message: ['User not found.'],
+          error: 'Not Found',
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    } else {
+      await this.userRepository.update(dto.id, dto);
+      return this.getUserById(dto.id);
+    }
   }
 
   async getAllUsers() {
