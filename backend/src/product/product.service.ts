@@ -61,4 +61,18 @@ export class ProductService {
       return { message: 'Product deleted' };
     }
   }
+
+  async updateProductReviewsSum(productId): Promise<Product> {
+    const product = await this.productRepository.findOne(productId, {
+      relations: ['reviews'],
+    });
+
+    product.numReviews = product.reviews.length;
+    const sumRating = product.reviews.reduce(
+      (rating, review) => (rating = rating + review.rating),
+      0,
+    );
+    product.rating = parseFloat((sumRating / product.numReviews).toFixed(1));
+    return await this.productRepository.save(product);
+  }
 }

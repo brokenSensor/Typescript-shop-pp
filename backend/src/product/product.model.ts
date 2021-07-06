@@ -1,6 +1,7 @@
 import { Review } from 'src/review/review.model';
 import { User } from 'src/users/users.model';
 import {
+  AfterUpdate,
   Column,
   CreateDateColumn,
   Entity,
@@ -36,7 +37,7 @@ export class Product {
   @OneToMany(() => Review, (review) => review.product)
   reviews: Review[];
 
-  @Column({ default: 0 })
+  @Column({ default: 0, type: 'decimal' })
   rating: number;
 
   @Column({ default: 0 })
