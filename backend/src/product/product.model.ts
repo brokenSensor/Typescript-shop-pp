@@ -43,7 +43,7 @@ export class Product {
   @Column({ default: 0 })
   numReviews: number;
 
-  @Column({ default: 0 })
+  @Column({ default: 0, type: 'decimal' })
   price: number;
 
   @Column({ default: 0 })
