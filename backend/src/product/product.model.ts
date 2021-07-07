@@ -1,7 +1,6 @@
 import { Review } from 'src/review/review.model';
 import { User } from 'src/users/users.model';
 import {
-  AfterUpdate,
   Column,
   CreateDateColumn,
   Entity,

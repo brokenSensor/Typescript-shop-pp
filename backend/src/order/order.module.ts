@@ -4,10 +4,10 @@ import { OrderController } from './order.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/users/users.model';
 import { Order } from './order.model';
-import { PaymentResult } from 'src/payment-result/payment-result.model';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Order, PaymentResult])],
+  imports: [TypeOrmModule.forFeature([User, Order]), AuthModule],
   providers: [OrderService],
   controllers: [OrderController],
 })

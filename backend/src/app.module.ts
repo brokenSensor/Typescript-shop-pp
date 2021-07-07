@@ -10,9 +10,6 @@ import { ReviewModule } from './review/review.module';
 import { Review } from './review/review.model';
 import { OrderModule } from './order/order.module';
 import { Order } from './order/order.model';
-import { PaymentResultModule } from './payment-result/payment-result.module';
-import { PaymentResult } from './payment-result/payment-result.model';
-
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -25,7 +22,7 @@ import { PaymentResult } from './payment-result/payment-result.model';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      entities: [User, Product, Review, Order, PaymentResult],
+      entities: [User, Product, Review, Order],
       synchronize: true,
       autoLoadEntities: true,
     }),
@@ -35,7 +32,6 @@ import { PaymentResult } from './payment-result/payment-result.model';
     ProductModule,
     ReviewModule,
     OrderModule,
-    PaymentResultModule,
   ],
   controllers: [],
   providers: [],

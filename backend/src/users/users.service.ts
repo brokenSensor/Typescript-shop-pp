@@ -27,8 +27,9 @@ export class UsersService {
     return await this.userRepository.save(this.userRepository.create(dto));
   }
 
-  async updateUser(dto: UpdateUserDto): Promise<User> {
-    const user = await this.getUserById(dto.id);
+  async updateUser(dto: UpdateUserDto, userId: number): Promise<User> {
+    const user = await this.getUserById(userId);
+    const userByEmail = await this.userRepository.findOne({ email: dto.email });
     if (!user) {
       throw new HttpException(
         {
@@ -38,9 +39,18 @@ export class UsersService {
         },
         HttpStatus.NOT_FOUND,
       );
+    } else if (userByEmail.id !== user.id) {
+      throw new HttpException(
+        {
+          statusCode: HttpStatus.BAD_REQUEST,
+          message: ['Email must be uniqe.'],
+          error: 'Bad Request',
+        },
+        HttpStatus.BAD_REQUEST,
+      );
     } else {
-      await this.userRepository.update(dto.id, dto);
-      return this.getUserById(dto.id);
+      await this.userRepository.update(userId, dto);
+      return this.getUserById(userId);
     }
   }
 

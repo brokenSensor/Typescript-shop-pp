@@ -1,7 +1,6 @@
 import { IsString, IsDefined, IsInt } from 'class-validator';
-import { PaymentResult } from 'src/payment-result/payment-result.model';
 import { User } from 'src/users/users.model';
-import { OrderItem, ShippingAddress } from '../order.model';
+import { OrderItem, PaymentResult, ShippingAddress } from '../order.model';
 
 export class CreateOrderDto {
   user?: User;

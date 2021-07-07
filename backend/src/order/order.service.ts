@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/users.model';
 import { Repository } from 'typeorm';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { Order } from './order.model';
+import { Order, PaymentResult } from './order.model';
 
 @Injectable()
 export class OrderService {
@@ -29,5 +29,27 @@ export class OrderService {
     order.orderItems = orderItems;
 
     return await this.orderRepository.save(order);
+  }
+
+  async updateOrderToPayed(
+    paymenResult: PaymentResult,
+    orderId: number,
+  ): Promise<Order> {
+    const order = await this.orderRepository.findOne(orderId);
+
+    order.paymentResult = paymenResult;
+    order.isPaid = true;
+    order.paidAt = new Date();
+
+    return this.orderRepository.save(order);
+  }
+
+  async updateOrderToDelivered(orderId: number): Promise<Order> {
+    const order = await this.orderRepository.findOne(orderId);
+
+    order.isDelivered = true;
+    order.deliveredAt = new Date();
+
+    return this.orderRepository.save(order);
   }
 }

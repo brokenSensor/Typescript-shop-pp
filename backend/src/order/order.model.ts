@@ -1,12 +1,9 @@
-import { PaymentResult } from 'src/payment-result/payment-result.model';
 import { User } from 'src/users/users.model';
 import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
   ManyToOne,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -33,6 +30,14 @@ export interface ShippingAddress {
   country: string;
 }
 
+export interface PaymentResult {
+  status: string;
+
+  update_time: string;
+
+  email_address: string;
+}
+
 @Entity()
 export class Order {
   @PrimaryGeneratedColumn()
@@ -50,8 +55,7 @@ export class Order {
   @Column()
   paymentMethod: string;
 
-  @OneToOne(() => PaymentResult, { nullable: true })
-  @JoinColumn()
+  @Column({ type: 'jsonb', array: false, nullable: true })
   paymentResult: PaymentResult;
 
   @Column({ default: 0.0, type: 'decimal' })

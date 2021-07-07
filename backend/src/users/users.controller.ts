@@ -8,9 +8,12 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Req,
+  UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './users.model';
@@ -57,9 +60,10 @@ export class UsersController {
 
   @ApiOperation({ summary: 'Update user' })
   @ApiResponse({ status: HttpStatus.OK, type: User })
+  @UseGuards(JwtAuthGuard)
   @Put()
-  updateUser(@Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.updateUser(updateUserDto);
+  updateUser(@Body() updateUserDto: UpdateUserDto, @Req() req) {
+    return this.usersService.updateUser(updateUserDto, req.user.sub);
   }
 
   @ApiOperation({ summary: 'Delete user' })
