@@ -1,20 +1,21 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsDefined, IsInt } from 'class-validator';
-import { Product } from 'src/product/product.model';
-import { User } from 'src/users/users.model';
 
 export class CreateReviewDto {
-  user: User;
-
-  product: Product;
-
+  @ApiProperty({ example: '3', description: 'Users rating of product' })
   @IsDefined()
   @IsInt()
   rating: number;
 
+  @ApiProperty({
+    example: 'Good product!',
+    description: 'Users comment of product',
+  })
   @IsDefined()
   @IsString()
   comment: string;
 
+  @ApiProperty({ example: 'Bob', description: 'User name' })
   @IsDefined()
   @IsString()
   name: string;

@@ -52,11 +52,15 @@ export class ReviewService {
       );
     }
 
-    dto.user = user;
-    dto.product = product;
+    const newReview = {
+      rating: dto.rating,
+      comment: dto.comment,
+      name: dto.name,
+      user: user,
+      product: product,
+    };
 
-    const newReview = this.reviewRepository.create(dto);
-    await this.reviewRepository.save(newReview);
+    await this.reviewRepository.save(this.reviewRepository.create(newReview));
 
     return await this.productService.updateProductReviewsSum(productId);
   }

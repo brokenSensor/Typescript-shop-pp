@@ -5,6 +5,10 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/users/users.model';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
+export interface ReturnToken {
+  access_token: string;
+}
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -22,7 +26,7 @@ export class AuthService {
     return null;
   }
 
-  async login(user: User) {
+  async login(user: User): Promise<ReturnToken> {
     const payload = { email: user.email, sub: user.id, isAdmin: user.isAdmin };
     return {
       access_token: this.jwtService.sign(payload),

@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/users/users.model';
 import { Repository } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -9,15 +10,17 @@ import { Product } from './product.model';
 export class ProductService {
   constructor(
     @InjectRepository(Product) private productRepository: Repository<Product>,
+    @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
-  async createProduct(dto: CreateProductDto): Promise<Product> {
-    const newProduct = this.productRepository.create(dto);
+  async createProduct(dto: CreateProductDto, userId: number): Promise<Product> {
+    const user = await this.userRepository.findOne(userId);
+    const newProduct = this.productRepository.create({ ...dto, user });
 
     return await this.productRepository.save(newProduct);
   }
 
   async getAllProducts(): Promise<Product[]> {
-    return await this.productRepository.find({ relations: ['reviews'] });
+    return await this.productRepository.find();
   }
 
   async getProductById(id: number): Promise<Product> {
@@ -26,10 +29,10 @@ export class ProductService {
     });
   }
 
-  async updateProduct(dto: UpdateProductDto): Promise<Product> {
-    const product = await this.productRepository.findOne(dto.id);
+  async updateProduct(dto: UpdateProductDto, productId): Promise<Product> {
+    const product = await this.productRepository.findOne(productId);
 
-    if (!product || !dto.id) {
+    if (!product || !productId) {
       throw new HttpException(
         {
           statusCode: HttpStatus.NOT_FOUND,
@@ -39,8 +42,8 @@ export class ProductService {
         HttpStatus.NOT_FOUND,
       );
     } else {
-      this.productRepository.update(dto.id, dto);
-      return this.getProductById(dto.id);
+      this.productRepository.update(productId, dto);
+      return this.getProductById(productId);
     }
   }
 

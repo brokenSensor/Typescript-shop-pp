@@ -6,15 +6,14 @@ import {
   HttpStatus,
   Param,
   ParseIntPipe,
-  Post,
   Put,
   Req,
   UseGuards,
-  ValidationPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { IsAdminGuard } from 'src/auth/isAdmin.guard';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { CreateUserDto } from './dto/create-user.dto';
+import { ValidationPipe } from 'src/pipes/validation.pipe';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './users.model';
 import { UsersService } from './users.service';
@@ -24,22 +23,24 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  @ApiOperation({ summary: 'User creation' })
-  @ApiResponse({ status: HttpStatus.CREATED, type: User })
-  @Post()
-  createUser(@Body(new ValidationPipe()) userDto: CreateUserDto) {
-    return this.usersService.createUser(userDto);
-  }
+  // @ApiOperation({ summary: 'User creation' })
+  // @ApiResponse({ status: HttpStatus.CREATED, type: User })
+  // @Post()
+  // createUser(@Body(new ValidationPipe()) userDto: CreateUserDto) {
+  //   return this.usersService.createUser(userDto);
+  // }
 
-  @ApiOperation({ summary: 'Get all users' })
+  @ApiOperation({ summary: 'Get all users. Admin only' })
   @ApiResponse({ status: HttpStatus.OK, type: [User] })
+  @UseGuards(IsAdminGuard)
   @Get()
   getAllUsers() {
     return this.usersService.getAllUsers();
   }
 
-  @ApiOperation({ summary: 'Get user by id' })
+  @ApiOperation({ summary: 'Get user by id. Admin only' })
   @ApiResponse({ status: HttpStatus.OK, type: User })
+  @UseGuards(IsAdminGuard)
   @Get('/id/:id')
   getUserById(
     @Param(
@@ -51,8 +52,9 @@ export class UsersController {
     return this.usersService.getUserById(id);
   }
 
-  @ApiOperation({ summary: 'Get user by email' })
+  @ApiOperation({ summary: 'Get user by email. Admin only' })
   @ApiResponse({ status: HttpStatus.OK, type: User })
+  @UseGuards(IsAdminGuard)
   @Get('/email/:email')
   getUserByEmail(@Param('email') email: string) {
     return this.usersService.getUserByEmail(email);
@@ -62,20 +64,18 @@ export class UsersController {
   @ApiResponse({ status: HttpStatus.OK, type: User })
   @UseGuards(JwtAuthGuard)
   @Put()
-  updateUser(@Body() updateUserDto: UpdateUserDto, @Req() req) {
+  updateUser(
+    @Body(new ValidationPipe()) updateUserDto: UpdateUserDto,
+    @Req() req,
+  ) {
     return this.usersService.updateUser(updateUserDto, req.user.sub);
   }
 
-  @ApiOperation({ summary: 'Delete user' })
-  @ApiResponse({ status: HttpStatus.OK, type: User })
-  @Delete('/:id')
-  deleteUser(
-    @Param(
-      'id',
-      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
-    )
-    id: number,
-  ) {
-    return this.usersService.deleteUser(id);
+  @ApiOperation({ summary: 'Delete currently loged in user' })
+  @ApiResponse({ status: HttpStatus.OK })
+  @UseGuards(JwtAuthGuard)
+  @Delete('/me')
+  deleteMe(@Req() req) {
+    return this.usersService.deleteMe(req.user.sub);
   }
 }

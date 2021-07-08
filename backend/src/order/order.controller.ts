@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  HttpStatus,
   Param,
   Post,
   Put,
@@ -8,16 +9,21 @@ import {
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { IsAdminGuard } from 'src/auth/isAdmin.guard';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderToPayedDto } from './dto/update-order-to-payed.dto';
+import { Order } from './order.model';
 import { OrderService } from './order.service';
 
+@ApiTags('Order')
 @Controller('order')
 export class OrderController {
   constructor(private orderService: OrderService) {}
 
+  @ApiOperation({ summary: 'Create order' })
+  @ApiResponse({ status: HttpStatus.CREATED, type: Order })
   @UseGuards(JwtAuthGuard)
   @Post()
   createOrder(
@@ -27,6 +33,8 @@ export class OrderController {
     return this.orderService.createOrder(orderDto, req.user.sub);
   }
 
+  @ApiOperation({ summary: 'Update order to payed' })
+  @ApiResponse({ status: HttpStatus.OK, type: Order })
   @UseGuards(JwtAuthGuard)
   @Put('/pay/:orderId')
   updateOrderToPayed(
@@ -36,6 +44,8 @@ export class OrderController {
     return this.orderService.updateOrderToPayed(paymentResult, orderId);
   }
 
+  @ApiOperation({ summary: 'Update order to delivered. Admin only' })
+  @ApiResponse({ status: HttpStatus.OK, type: Order })
   @UseGuards(IsAdminGuard)
   @Put('/delivered/:orderId')
   updateOrderToDelivered(@Param('orderId') orderId: number) {

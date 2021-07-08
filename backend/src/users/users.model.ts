@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   BeforeInsert,
+  BeforeUpdate,
   Column,
   CreateDateColumn,
   Entity,
@@ -37,9 +38,15 @@ export class User {
   @Column({ default: false })
   isAdmin: boolean;
 
+  @ApiProperty({
+    description: 'Products made by user',
+  })
   @OneToMany(() => Product, (product) => product.user)
   products: Product[];
 
+  @ApiProperty({
+    description: 'Orders made by user',
+  })
   @OneToMany(() => Order, (order) => order.user)
   orders: Order[];
 
@@ -50,6 +57,7 @@ export class User {
   updatedAt: Date;
 
   @BeforeInsert()
+  @BeforeUpdate()
   private async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);
   }
