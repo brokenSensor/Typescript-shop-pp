@@ -1,22 +1,19 @@
 import React from 'react'
+import { BrowserRouter, Route } from 'react-router-dom'
+import { Container } from 'react-bootstrap'
+import MainScreen from './screens/MainScreen'
 
 function App() {
 	return (
-		<div className='App'>
-			<header className='App-header'>
-				<p>
-					Edit <code>src/App.tsx</code> and save to reload.
-				</p>
-				<a
-					className='App-link'
-					href='https://reactjs.org'
-					target='_blank'
-					rel='noopener noreferrer'
-				>
-					Learn React
-				</a>
-			</header>
-		</div>
+		<BrowserRouter>
+			{/* <Header /> */}
+			<main>
+				<Container>
+					<Route path='/' component={MainScreen} exact />
+				</Container>
+			</main>
+			{/* <Footer /> */}
+		</BrowserRouter>
 	)
 }
 
