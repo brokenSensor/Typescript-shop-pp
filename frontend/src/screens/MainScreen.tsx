@@ -1,17 +1,18 @@
-import React from 'react'
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
+import { listProducts } from '../actions/productActions'
 import { useAppSelector } from '../hooks'
-import { AppDispatch } from '../store'
+import { ProductListState } from '../types/product'
 
-function MainScreen() {
-	const dispatch: AppDispatch = useDispatch()
-
-	const productList = useAppSelector(state => state.productList)
-	const { loading, error, products } = productList
+const MainScreen: React.FC = () => {
+	const dispatch = useDispatch()
+	const productList: ProductListState = useAppSelector(
+		state => state.productList
+	)
+	const { products, loading, error } = productList
 
 	useEffect(() => {
-		// dispatch(listProducts())
+		dispatch(listProducts())
 	}, [dispatch])
 	return <div></div>
 }
