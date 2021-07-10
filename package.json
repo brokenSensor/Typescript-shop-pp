@@ -7,5 +7,6 @@
 		"start": "concurrently \"npm run start:dev --prefix backend\" \"npm start --prefix frontend\""
 	},
 	"author": "",
-	"license": "ISC"
+	"license": "ISC",
+	"dependencies": {}
 }

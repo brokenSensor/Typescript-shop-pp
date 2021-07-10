@@ -38,7 +38,7 @@ export class AuthController {
     status: HttpStatus.CREATED,
     schema: {
       properties: {
-        access_token: { type: 'string', description: 'Users JWT Token' },
+        token: { type: 'string', description: 'Users JWT Token' },
       },
     },
   })

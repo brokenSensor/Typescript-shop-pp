@@ -1,18 +1,15 @@
-import { applyMiddleware, createStore } from 'redux'
-import { composeWithDevTools } from 'redux-devtools-extension'
-import thunk from 'redux-thunk'
-import { reducer } from './reducers'
+import { configureStore } from '@reduxjs/toolkit'
+import { shopApi } from './api'
+import authSlice from './slices/authSlice'
 
-const initialState = {}
-
-const middleware = [thunk]
-
-const store = createStore(
-	reducer,
-	initialState,
-	composeWithDevTools(applyMiddleware(...middleware))
-)
-
-export default store
+export const store = configureStore({
+	reducer: {
+		[shopApi.reducerPath]: shopApi.reducer,
+		authReducer: authSlice,
+	},
+	middleware: getDefaultMiddleware =>
+		getDefaultMiddleware().concat(shopApi.middleware),
+})
 
 export type RootState = ReturnType<typeof store.getState>
+export type AppDispatch = typeof store.dispatch

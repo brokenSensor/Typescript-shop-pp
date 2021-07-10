@@ -1,23 +1,3 @@
-export enum ProductListActionTypes {
-	PRODUCT_LIST_REQUEST = 'PRODUCT_LIST_REQUEST',
-	PRODUCT_LIST_SUCCESS = 'PRODUCT_LIST_SUCCESS',
-	PRODUCT_LIST_FAIL = 'PRODUCT_LIST_FAIL',
-}
-
-interface ProductListRequestAction {
-	type: ProductListActionTypes.PRODUCT_LIST_REQUEST
-}
-
-interface ProductListSuccessAction {
-	type: ProductListActionTypes.PRODUCT_LIST_SUCCESS
-	payload: Product[]
-}
-
-interface ProductListFailAction {
-	type: ProductListActionTypes.PRODUCT_LIST_FAIL
-	payload: string
-}
-
 type Product = {
 	id: number
 	name: string
@@ -48,8 +28,3 @@ export interface ProductListState {
 	loading: boolean
 	error: string | null
 }
-
-export type ProductListAction =
-	| ProductListRequestAction
-	| ProductListSuccessAction
-	| ProductListFailAction
