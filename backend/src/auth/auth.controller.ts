@@ -1,14 +1,15 @@
 import {
   Body,
   Controller,
-  Get,
   HttpStatus,
   Post,
-  Request,
+  Req,
+  Res,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Request, Response } from 'express';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './local-auth.guard';
@@ -29,8 +30,10 @@ export class AuthController {
   })
   @UseGuards(LocalAuthGuard)
   @Post('/login')
-  async login(@Request() req) {
-    return this.authService.login(req.user);
+  async login(@Req() req, @Res({ passthrough: true }) response: Response) {
+    const body = await this.authService.login(req.user);
+    response.cookie('refresh_token', body.refresh_token);
+    return body;
   }
 
   @ApiOperation({ summary: 'Register user' })
@@ -43,7 +46,31 @@ export class AuthController {
     },
   })
   @Post('/register')
-  register(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
-    return this.authService.registerUser(createUserDto);
+  async register(
+    @Body(new ValidationPipe()) createUserDto: CreateUserDto,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const body = await this.authService.registerUser(createUserDto);
+    response.cookie('refresh_token', body.refresh_token);
+    return body;
+  }
+
+  @ApiOperation({ summary: 'Refresh access token' })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    schema: {
+      properties: {
+        access_token: { type: 'string', description: 'Users JWT Token' },
+      },
+    },
+  })
+  @Post('/refresh')
+  async refresh(
+    @Req() req: Request,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const body = await this.authService.refresh(req.cookies['refresh_token']);
+    response.cookie('refresh_token', body.refresh_token);
+    return body;
   }
 }

@@ -27,6 +27,18 @@ export class User {
   @Column({ unique: true })
   email: string;
 
+  @ApiProperty({
+    description: 'Uuid link for email activation',
+  })
+  @Column()
+  activationLink: string;
+
+  @ApiProperty({
+    description: 'Is email activated',
+  })
+  @Column({ default: false })
+  isActivated: boolean;
+
   @ApiProperty({ example: '12345678', description: 'User password' })
   @Column()
   password: string;
@@ -49,6 +61,13 @@ export class User {
   })
   @OneToMany(() => Order, (order) => order.user)
   orders: Order[];
+  @ApiProperty({
+    example:
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQm9iaSBGb28iLCJlbWFpbCI6ImJvYnNhYUBtYWlsLmNvbSIsImlkIjoxNywiaXNBZG1pbiI6ZmFsc2UsImNyZWF0ZWRBdCI6IjIwMjEtMDctMTFUMDQ6NTM6NDQuMTIzWiIsInVwZGF0ZWRBdCI6IjIwMjEtMDctMTFUMDQ6NTM6NDQuMTIzWiIsImlhdCI6MTYyNTk3OTIyNCwiZXhwIjoxNjI1OTgxMDI0fQ.4u4X0anANiVdpyiCgClK6jLu4-qZv1SUPxLeDeM0HA8',
+    description: 'Refresh token',
+  })
+  @Column({ default: null, nullable: true })
+  refresh_token: string;
 
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;
@@ -57,7 +76,6 @@ export class User {
   updatedAt: Date;
 
   @BeforeInsert()
-  @BeforeUpdate()
   private async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);
   }

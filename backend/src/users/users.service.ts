@@ -5,6 +5,8 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './users.model';
+import * as bcrypt from 'bcrypt';
+import { v4 } from 'uuid';
 
 @Injectable()
 export class UsersService {
@@ -24,7 +26,10 @@ export class UsersService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    return await this.userRepository.save(this.userRepository.create(dto));
+    const activationLink = v4();
+    return await this.userRepository.save(
+      this.userRepository.create({ ...dto, activationLink }),
+    );
   }
 
   async updateUser(dto: UpdateUserDto, userId: number): Promise<User> {
@@ -40,9 +45,14 @@ export class UsersService {
       );
     } else {
       const user = await this.userRepository.findOne(userId);
-      if (dto.password) user.password = dto.password;
-      user.name = dto.name;
-      user.email = dto.email;
+      if (dto.password) user.password = await bcrypt.hash(dto.password, 10);
+      if (dto.name) user.name = dto.name;
+      if (dto.email) {
+        user.email = dto.email;
+        user.isActivated = false;
+        user.activationLink = v4();
+      }
+      if (dto.refresh_token) user.refresh_token = dto.refresh_token;
       return await this.userRepository.save(user);
     }
   }
@@ -65,5 +75,8 @@ export class UsersService {
     } catch (error) {
       return error;
     }
+  }
+  async getUserByRefreshToken(refresh_token: string): Promise<User> {
+    return await this.userRepository.findOne({ refresh_token });
   }
 }

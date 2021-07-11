@@ -4,9 +4,29 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/users/users.model';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { ConfigService } from '@nestjs/config';
 
-export interface ReturnToken {
+export interface TokensAndUser {
+  user: UserDTO;
   access_token: string;
+  refresh_token: string;
+}
+
+export class UserDTO {
+  constructor(user: User) {
+    this.id = user.id;
+    this.name = user.name;
+    this.email = user.email;
+    this.isAdmin = user.isAdmin;
+    this.createdAt = user.createdAt;
+    this.updatedAt = user.updatedAt;
+  }
+  id: number;
+  name: string;
+  email: string;
+  isAdmin: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 @Injectable()
@@ -14,28 +34,67 @@ export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
+    private configService: ConfigService,
   ) {}
 
-  async validateUser(email: string, pass: string): Promise<any> {
+  async validateUser(email: string, pass: string): Promise<UserDTO> {
     const user = await this.usersService.getUserByEmail(email);
     if (!user) throw new UnauthorizedException();
     const passMatches = await bcrypt.compare(pass, user.password);
     if (user && passMatches) {
-      const { password, ...result } = user;
-      return result;
+      const userDto = new UserDTO(user);
+      return { ...userDto };
     }
     return null;
   }
 
-  async login(user: User): Promise<ReturnToken> {
-    const payload = { email: user.email, sub: user.id, isAdmin: user.isAdmin };
+  async login(userDto: UserDTO): Promise<TokensAndUser> {
+    const { access_token, refresh_token } = this.generateTokens(userDto);
+    this.usersService.updateUser({ refresh_token }, userDto.id);
     return {
-      access_token: this.jwtService.sign(payload),
+      user: { ...userDto },
+      access_token,
+      refresh_token,
     };
   }
 
   async registerUser(createUserDto: CreateUserDto) {
-    const newUser = await this.usersService.createUser(createUserDto);
-    return this.login(newUser);
+    const user = await this.usersService.createUser(createUserDto);
+    const userDto = new UserDTO(user);
+    return this.login({ ...userDto });
+  }
+
+  generateTokens(payload) {
+    const access_token = this.jwtService.sign(payload, { expiresIn: '30d' });
+    const refresh_token = this.jwtService.sign(payload, { expiresIn: '30m' });
+    return {
+      access_token,
+      refresh_token,
+    };
+  }
+
+  async refresh(refresh_token: string): Promise<TokensAndUser> {
+    try {
+      const checkUser = await this.usersService.getUserByRefreshToken(
+        refresh_token,
+      );
+      const validatedToken = this.jwtService.verify(refresh_token);
+
+      if (validatedToken && checkUser.refresh_token) {
+        const userDto = new UserDTO(checkUser);
+        const tokens = this.generateTokens({ ...userDto });
+        this.usersService.updateUser(
+          { refresh_token: tokens.refresh_token },
+          userDto.id,
+        );
+        return {
+          user: { ...userDto },
+          ...tokens,
+        };
+      }
+    } catch (error) {
+      throw new UnauthorizedException(error.message);
+    }
+    throw new UnauthorizedException();
   }
 }
