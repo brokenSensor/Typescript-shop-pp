@@ -8,6 +8,11 @@ const authApi = shopApi.injectEndpoints({
 				url: '/auth/login',
 				method: 'POST',
 				body: loginCredentials,
+				credentials: 'include',
+				headers: [
+					['Accept', 'application/json'],
+					['Access-Control-Allow-Credentials', 'true'],
+				],
 			}),
 		}),
 		registerUser: build.mutation<Token, RegisterRequest>({

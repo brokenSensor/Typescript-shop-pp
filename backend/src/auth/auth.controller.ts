@@ -32,7 +32,14 @@ export class AuthController {
   @Post('/login')
   async login(@Req() req, @Res({ passthrough: true }) response: Response) {
     const body = await this.authService.login(req.user);
-    response.cookie('refresh_token', body.refresh_token);
+    response.cookie('refreshToken', body.refresh_token, {
+      httpOnly: true,
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+      path: '/',
+      domain: 'localhost',
+      sameSite: true,
+      secure: true,
+    });
     return body;
   }
 
@@ -51,7 +58,10 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response,
   ) {
     const body = await this.authService.registerUser(createUserDto);
-    response.cookie('refresh_token', body.refresh_token);
+    response.cookie('refreshToken', body.refresh_token, {
+      httpOnly: true,
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+    });
     return body;
   }
 
@@ -69,8 +79,11 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const body = await this.authService.refresh(req.cookies['refresh_token']);
-    response.cookie('refresh_token', body.refresh_token);
+    const body = await this.authService.refresh(req.cookies['refreshToken']);
+    response.cookie('refreshToken', body.refresh_token, {
+      httpOnly: true,
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+    });
     return body;
   }
 }

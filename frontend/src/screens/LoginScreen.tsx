@@ -62,7 +62,10 @@ const LoginScreen: React.FC = () => {
 								push('/')
 							} catch (error) {
 								if (error.status === 401) {
-									setError('Wrong password or email')
+									setError('Wrong email or password!')
+									setTimeout(() => {
+										setError('')
+									}, 10000)
 								}
 							}
 						}}
