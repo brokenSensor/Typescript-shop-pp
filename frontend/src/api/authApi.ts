@@ -16,10 +16,22 @@ const authApi = shopApi.injectEndpoints({
 				url: '/auth/register',
 				method: 'POST',
 				body: registerCredentials,
+				credentials: 'include',
+			}),
+		}),
+		logoutUser: build.mutation<void, void>({
+			query: () => ({
+				url: '/auth/logout',
+				method: 'POST',
+				credentials: 'include',
 			}),
 		}),
 	}),
 	overrideExisting: false,
 })
 
-export const { useLoginUserMutation, useRegisterUserMutation } = authApi
+export const {
+	useLoginUserMutation,
+	useRegisterUserMutation,
+	useLogoutUserMutation,
+} = authApi

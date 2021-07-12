@@ -4,12 +4,13 @@ import { Container } from 'react-bootstrap'
 import MainScreen from './screens/MainScreen'
 import ProductScreen from './screens/ProductScreen'
 import LoginScreen from './screens/LoginScreen'
+import Header from './components/Header'
 
 function App() {
 	return (
 		<BrowserRouter>
-			{/* <Header /> */}
-			<main>
+			<Header />
+			<main className='py-3'>
 				<Container>
 					<Route path='/product/:id' component={ProductScreen} />
 					<Route path='/login' component={LoginScreen} />
