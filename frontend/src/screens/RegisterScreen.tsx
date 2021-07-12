@@ -1,24 +1,25 @@
 import React, { useState } from 'react'
 import { Button, Col, Form, Row } from 'react-bootstrap'
 import { Link, useHistory } from 'react-router-dom'
-import { useLoginUserMutation } from '../api/authApi'
+import { useRegisterUserMutation } from '../api/authApi'
 import FormContainer from '../components/FormContainer'
 import Message from '../components/Message'
 import { useAppDispatch } from '../hooks'
 import { setCredentials } from '../slices/authSlice'
-import { LoginRequest } from '../types/auth'
+import { RegisterRequest } from '../types/auth'
 
-const LoginScreen: React.FC = () => {
+const RegisterScreen = () => {
 	const dispatch = useAppDispatch()
 	const { push } = useHistory()
 	const [error, setError] = useState('')
 
-	const [formState, setFormState] = useState<LoginRequest>({
+	const [formState, setFormState] = useState<RegisterRequest>({
+		name: '',
 		email: '',
 		password: '',
 	})
 
-	const [login, { isLoading }] = useLoginUserMutation()
+	const [register, { isLoading }] = useRegisterUserMutation()
 
 	const handleChange = ({
 		target: { name, value },
@@ -27,9 +28,18 @@ const LoginScreen: React.FC = () => {
 
 	return (
 		<FormContainer>
-			<h1>Sign In</h1>
+			<h1>Sign Up</h1>
 			{error && <Message variant='danger'>{error}</Message>}
 			<Form>
+				<Form.Group controlId='name'>
+					<Form.Label>Full Name</Form.Label>
+					<Form.Control
+						name='name'
+						type='text'
+						placeholder='Enter full name'
+						onChange={handleChange}
+					></Form.Control>
+				</Form.Group>
 				<Form.Group controlId='email'>
 					<Form.Label>Email Address</Form.Label>
 					<Form.Control
@@ -55,7 +65,7 @@ const LoginScreen: React.FC = () => {
 						variant='primary'
 						onClick={async () => {
 							try {
-								const res = await login(formState).unwrap()
+								const res = await register(formState).unwrap()
 								dispatch(setCredentials(res))
 								push('/')
 							} catch (error) {
@@ -68,12 +78,12 @@ const LoginScreen: React.FC = () => {
 							}
 						}}
 					>
-						Sign In
+						Sign Up
 					</Button>
 				)}
 				<Row className='py-3'>
 					<Col>
-						New Customer? <Link to='/register'>Register</Link>
+						Have an Account? <Link to='/login'>Login</Link>
 					</Col>
 				</Row>
 			</Form>
@@ -81,4 +91,4 @@ const LoginScreen: React.FC = () => {
 	)
 }
 
-export default LoginScreen
+export default RegisterScreen
