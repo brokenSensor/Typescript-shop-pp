@@ -35,12 +35,22 @@ export class AuthController {
     response.cookie('refreshToken', body.refresh_token, {
       httpOnly: true,
       maxAge: 30 * 24 * 60 * 60 * 1000,
-      path: '/',
-      domain: 'localhost',
-      sameSite: true,
-      secure: true,
     });
     return body;
+  }
+
+  @ApiOperation({ summary: 'Logout user' })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+  })
+  @Post('/logout')
+  async logout(
+    @Req() req: Request,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const refreshToken = req.cookies['refreshToken'];
+    await this.authService.logout(refreshToken);
+    response.clearCookie('refreshToken');
   }
 
   @ApiOperation({ summary: 'Register user' })

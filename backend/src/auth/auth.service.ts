@@ -5,6 +5,8 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/users/users.model';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { ConfigService } from '@nestjs/config';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 export interface TokensAndUser {
   user: UserDTO;
@@ -35,6 +37,7 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
     private configService: ConfigService,
+    @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
   async validateUser(email: string, pass: string): Promise<UserDTO> {
@@ -56,6 +59,16 @@ export class AuthService {
       access_token,
       refresh_token,
     };
+  }
+
+  async logout(refresh_token: string): Promise<void> {
+    try {
+      const user = await this.usersService.getUserByRefreshToken(refresh_token);
+      user.refresh_token = null;
+      await this.userRepository.save(user);
+    } catch (error) {
+      console.log(error.message);
+    }
   }
 
   async registerUser(createUserDto: CreateUserDto) {
