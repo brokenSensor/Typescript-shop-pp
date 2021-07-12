@@ -1,7 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/users.model';
+import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
+import { products, users } from './dbseed';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './product.model';
@@ -11,6 +13,7 @@ export class ProductService {
   constructor(
     @InjectRepository(Product) private productRepository: Repository<Product>,
     @InjectRepository(User) private userRepository: Repository<User>,
+    private usersService: UsersService,
   ) {}
   async createProduct(dto: CreateProductDto, userId: number): Promise<Product> {
     const user = await this.userRepository.findOne(userId);
@@ -77,5 +80,29 @@ export class ProductService {
     );
     product.rating = parseFloat((sumRating / product.numReviews).toFixed(1));
     return await this.productRepository.save(product);
+  }
+
+  async seed(): Promise<void> {
+    try {
+      users.forEach(async (user) => {
+        await this.usersService.createUser({ ...user });
+      });
+
+      const notAdmin = await this.userRepository.findOne({
+        email: 'bobAdmin@mail.com',
+      });
+
+      notAdmin.isAdmin = true;
+
+      await this.userRepository.save(notAdmin);
+
+      const admin = await this.usersService.getUserByEmail('bobAdmin@mail.com');
+
+      products.forEach(async (product) => {
+        await this.createProduct({ ...product }, admin.id);
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

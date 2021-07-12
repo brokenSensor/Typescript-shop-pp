@@ -14,46 +14,56 @@ export class UsersService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
   async createUser(dto: CreateUserDto): Promise<User> {
-    const user = await this.userRepository.findOne({ email: dto.email });
+    try {
+      const user = await this.userRepository.findOne({ email: dto.email });
 
-    if (user) {
-      throw new HttpException(
-        {
-          statusCode: HttpStatus.BAD_REQUEST,
-          message: ['Email must be uniqe.'],
-          error: 'Bad Request',
-        },
-        HttpStatus.BAD_REQUEST,
+      if (user) {
+        throw new HttpException(
+          {
+            statusCode: HttpStatus.BAD_REQUEST,
+            message: ['Email must be uniqe.'],
+            error: 'Bad Request',
+          },
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      const activationLink = v4();
+      return await this.userRepository.save(
+        this.userRepository.create({ ...dto, activationLink }),
       );
+    } catch (error) {
+      console.log(error);
     }
-    const activationLink = v4();
-    return await this.userRepository.save(
-      this.userRepository.create({ ...dto, activationLink }),
-    );
   }
 
   async updateUser(dto: UpdateUserDto, userId: number): Promise<User> {
-    const userByEmail = await this.userRepository.findOne({ email: dto.email });
-    if (userByEmail) {
-      throw new HttpException(
-        {
-          statusCode: HttpStatus.BAD_REQUEST,
-          message: ['Email must be uniqe.'],
-          error: 'Bad Request',
-        },
-        HttpStatus.BAD_REQUEST,
-      );
-    } else {
-      const user = await this.userRepository.findOne(userId);
-      if (dto.password) user.password = await bcrypt.hash(dto.password, 10);
-      if (dto.name) user.name = dto.name;
-      if (dto.email) {
-        user.email = dto.email;
-        user.isActivated = false;
-        user.activationLink = v4();
+    try {
+      const userByEmail = await this.userRepository.findOne({
+        email: dto.email,
+      });
+      if (userByEmail) {
+        throw new HttpException(
+          {
+            statusCode: HttpStatus.BAD_REQUEST,
+            message: ['Email must be uniqe.'],
+            error: 'Bad Request',
+          },
+          HttpStatus.BAD_REQUEST,
+        );
+      } else {
+        const user = await this.userRepository.findOne(userId);
+        if (dto.password) user.password = await bcrypt.hash(dto.password, 10);
+        if (dto.name) user.name = dto.name;
+        if (dto.email) {
+          user.email = dto.email;
+          user.isActivated = false;
+          user.activationLink = v4();
+        }
+        if (dto.refresh_token) user.refresh_token = dto.refresh_token;
+        return await this.userRepository.save(user);
       }
-      if (dto.refresh_token) user.refresh_token = dto.refresh_token;
-      return await this.userRepository.save(user);
+    } catch (error) {
+      console.log(error);
     }
   }
 

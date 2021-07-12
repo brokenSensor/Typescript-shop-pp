@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpStatus,
   Param,
   ParseIntPipe,
@@ -55,5 +56,10 @@ export class ReviewController {
     reviewId: number,
   ) {
     return this.reviewService.deleteReview(productId, reviewId, req.user.sub);
+  }
+
+  @Get('/seedreviews')
+  seed() {
+    this.reviewService.seedReviews();
   }
 }

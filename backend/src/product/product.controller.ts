@@ -24,6 +24,11 @@ import { ProductService } from './product.service';
 export class ProductController {
   constructor(private productService: ProductService) {}
 
+  @Get('/seedproducts')
+  seed() {
+    this.productService.seed();
+  }
+
   @ApiOperation({ summary: 'Create new product. Admin only' })
   @ApiResponse({ status: HttpStatus.CREATED, type: Product })
   @UseGuards(IsAdminGuard)
