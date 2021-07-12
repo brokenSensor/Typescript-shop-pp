@@ -1,5 +1,5 @@
 import React from 'react'
-import { RouteComponentProps, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { useGetProductByIdQuery } from '../api/productApi'
 
 const ProductScreen = () => {
