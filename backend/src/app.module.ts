@@ -10,6 +10,9 @@ import { ReviewModule } from './review/review.module';
 import { Review } from './review/review.model';
 import { OrderModule } from './order/order.module';
 import { Order } from './order/order.model';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -32,6 +35,9 @@ import { Order } from './order/order.model';
     ProductModule,
     ReviewModule,
     OrderModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'static'),
+    }),
   ],
   controllers: [],
   providers: [],
