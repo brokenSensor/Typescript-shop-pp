@@ -83,26 +83,22 @@ export class ProductService {
   }
 
   async seed(): Promise<void> {
-    try {
-      users.forEach(async (user) => {
-        await this.usersService.createUser({ ...user });
-      });
+    users.forEach(async (user) => {
+      await this.usersService.createUser({ ...user });
+    });
 
-      const notAdmin = await this.userRepository.findOne({
-        email: 'bobAdmin@mail.com',
-      });
+    const notAdmin = await this.userRepository.findOne({
+      email: 'bobAdmin@mail.com',
+    });
 
-      notAdmin.isAdmin = true;
+    notAdmin.isAdmin = true;
 
-      await this.userRepository.save(notAdmin);
+    await this.userRepository.save(notAdmin);
 
-      const admin = await this.usersService.getUserByEmail('bobAdmin@mail.com');
+    const admin = await this.usersService.getUserByEmail('bobAdmin@mail.com');
 
-      products.forEach(async (product) => {
-        await this.createProduct({ ...product }, admin.id);
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    products.forEach(async (product) => {
+      await this.createProduct({ ...product }, admin.id);
+    });
   }
 }

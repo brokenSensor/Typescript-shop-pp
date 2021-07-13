@@ -59,12 +59,7 @@ const LoginScreen: React.FC = () => {
 								dispatch(setCredentials(res))
 								push('/')
 							} catch (error) {
-								if (error.status === 401) {
-									setError('Wrong email or password!')
-									setTimeout(() => {
-										setError('')
-									}, 10000)
-								}
+								setError(error.data.message.join(' '))
 							}
 						}}
 					>

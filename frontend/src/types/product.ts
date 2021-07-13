@@ -1,13 +1,13 @@
-type Product = {
+export type Product = {
 	id: number
 	name: string
 	image: string
 	brand: string
 	category: string
 	description: string
-	rating: number
+	rating: string
 	numReviews: number
-	price: number
+	price: string
 	countInStock: number
 	createdAt: Date
 	updatedAt: Date

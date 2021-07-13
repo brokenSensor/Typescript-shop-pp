@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
@@ -62,19 +66,17 @@ export class AuthService {
   }
 
   async logout(refresh_token: string): Promise<void> {
-    try {
-      const user = await this.usersService.getUserByRefreshToken(refresh_token);
-      user.refresh_token = null;
-      await this.userRepository.save(user);
-    } catch (error) {
-      console.log(error.message);
-    }
+    const user = await this.usersService.getUserByRefreshToken(refresh_token);
+    user.refresh_token = null;
+    await this.userRepository.save(user);
   }
 
   async registerUser(createUserDto: CreateUserDto) {
     const user = await this.usersService.createUser(createUserDto);
-    const userDto = new UserDTO(user);
-    return this.login({ ...userDto });
+    if (user) {
+      const userDto = new UserDTO(user);
+      return this.login({ ...userDto });
+    }
   }
 
   generateTokens(payload) {
@@ -87,26 +89,22 @@ export class AuthService {
   }
 
   async refresh(refresh_token: string): Promise<TokensAndUser> {
-    try {
-      const checkUser = await this.usersService.getUserByRefreshToken(
-        refresh_token,
-      );
-      const validatedToken = this.jwtService.verify(refresh_token);
+    const checkUser = await this.usersService.getUserByRefreshToken(
+      refresh_token,
+    );
+    const validatedToken = this.jwtService.verify(refresh_token);
 
-      if (validatedToken && checkUser.refresh_token) {
-        const userDto = new UserDTO(checkUser);
-        const tokens = this.generateTokens({ ...userDto });
-        this.usersService.updateUser(
-          { refresh_token: tokens.refresh_token },
-          userDto.id,
-        );
-        return {
-          user: { ...userDto },
-          ...tokens,
-        };
-      }
-    } catch (error) {
-      throw new UnauthorizedException(error.message);
+    if (validatedToken && checkUser.refresh_token) {
+      const userDto = new UserDTO(checkUser);
+      const tokens = this.generateTokens({ ...userDto });
+      this.usersService.updateUser(
+        { refresh_token: tokens.refresh_token },
+        userDto.id,
+      );
+      return {
+        user: { ...userDto },
+        ...tokens,
+      };
     }
     throw new UnauthorizedException();
   }

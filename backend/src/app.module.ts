@@ -36,7 +36,8 @@ import { join } from 'path';
     ReviewModule,
     OrderModule,
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'static'),
+      rootPath: join(__dirname, '..', 'client'),
+      exclude: ['/index.html'],
     }),
   ],
   controllers: [],

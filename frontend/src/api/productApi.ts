@@ -1,5 +1,5 @@
 import { shopApi } from '.'
-import { Product } from '../types'
+import { Product } from '../types/product'
 
 const productApi = shopApi.injectEndpoints({
 	endpoints: build => ({

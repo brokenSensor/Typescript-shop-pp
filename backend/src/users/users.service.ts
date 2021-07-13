@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -14,56 +19,42 @@ export class UsersService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
   async createUser(dto: CreateUserDto): Promise<User> {
-    try {
-      const user = await this.userRepository.findOne({ email: dto.email });
+    const user = await this.userRepository.findOne({ email: dto.email });
 
-      if (user) {
-        throw new HttpException(
-          {
-            statusCode: HttpStatus.BAD_REQUEST,
-            message: ['Email must be uniqe.'],
-            error: 'Bad Request',
-          },
-          HttpStatus.BAD_REQUEST,
-        );
-      }
+    if (!user) {
       const activationLink = v4();
       return await this.userRepository.save(
         this.userRepository.create({ ...dto, activationLink }),
       );
-    } catch (error) {
-      console.log(error);
     }
+    throw new BadRequestException({
+      statusCode: HttpStatus.BAD_REQUEST,
+      message: 'Email must be uniqe.',
+      error: 'Bad Request',
+    });
   }
 
   async updateUser(dto: UpdateUserDto, userId: number): Promise<User> {
-    try {
-      const userByEmail = await this.userRepository.findOne({
-        email: dto.email,
+    const userByEmail = await this.userRepository.findOne({
+      email: dto.email,
+    });
+    if (userByEmail) {
+      throw new BadRequestException({
+        statusCode: HttpStatus.BAD_REQUEST,
+        message: ['Email must be uniqe.'],
+        error: 'Bad Request',
       });
-      if (userByEmail) {
-        throw new HttpException(
-          {
-            statusCode: HttpStatus.BAD_REQUEST,
-            message: ['Email must be uniqe.'],
-            error: 'Bad Request',
-          },
-          HttpStatus.BAD_REQUEST,
-        );
-      } else {
-        const user = await this.userRepository.findOne(userId);
-        if (dto.password) user.password = await bcrypt.hash(dto.password, 10);
-        if (dto.name) user.name = dto.name;
-        if (dto.email) {
-          user.email = dto.email;
-          user.isActivated = false;
-          user.activationLink = v4();
-        }
-        if (dto.refresh_token) user.refresh_token = dto.refresh_token;
-        return await this.userRepository.save(user);
+    } else {
+      const user = await this.userRepository.findOne(userId);
+      if (dto.password) user.password = await bcrypt.hash(dto.password, 10);
+      if (dto.name) user.name = dto.name;
+      if (dto.email) {
+        user.email = dto.email;
+        user.isActivated = false;
+        user.activationLink = v4();
       }
-    } catch (error) {
-      console.log(error);
+      if (dto.refresh_token) user.refresh_token = dto.refresh_token;
+      return await this.userRepository.save(user);
     }
   }
 
@@ -79,12 +70,8 @@ export class UsersService {
     return await this.userRepository.findOne({ email });
   }
   async deleteMe(id): Promise<{ message: string }> {
-    try {
-      await this.userRepository.delete(id);
-      return { message: 'User deleted' };
-    } catch (error) {
-      return error;
-    }
+    await this.userRepository.delete(id);
+    return { message: 'User deleted' };
   }
   async getUserByRefreshToken(refresh_token: string): Promise<User> {
     return await this.userRepository.findOne({ refresh_token });

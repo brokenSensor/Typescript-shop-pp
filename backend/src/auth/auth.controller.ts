@@ -1,6 +1,8 @@
 import {
+  BadRequestException,
   Body,
   Controller,
+  HttpException,
   HttpStatus,
   Post,
   Req,
@@ -68,11 +70,13 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response,
   ) {
     const body = await this.authService.registerUser(createUserDto);
-    response.cookie('refreshToken', body.refresh_token, {
-      httpOnly: true,
-      maxAge: 30 * 24 * 60 * 60 * 1000,
-    });
-    return body;
+    if (body) {
+      response.cookie('refreshToken', body.refresh_token, {
+        httpOnly: true,
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+      });
+      return body;
+    }
   }
 
   @ApiOperation({ summary: 'Refresh access token' })
