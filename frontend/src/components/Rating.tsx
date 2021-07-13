@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 type RatingProps = {
 	value: number
-	text: string
+	text?: string
 	color: string
 }
 

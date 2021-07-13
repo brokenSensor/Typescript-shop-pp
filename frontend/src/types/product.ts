@@ -16,7 +16,7 @@ export type Product = {
 
 type Review = {
 	id: number
-	rating: number
+	rating: string
 	comment: string
 	name: string
 	createdAt: Date
