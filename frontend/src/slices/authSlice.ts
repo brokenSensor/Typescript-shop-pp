@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { TokensAndUser, UserDto } from '../types/auth'
 
-export type AithState = {
+export type AuthState = {
 	user: UserDto | null
 	access_token: string | null
 	refresh_token: string | null
@@ -13,7 +13,7 @@ const authSlice = createSlice({
 		user: JSON.parse(localStorage.getItem('user') || 'null'),
 		access_token: JSON.parse(localStorage.getItem('accessToken') || 'null'),
 		refresh_token: null,
-	} as AithState,
+	} as AuthState,
 	reducers: {
 		setCredentials: (state, { payload }: PayloadAction<TokensAndUser>) => {
 			state.access_token = payload.access_token

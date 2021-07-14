@@ -7,7 +7,7 @@ export type Product = {
 	description: string
 	rating: string
 	numReviews: number
-	price: string
+	price: number
 	countInStock: number
 	createdAt: Date
 	updatedAt: Date
@@ -27,4 +27,12 @@ export interface ProductListState {
 	products: Product[]
 	loading: boolean
 	error: string | null
+}
+
+export type CartItem = {
+	name: string
+	qty: number
+	image: string
+	price: number
+	productId: number
 }

@@ -6,9 +6,13 @@ import Loader from '../components/Loader'
 import Message from '../components/Message'
 import Meta from '../components/Meta'
 import Rating from '../components/Rating'
+import { useAppDispatch } from '../hooks'
+import { addToCart } from '../slices/cartSlice'
 
 const ProductScreen = () => {
+	const dispatch = useAppDispatch()
 	const [qty, setQty] = useState(1)
+	const [message, setMessage] = useState('')
 
 	const { id } = useParams<{
 		id: string
@@ -27,6 +31,7 @@ const ProductScreen = () => {
 				data && (
 					<>
 						<Meta title={data.name} />
+
 						<Row>
 							<Col md={6}>
 								<Image src={data.image} alt={data.name} fluid />
@@ -95,14 +100,30 @@ const ProductScreen = () => {
 											</ListGroup.Item>
 										)}
 										<ListGroup.Item>
-											{/* <Button
-												onClick={addToCartHandler}
+											{message && <Message>{message}</Message>}
+											<Button
+												onClick={() => {
+													dispatch(
+														addToCart({
+															image: data.image,
+															name: data.name,
+															price: data.price,
+															productId: data.id,
+															qty: qty,
+														})
+													)
+													setMessage(`${qty}  ${data.name} added to cart!`)
+
+													setTimeout(() => {
+														setMessage('')
+													}, 10000)
+												}}
 												className='btn-block'
 												type='button'
 												disabled={data.countInStock === 0}
 											>
 												Add To Cart
-											</Button> */}
+											</Button>
 										</ListGroup.Item>
 									</ListGroup>
 								</Card>
