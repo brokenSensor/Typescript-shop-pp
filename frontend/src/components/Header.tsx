@@ -9,6 +9,7 @@ const Header = () => {
 	const dispatch = useAppDispatch()
 	const { push } = useHistory()
 	const user = useAppSelector(state => state.authReducer.user)
+	const cartItems = useAppSelector(state => state.cartReducer.items)
 	const [logoutServer] = useLogoutUserMutation()
 	return (
 		<header>
@@ -35,6 +36,9 @@ const Header = () => {
 							</NavDropdown>
 						</Nav>
 						<Nav>
+							<Nav.Link as={Link} to='/cart'>
+								<i className='fas fa-shopping-cart'> {cartItems.length}</i>
+							</Nav.Link>
 							{user ? (
 								<NavDropdown
 									title={user.name}
