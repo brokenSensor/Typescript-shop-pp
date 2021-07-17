@@ -35,4 +35,5 @@ export type CartItem = {
 	image: string
 	price: number
 	productId: number
+	countInStock: number
 }

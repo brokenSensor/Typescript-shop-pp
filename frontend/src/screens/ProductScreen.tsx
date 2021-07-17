@@ -110,6 +110,7 @@ const ProductScreen = () => {
 															price: data.price,
 															productId: data.id,
 															qty: qty,
+															countInStock: data.countInStock,
 														})
 													)
 													setMessage(`${qty}  ${data.name} added to cart!`)
