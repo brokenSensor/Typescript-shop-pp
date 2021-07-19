@@ -21,8 +21,12 @@ export class ReviewService {
     userId: number,
     productId: number,
   ): Promise<Product> {
-    const user = await this.userRepository.findOne(userId);
-    if (!user) {
+    const user = await this.userRepository.findOne({
+      where: {
+        id: userId,
+      },
+    });
+    if (!userId) {
       throw new HttpException(
         {
           statusCode: HttpStatus.NOT_FOUND,
@@ -32,7 +36,11 @@ export class ReviewService {
         HttpStatus.NOT_FOUND,
       );
     }
-    const product = await this.productRepository.findOne(productId);
+    const product = await this.productRepository.findOne({
+      where: {
+        id: productId,
+      },
+    });
     if (!product) {
       throw new HttpException(
         {
@@ -44,10 +52,14 @@ export class ReviewService {
       );
     }
 
-    const review = await this.reviewRepository.findOne(
-      { user, product },
-      { relations: ['user'] },
-    );
+    const review = await this.reviewRepository.findOne({
+      where: {
+        user: user,
+        product: product,
+      },
+      relations: ['user'],
+    });
+
     if (review) {
       throw new HttpException(
         {

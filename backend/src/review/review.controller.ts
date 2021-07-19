@@ -35,7 +35,7 @@ export class ReviewController {
     )
     productId: number,
   ) {
-    return this.reviewService.createReview(reviewDto, req.user.sub, productId);
+    return this.reviewService.createReview(reviewDto, req.user.id, productId);
   }
 
   @ApiOperation({ summary: 'Delete review' })
@@ -55,7 +55,7 @@ export class ReviewController {
     )
     reviewId: number,
   ) {
-    return this.reviewService.deleteReview(productId, reviewId, req.user.sub);
+    return this.reviewService.deleteReview(productId, reviewId, req.user.id);
   }
 
   @Get('/seedreviews')

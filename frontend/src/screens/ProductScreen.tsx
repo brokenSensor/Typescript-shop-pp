@@ -2,11 +2,12 @@ import React, { useState } from 'react'
 import { Button, Card, Col, Form, Image, ListGroup, Row } from 'react-bootstrap'
 import { Link, useParams } from 'react-router-dom'
 import { useGetProductByIdQuery } from '../api/productApi'
+import { useCreateReviewMutation } from '../api/reviewApi'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 import Meta from '../components/Meta'
 import Rating from '../components/Rating'
-import { useAppDispatch } from '../hooks'
+import { useAppDispatch, useAppSelector } from '../hooks'
 import { addToCart } from '../slices/cartSlice'
 
 const ProductScreen = () => {
@@ -14,10 +15,19 @@ const ProductScreen = () => {
 	const [qty, setQty] = useState(1)
 	const [message, setMessage] = useState('')
 
+	const [comment, setComment] = useState('')
+	const [rating, setRating] = useState('')
+	const [reviewError, setReviewError] = useState('')
+
+	const authReducer = useAppSelector(state => state.authReducer)
+	const { user, access_token } = authReducer
+
 	const { id } = useParams<{
 		id: string
 	}>()
 	const { data, error, isLoading } = useGetProductByIdQuery(parseInt(id))
+
+	const [createReviev] = useCreateReviewMutation()
 	return (
 		<>
 			<Link className='btn btn-light my-3' to='/'>
@@ -143,13 +153,28 @@ const ProductScreen = () => {
 											<p>{review.comment}</p>
 										</ListGroup.Item>
 									))}
-									{/* <ListGroup.Item>
+									<ListGroup.Item>
 										<h2>Write a Customer Review</h2>
-										{errorProductReview && (
-											<Message variant='danger'>{errorProductReview}</Message>
+										{reviewError && (
+											<Message variant='danger'>{reviewError}</Message>
 										)}
 										{user ? (
-											<Form onSubmit={submitHandler}>
+											<Form
+												onSubmit={async e => {
+													e.preventDefault()
+													try {
+														const res = await createReviev({
+															comment,
+															name: user.name,
+															productId: data.id,
+															rating: Number(rating),
+															accessToken: access_token || '',
+														}).unwrap()
+													} catch (error) {
+														setReviewError(error.data.message.join(' '))
+													}
+												}}
+											>
 												<Form.Group controlId='rating'>
 													<Form.Label>Rating</Form.Label>
 													<Form.Control
@@ -183,7 +208,7 @@ const ProductScreen = () => {
 												review
 											</Message>
 										)}
-									</ListGroup.Item> */}
+									</ListGroup.Item>
 								</ListGroup>
 							</Col>
 						</Row>
