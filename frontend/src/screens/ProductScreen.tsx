@@ -25,7 +25,12 @@ const ProductScreen = () => {
 	const { id } = useParams<{
 		id: string
 	}>()
-	const { data, error, isLoading } = useGetProductByIdQuery(parseInt(id))
+	const {
+		data,
+		error,
+		isLoading,
+		refetch: refetchProduct,
+	} = useGetProductByIdQuery(parseInt(id))
 
 	const [createReviev] = useCreateReviewMutation()
 	return (
@@ -163,13 +168,14 @@ const ProductScreen = () => {
 												onSubmit={async e => {
 													e.preventDefault()
 													try {
-														const res = await createReviev({
+														await createReviev({
 															comment,
 															name: user.name,
 															productId: data.id,
 															rating: Number(rating),
 															accessToken: access_token || '',
 														}).unwrap()
+														refetchProduct()
 													} catch (error) {
 														setReviewError(error.data.message.join(' '))
 													}

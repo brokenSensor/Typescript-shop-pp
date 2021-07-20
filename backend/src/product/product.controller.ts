@@ -37,7 +37,7 @@ export class ProductController {
     @Body(new ValidationPipe()) productDto: CreateProductDto,
     @Req() req,
   ) {
-    return this.productService.createProduct(productDto, req.user.sub);
+    return this.productService.createProduct(productDto, req.user.id);
   }
 
   @ApiOperation({ summary: 'Get all products' })

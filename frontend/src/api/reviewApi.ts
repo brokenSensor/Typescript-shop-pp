@@ -24,6 +24,19 @@ const reviewApi = shopApi.injectEndpoints({
 				headers: [['Authorization', `Bearer ${ReviewDto.accessToken}`]],
 			}),
 		}),
+		deleteReview: build.mutation<Product, createReviewDto>({
+			query: ReviewDto => ({
+				url: `/review/${ReviewDto.productId}`,
+				method: 'POST',
+				credentials: 'include',
+				body: {
+					rating: ReviewDto.rating,
+					comment: ReviewDto.comment,
+					name: ReviewDto.name,
+				},
+				headers: [['Authorization', `Bearer ${ReviewDto.accessToken}`]],
+			}),
+		}),
 	}),
 	overrideExisting: false,
 })

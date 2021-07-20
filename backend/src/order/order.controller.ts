@@ -30,7 +30,7 @@ export class OrderController {
     @Body(new ValidationPipe()) orderDto: CreateOrderDto,
     @Req() req,
   ) {
-    return this.orderService.createOrder(orderDto, req.user.sub);
+    return this.orderService.createOrder(orderDto, req.user.id);
   }
 
   @ApiOperation({ summary: 'Update order to payed' })

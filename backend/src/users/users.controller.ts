@@ -68,7 +68,7 @@ export class UsersController {
     @Body(new ValidationPipe()) updateUserDto: UpdateUserDto,
     @Req() req,
   ) {
-    return this.usersService.updateUser(updateUserDto, req.user.sub);
+    return this.usersService.updateUser(updateUserDto, req.user.id);
   }
 
   @ApiOperation({ summary: 'Delete currently loged in user' })
@@ -76,6 +76,6 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Delete('/me')
   deleteMe(@Req() req) {
-    return this.usersService.deleteMe(req.user.sub);
+    return this.usersService.deleteMe(req.user.id);
   }
 }
