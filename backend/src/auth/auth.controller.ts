@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Get,
   HttpException,
   HttpStatus,
   Post,
@@ -88,7 +89,7 @@ export class AuthController {
       },
     },
   })
-  @Post('/refresh')
+  @Get('/refresh')
   async refresh(
     @Req() req: Request,
     @Res({ passthrough: true }) response: Response,

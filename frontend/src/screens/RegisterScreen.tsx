@@ -69,7 +69,11 @@ const RegisterScreen = () => {
 								dispatch(setCredentials(res))
 								push('/')
 							} catch (error) {
-								setError(error.data.message.join(' '))
+								if (Array.isArray(error.data.message)) {
+									setError(error.data.message.join(' '))
+								} else {
+									setError(error.data.message)
+								}
 							}
 						}}
 					>

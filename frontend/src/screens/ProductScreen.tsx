@@ -20,7 +20,7 @@ const ProductScreen = () => {
 	const [reviewError, setReviewError] = useState('')
 
 	const authReducer = useAppSelector(state => state.authReducer)
-	const { user, access_token } = authReducer
+	const { user } = authReducer
 
 	const { id } = useParams<{
 		id: string
@@ -173,11 +173,14 @@ const ProductScreen = () => {
 															name: user.name,
 															productId: data.id,
 															rating: Number(rating),
-															accessToken: access_token || '',
 														}).unwrap()
 														refetchProduct()
 													} catch (error) {
-														setReviewError(error.data.message.join(' '))
+														if (Array.isArray(error.data.message)) {
+															setReviewError(error.data.message.join(' '))
+														} else {
+															setReviewError(error.data.message)
+														}
 													}
 												}}
 											>

@@ -6,13 +6,11 @@ export type createReviewDto = {
 	comment: string
 	name: string
 	productId: number
-	accessToken: string
 }
 
 export type deleteReviewDto = {
 	productId: number
 	reviewId: number
-	accessToken: string
 }
 
 const reviewApi = shopApi.injectEndpoints({
@@ -27,7 +25,6 @@ const reviewApi = shopApi.injectEndpoints({
 					comment: ReviewDto.comment,
 					name: ReviewDto.name,
 				},
-				headers: [['Authorization', `Bearer ${ReviewDto.accessToken}`]],
 			}),
 		}),
 		deleteReview: build.mutation<Product, deleteReviewDto>({
@@ -35,7 +32,6 @@ const reviewApi = shopApi.injectEndpoints({
 				url: `/review/${ReviewDto.productId}/${ReviewDto.reviewId}`,
 				method: 'DELETE',
 				credentials: 'include',
-				headers: [['Authorization', `Bearer ${ReviewDto.accessToken}`]],
 			}),
 		}),
 	}),

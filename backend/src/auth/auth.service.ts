@@ -80,8 +80,8 @@ export class AuthService {
   }
 
   generateTokens(payload) {
-    const access_token = this.jwtService.sign(payload, { expiresIn: '30d' });
-    const refresh_token = this.jwtService.sign(payload, { expiresIn: '30m' });
+    const access_token = this.jwtService.sign(payload, { expiresIn: '10s' });
+    const refresh_token = this.jwtService.sign(payload, { expiresIn: '30d' });
     return {
       access_token,
       refresh_token,
@@ -92,9 +92,10 @@ export class AuthService {
     const checkUser = await this.usersService.getUserByRefreshToken(
       refresh_token,
     );
+
     const validatedToken = this.jwtService.verify(refresh_token);
 
-    if (validatedToken && checkUser.refresh_token) {
+    if (validatedToken && checkUser && checkUser.refresh_token) {
       const userDto = new UserDTO(checkUser);
       const tokens = this.generateTokens({ ...userDto });
       this.usersService.updateUser(
@@ -103,7 +104,8 @@ export class AuthService {
       );
       return {
         user: { ...userDto },
-        ...tokens,
+        access_token: tokens.access_token,
+        refresh_token: tokens.refresh_token,
       };
     }
     throw new UnauthorizedException();
