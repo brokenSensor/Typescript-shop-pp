@@ -101,4 +101,11 @@ export class ProductService {
       await this.createProduct({ ...product }, admin.id);
     });
   }
+
+  async getTopProducts(): Promise<Product[]> {
+    return await this.productRepository.find({
+      order: { rating: 'DESC' },
+      take: 5,
+    });
+  }
 }

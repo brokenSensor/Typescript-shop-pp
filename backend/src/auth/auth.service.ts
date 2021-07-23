@@ -80,7 +80,7 @@ export class AuthService {
   }
 
   generateTokens(payload) {
-    const access_token = this.jwtService.sign(payload, { expiresIn: '10s' });
+    const access_token = this.jwtService.sign(payload, { expiresIn: '30m' });
     const refresh_token = this.jwtService.sign(payload, { expiresIn: '30d' });
     return {
       access_token,

@@ -3,14 +3,16 @@ import { Col, Row } from 'react-bootstrap'
 import { useGetAllProductsQuery } from '../api/productApi'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
+import Meta from '../components/Meta'
 import Product from '../components/Product'
 
 const MainScreen: React.FC = () => {
 	const { isLoading, data, error } = useGetAllProductsQuery()
 	return (
 		<>
+			<Meta />
 			{isLoading ? (
-				<h1>Loading...</h1>
+				<Loader />
 			) : error ? (
 				<h1>{error}</h1>
 			) : (
