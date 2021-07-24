@@ -37,3 +37,10 @@ export type CartItem = {
 	productId: number
 	countInStock: number
 }
+
+export type ShippingAddress = {
+	address: string
+	city: string
+	postalCode: string
+	country: string
+}

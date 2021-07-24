@@ -15,7 +15,7 @@ const Product = ({ product }: ProductProps) => {
 				<Card.Img src={product.image} variant='top' />
 			</Link>
 
-			<Card.Body>
+			<Card.Body className='p-1 text-center'>
 				<Link to={`/product/${product.id}`}>
 					<Card.Title as='div'>
 						<strong>{product.name}</strong>
@@ -23,13 +23,11 @@ const Product = ({ product }: ProductProps) => {
 				</Link>
 
 				<Card.Text as='div'>
-					<Rating
-						value={parseFloat(product.rating)}
-						text={`  ${product.numReviews} reviews`}
-					/>
+					<Rating value={parseFloat(product.rating)} />
+					<p>{product.numReviews} Reviews</p>
 				</Card.Text>
 
-				<Card.Text as='h3'>${product.price}</Card.Text>
+				<Card.Text as='h4'>${product.price}</Card.Text>
 			</Card.Body>
 		</Card>
 	)

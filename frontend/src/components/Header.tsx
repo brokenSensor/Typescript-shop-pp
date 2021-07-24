@@ -13,14 +13,14 @@ const Header = () => {
 	const [logoutServer] = useLogoutUserMutation()
 	return (
 		<header>
-			<Navbar collapseOnSelect expand='lg' bg='dark' variant='dark'>
+			<Navbar collapseOnSelect expand='lg' bg='secondary' variant='light'>
 				<Container>
 					<Navbar.Brand as={Link} to='/'>
 						Example Shop
 					</Navbar.Brand>
 					<Navbar.Toggle aria-controls='responsive-navbar-nav' />
 					<Navbar.Collapse id='responsive-navbar-nav'>
-						<Nav className='mr-auto'>
+						<Nav>
 							<NavDropdown title='Categories' id='collasible-nav-dropdown'>
 								<NavDropdown.Item href='#action/3.1'>Action</NavDropdown.Item>
 								<NavDropdown.Item href='#action/3.2'>
@@ -35,7 +35,7 @@ const Header = () => {
 								</NavDropdown.Item>
 							</NavDropdown>
 						</Nav>
-						<Nav>
+						<Nav className='ml-auto'>
 							<Nav.Link as={Link} to='/cart'>
 								<i className='fas fa-shopping-cart'> {cartItems.length}</i>
 							</Nav.Link>

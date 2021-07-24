@@ -9,8 +9,15 @@ const productApi = shopApi.injectEndpoints({
 		getProductById: build.query<Product, number>({
 			query: id => `/product/${id}`,
 		}),
+		getTopProducts: build.query<Product[], void>({
+			query: () => `/product/top5`,
+		}),
 	}),
 	overrideExisting: false,
 })
 
-export const { useGetAllProductsQuery, useGetProductByIdQuery } = productApi
+export const {
+	useGetAllProductsQuery,
+	useGetProductByIdQuery,
+	useGetTopProductsQuery,
+} = productApi

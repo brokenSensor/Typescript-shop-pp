@@ -1,13 +1,18 @@
 import React from 'react'
 import { Button, Card, Col, Form, Image, ListGroup, Row } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import Message from '../components/Message'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { addToCart, removeFromCartByIndex } from '../slices/cartSlice'
 
 const CartScreen = () => {
 	const dispatch = useAppDispatch()
+	const history = useHistory()
 	const cartItems = useAppSelector(state => state.cartReducer.items)
+
+	const checkoutHandler = () => {
+		history.push('/login?redirect=shipping')
+	}
 	return (
 		<Row>
 			<Col md={8}>
@@ -33,6 +38,7 @@ const CartScreen = () => {
 									<Col md={2}>${item.price}</Col>
 									<Col md={2}>
 										<Form.Control
+											className='text-dark'
 											as='select'
 											value={item.qty}
 											onChange={e =>
@@ -84,7 +90,7 @@ const CartScreen = () => {
 								type='button'
 								className='btn-block'
 								disabled={cartItems.length === 0}
-								// onClick={checkoutHandler}
+								onClick={checkoutHandler}
 							>
 								Proceed To Checkout
 							</Button>

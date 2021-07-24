@@ -57,10 +57,8 @@ const ProductScreen = () => {
 										<h3>{data.name}</h3>
 									</ListGroup.Item>
 									<ListGroup.Item>
-										<Rating
-											value={parseFloat(data.rating)}
-											text={`${data.numReviews} reviews`}
-										/>
+										<Rating value={parseFloat(data.rating)} />
+										<p>{data.numReviews} Reviews</p>
 									</ListGroup.Item>
 									<ListGroup.Item>Price: ${data.price}</ListGroup.Item>
 									<ListGroup.Item>
@@ -90,9 +88,10 @@ const ProductScreen = () => {
 										{data.countInStock > 0 && (
 											<ListGroup.Item>
 												<Row>
-													<Col>Qty</Col>
+													<Col>Qty:</Col>
 													<Col>
 														<Form.Control
+															className='text-dark'
 															as='select'
 															value={qty}
 															onChange={(

@@ -1,17 +1,28 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Col, Form, Row } from 'react-bootstrap'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useHistory, useLocation } from 'react-router-dom'
 import { useRegisterUserMutation } from '../api/authApi'
 import FormContainer from '../components/FormContainer'
 import Message from '../components/Message'
-import { useAppDispatch } from '../hooks'
+import { useAppDispatch, useAppSelector } from '../hooks'
 import { setCredentials } from '../slices/authSlice'
 import { RegisterRequest } from '../types/auth'
 
 const RegisterScreen = () => {
 	const dispatch = useAppDispatch()
-	const { push } = useHistory()
+	const history = useHistory()
+	const location = useLocation()
 	const [error, setError] = useState('')
+
+	const userInfo = useAppSelector(state => state.authReducer.user)
+
+	const redirect = location.search ? location.search.split('=')[1] : '/'
+
+	useEffect(() => {
+		if (userInfo) {
+			history.push(redirect)
+		}
+	}, [history, redirect, userInfo])
 
 	const [formState, setFormState] = useState<RegisterRequest>({
 		name: '',
@@ -67,7 +78,7 @@ const RegisterScreen = () => {
 							try {
 								const res = await register(formState).unwrap()
 								dispatch(setCredentials(res))
-								push('/')
+								history.push('/')
 							} catch (error) {
 								if (Array.isArray(error.data.message)) {
 									setError(error.data.message.join(' '))
@@ -82,7 +93,10 @@ const RegisterScreen = () => {
 				)}
 				<Row className='py-3'>
 					<Col>
-						Have an Account? <Link to='/login'>Login</Link>
+						Have an Account?{' '}
+						<Link to={redirect ? `/login?redirect=${redirect}` : '/login'}>
+							Login
+						</Link>
 					</Col>
 				</Row>
 			</Form>

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Col, Row } from 'react-bootstrap'
 import { useGetAllProductsQuery } from '../api/productApi'
+import CastomCarousel from '../components/CastomCarousel'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 import Meta from '../components/Meta'
@@ -11,6 +12,7 @@ const MainScreen: React.FC = () => {
 	return (
 		<>
 			<Meta />
+			<CastomCarousel />
 			{isLoading ? (
 				<Loader />
 			) : error ? (
