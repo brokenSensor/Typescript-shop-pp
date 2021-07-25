@@ -7,7 +7,11 @@ interface MessageProps {
 }
 
 const Message = ({ variant, children }: MessageProps) => {
-	return <Alert variant={variant}>{children}</Alert>
+	return (
+		<Alert className='text-dark' variant={variant}>
+			{children}
+		</Alert>
+	)
 }
 
 Message.defaultProps = {

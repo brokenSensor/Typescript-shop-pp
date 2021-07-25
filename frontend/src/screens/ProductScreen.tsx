@@ -113,7 +113,7 @@ const ProductScreen = () => {
 												</Row>
 											</ListGroup.Item>
 										)}
-										<ListGroup.Item>
+										<ListGroup.Item className='d-grid gap-2'>
 											{message && <Message>{message}</Message>}
 											<Button
 												onClick={() => {
@@ -135,6 +135,7 @@ const ProductScreen = () => {
 												}}
 												className='btn-block'
 												type='button'
+												size='lg'
 												disabled={data.countInStock === 0}
 											>
 												Add To Cart
@@ -166,26 +167,31 @@ const ProductScreen = () => {
 											<Form
 												onSubmit={async e => {
 													e.preventDefault()
-													try {
-														await createReviev({
-															comment,
-															name: user.name,
-															productId: data.id,
-															rating: Number(rating),
-														}).unwrap()
-														refetchProduct()
-													} catch (error) {
-														if (Array.isArray(error.data.message)) {
-															setReviewError(error.data.message.join(' '))
-														} else {
-															setReviewError(error.data.message)
+													if (rating !== '') {
+														try {
+															await createReviev({
+																comment,
+																name: user.name,
+																productId: data.id,
+																rating: Number(rating),
+															}).unwrap()
+															refetchProduct()
+														} catch (error) {
+															if (Array.isArray(error.data.message)) {
+																setReviewError(error.data.message.join(' '))
+															} else {
+																setReviewError(error.data.message)
+															}
 														}
+													} else {
+														setReviewError('Please select rating')
 													}
 												}}
 											>
 												<Form.Group controlId='rating'>
 													<Form.Label>Rating</Form.Label>
 													<Form.Control
+														className='text-dark'
 														as='select'
 														value={rating}
 														onChange={e => setRating(e.target.value)}
