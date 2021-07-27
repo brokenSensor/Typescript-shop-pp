@@ -182,6 +182,9 @@ const ProductScreen = () => {
 															} else {
 																setReviewError(error.data.message)
 															}
+															setTimeout(() => {
+																setReviewError('')
+															}, 10000)
 														}
 													} else {
 														setReviewError('Please select rating')

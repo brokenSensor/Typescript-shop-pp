@@ -85,6 +85,9 @@ const RegisterScreen = () => {
 								} else {
 									setError(error.data.message)
 								}
+								setTimeout(() => {
+									setError('')
+								}, 10000)
 							}
 						}}
 					>
