@@ -132,3 +132,46 @@ export type CheckoutStepsProps = {
 	step3?: any
 	step4?: any
 }
+
+export type CreateOrderDto = {
+	orderItems: OrderItem[]
+	shippingAddress: ShippingAddress
+	paymentMethod: string
+	itemsPrice: number
+	taxPrice?: number
+	shippingPrice?: number
+	totalPrice: number
+}
+
+export type OrderItem = {
+	name: string
+	qty: number
+	image: string
+	price: number
+	productId: number
+}
+
+export type Order = {
+	id: number
+	user: UserDto
+	orderItems: OrderItem[]
+	shippingAddress: ShippingAddress
+	paymentMethod: string
+	paymentResult: PaymentResult
+	itemsPrice: number
+	taxPrice: number
+	shippingPrice: number
+	totalPrice: number
+	isPaid: boolean
+	paidAt: Date
+	isDelivered: boolean
+	deliveredAt: Date
+	createdAt: Date
+	updatedAt: Date
+}
+
+export type PaymentResult = {
+	status: string
+	update_time: string
+	email_address: string
+}

@@ -45,7 +45,9 @@ export class AuthService {
   ) {}
 
   async validateUser(email: string, pass: string): Promise<UserDTO> {
-    const user = await this.usersService.getUserByEmail(email);
+    const user = await this.userRepository.findOne({
+      where: { email: email },
+    });
     if (!user) throw new UnauthorizedException();
     const passMatches = await bcrypt.compare(pass, user.password);
     if (user && passMatches) {

@@ -12,7 +12,7 @@ const PaymentScreen = () => {
 	const dispatch = useAppDispatch()
 
 	const cart = useAppSelector(state => state.cartReducer)
-	const { shippingAddress, paymentMethod } = cart
+	const { shippingAddress } = cart
 
 	if (!shippingAddress) {
 		history.push('/shipping')

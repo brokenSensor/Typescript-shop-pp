@@ -75,6 +75,13 @@ export class Order {
   paymentResult: PaymentResult;
 
   @ApiProperty({
+    description: 'Items price',
+    type: Number,
+  })
+  @Column({ default: 0.0, type: 'decimal' })
+  itemsPrice: number;
+
+  @ApiProperty({
     description: 'Tax price',
     type: Number,
   })

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsDefined, IsInt } from 'class-validator';
+import { IsString, IsDefined, IsInt, IsNumber } from 'class-validator';
 import { OrderItem, ShippingAddress } from '../order.model';
 
 export class CreateOrderDto {
@@ -23,17 +23,24 @@ export class CreateOrderDto {
   paymentMethod: string;
 
   @ApiProperty({
+    description: 'Items price',
+    type: Number,
+  })
+  @IsNumber()
+  itemsPrice: number;
+
+  @ApiProperty({
     description: 'Tax price',
     type: Number,
   })
-  @IsInt()
+  @IsNumber()
   taxPrice?: number;
 
   @ApiProperty({
     description: 'Shipping price',
     type: Number,
   })
-  @IsInt()
+  @IsNumber()
   shippingPrice?: number;
 
   @ApiProperty({
@@ -41,6 +48,6 @@ export class CreateOrderDto {
     type: Number,
   })
   @IsDefined()
-  @IsInt()
+  @IsNumber()
   totalPrice: number;
 }
