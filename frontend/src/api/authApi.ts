@@ -1,5 +1,5 @@
 import { shopApi } from '.'
-import { LoginRequest, RegisterRequest, TokensAndUser } from '../types/auth'
+import { LoginRequest, RegisterRequest, TokensAndUser } from '../types'
 
 const authApi = shopApi.injectEndpoints({
 	endpoints: build => ({

@@ -1,12 +1,8 @@
 import React from 'react'
 import { Card } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
-import { Product as ProductType } from '../types/product'
+import { ProductProps } from '../types'
 import Rating from './Rating'
-
-type ProductProps = {
-	product: ProductType
-}
 
 const Product = ({ product }: ProductProps) => {
 	return (

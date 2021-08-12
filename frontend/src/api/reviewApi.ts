@@ -1,21 +1,9 @@
 import { shopApi } from '.'
-import { Product } from '../types/product'
-
-export type createReviewDto = {
-	rating: number
-	comment: string
-	name: string
-	productId: number
-}
-
-export type deleteReviewDto = {
-	productId: number
-	reviewId: number
-}
+import { CreateReviewDto, DeleteReviewDto, Product } from '../types'
 
 const reviewApi = shopApi.injectEndpoints({
 	endpoints: build => ({
-		createReview: build.mutation<Product, createReviewDto>({
+		createReview: build.mutation<Product, CreateReviewDto>({
 			query: ReviewDto => ({
 				url: `/review/${ReviewDto.productId}`,
 				method: 'POST',
@@ -27,7 +15,7 @@ const reviewApi = shopApi.injectEndpoints({
 				},
 			}),
 		}),
-		deleteReview: build.mutation<Product, deleteReviewDto>({
+		deleteReview: build.mutation<Product, DeleteReviewDto>({
 			query: ReviewDto => ({
 				url: `/review/${ReviewDto.productId}/${ReviewDto.reviewId}`,
 				method: 'DELETE',

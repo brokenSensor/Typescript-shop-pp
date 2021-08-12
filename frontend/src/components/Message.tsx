@@ -1,10 +1,6 @@
 import React from 'react'
 import { Alert } from 'react-bootstrap'
-
-interface MessageProps {
-	children: React.ReactNode
-	variant: string
-}
+import { MessageProps } from '../types'
 
 const Message = ({ variant, children }: MessageProps) => {
 	return (

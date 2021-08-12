@@ -7,7 +7,7 @@ import FormContainer from '../components/FormContainer'
 import Message from '../components/Message'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { setCredentials } from '../slices/authSlice'
-import { LoginRequest } from '../types/auth'
+import { LoginRequest } from '../types'
 
 const LoginScreen: React.FC = () => {
 	const dispatch = useAppDispatch()

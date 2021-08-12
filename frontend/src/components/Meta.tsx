@@ -1,11 +1,6 @@
 import React from 'react'
 import { Helmet } from 'react-helmet'
-
-type MetaProps = {
-	title?: string
-	description?: string
-	keywords?: string
-}
+import { MetaProps } from '../types'
 
 const Meta = ({ title, description, keywords }: MetaProps) => {
 	return (

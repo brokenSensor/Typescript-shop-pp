@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom'
 import FormContainer from '../components/FormContainer'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { saveShippingAddress } from '../slices/cartSlice'
+import { ShippingAddress } from '../types'
 
 const ShippingScreen = () => {
 	const dispatch = useAppDispatch()
@@ -13,7 +14,7 @@ const ShippingScreen = () => {
 		state => state.cartReducer.shippingAddress
 	)
 
-	const [shippingAddress, setShippingAddress] = useState(
+	const [shippingAddress, setShippingAddress] = useState<ShippingAddress>(
 		shippingAddressFromState || {
 			address: '',
 			city: '',

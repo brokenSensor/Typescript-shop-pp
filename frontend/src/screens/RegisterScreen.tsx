@@ -6,7 +6,7 @@ import FormContainer from '../components/FormContainer'
 import Message from '../components/Message'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { setCredentials } from '../slices/authSlice'
-import { RegisterRequest } from '../types/auth'
+import { RegisterRequest } from '../types'
 
 const RegisterScreen = () => {
 	const dispatch = useAppDispatch()

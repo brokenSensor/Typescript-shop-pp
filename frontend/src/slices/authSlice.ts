@@ -1,11 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { TokensAndUser, UserDto } from '../types/auth'
-
-export type AuthState = {
-	user: UserDto | null
-	access_token: string | null
-	refresh_token: string | null
-}
+import { AuthState, TokensAndUser } from '../types'
 
 const authSlice = createSlice({
 	name: 'auth',

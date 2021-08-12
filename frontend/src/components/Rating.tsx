@@ -1,10 +1,5 @@
 import React from 'react'
-
-type RatingProps = {
-	value: number
-	text?: string
-	color: string
-}
+import { RatingProps } from '../types'
 
 const Rating = ({ value, text, color }: RatingProps) => {
 	return (
