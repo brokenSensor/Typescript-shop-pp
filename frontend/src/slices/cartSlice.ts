@@ -1,10 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { CartItem, ShippingAddress } from '../types/product'
-
-export type CartState = {
-	items: CartItem[]
-	shippingAddress: ShippingAddress
-}
+import { CartItem, CartState, PaymentMethod, ShippingAddress } from '../types'
 
 const cartSlice = createSlice({
 	name: 'auth',
@@ -13,6 +8,7 @@ const cartSlice = createSlice({
 		shippingAddress: JSON.parse(
 			localStorage.getItem('shippingAddress') || '{}'
 		),
+		paymentMethod: localStorage.getItem('paymentMethod') || '',
 	} as CartState,
 	reducers: {
 		addToCart: (state, { payload }: PayloadAction<CartItem>) => {
@@ -48,10 +44,18 @@ const cartSlice = createSlice({
 			state.shippingAddress = payload
 			localStorage.setItem('shippingAddress', JSON.stringify(payload))
 		},
+		savePaymentMethod: (state, { payload }: PayloadAction<PaymentMethod>) => {
+			state.paymentMethod = payload
+			localStorage.setItem('paymentMethod', JSON.stringify(payload))
+		},
 	},
 })
 
-export const { addToCart, removeFromCartByIndex, saveShippingAddress } =
-	cartSlice.actions
+export const {
+	addToCart,
+	removeFromCartByIndex,
+	saveShippingAddress,
+	savePaymentMethod,
+} = cartSlice.actions
 
 export default cartSlice.reducer
