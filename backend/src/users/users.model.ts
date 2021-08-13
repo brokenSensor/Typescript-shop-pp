@@ -30,7 +30,7 @@ export class User {
   @ApiProperty({
     description: 'Uuid link for email activation',
   })
-  @Column()
+  @Column({ select: false })
   activationLink: string;
 
   @ApiProperty({
@@ -40,7 +40,7 @@ export class User {
   isActivated: boolean;
 
   @ApiProperty({ example: '12345678', description: 'User password' })
-  @Column()
+  @Column({ select: false })
   password: string;
 
   @ApiProperty({
@@ -66,7 +66,7 @@ export class User {
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQm9iaSBGb28iLCJlbWFpbCI6ImJvYnNhYUBtYWlsLmNvbSIsImlkIjoxNywiaXNBZG1pbiI6ZmFsc2UsImNyZWF0ZWRBdCI6IjIwMjEtMDctMTFUMDQ6NTM6NDQuMTIzWiIsInVwZGF0ZWRBdCI6IjIwMjEtMDctMTFUMDQ6NTM6NDQuMTIzWiIsImlhdCI6MTYyNTk3OTIyNCwiZXhwIjoxNjI1OTgxMDI0fQ.4u4X0anANiVdpyiCgClK6jLu4-qZv1SUPxLeDeM0HA8',
     description: 'Refresh token',
   })
-  @Column({ default: null, nullable: true })
+  @Column({ default: null, nullable: true, select: false })
   refresh_token: string;
 
   @CreateDateColumn({ type: 'timestamptz' })

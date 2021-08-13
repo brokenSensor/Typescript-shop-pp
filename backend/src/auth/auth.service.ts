@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   HttpException,
   Injectable,
   UnauthorizedException,
@@ -26,6 +27,7 @@ export class UserDTO {
     this.isAdmin = user.isAdmin;
     this.createdAt = user.createdAt;
     this.updatedAt = user.updatedAt;
+    this.isActivated = user.isActivated;
   }
   id: number;
   name: string;
@@ -33,6 +35,7 @@ export class UserDTO {
   isAdmin: boolean;
   createdAt: Date;
   updatedAt: Date;
+  isActivated: boolean;
 }
 
 @Injectable()
@@ -47,6 +50,16 @@ export class AuthService {
   async validateUser(email: string, pass: string): Promise<UserDTO> {
     const user = await this.userRepository.findOne({
       where: { email: email },
+      select: [
+        'password',
+        'id',
+        'name',
+        'email',
+        'isAdmin',
+        'createdAt',
+        'updatedAt',
+        'isActivated',
+      ],
     });
     if (!user) throw new UnauthorizedException();
     const passMatches = await bcrypt.compare(pass, user.password);
@@ -68,7 +81,12 @@ export class AuthService {
   }
 
   async logout(refresh_token: string): Promise<void> {
-    const user = await this.usersService.getUserByRefreshToken(refresh_token);
+    const user = await this.userRepository.findOne({
+      where: { refresh_token: refresh_token },
+    });
+    if (!user) {
+      throw new BadRequestException();
+    }
     user.refresh_token = null;
     await this.userRepository.save(user);
   }
@@ -91,9 +109,19 @@ export class AuthService {
   }
 
   async refresh(refresh_token: string): Promise<TokensAndUser> {
-    const checkUser = await this.usersService.getUserByRefreshToken(
-      refresh_token,
-    );
+    const checkUser = await this.userRepository.findOne({
+      where: { refresh_token: refresh_token },
+      select: [
+        'refresh_token',
+        'id',
+        'name',
+        'email',
+        'isAdmin',
+        'createdAt',
+        'updatedAt',
+        'isActivated',
+      ],
+    });
 
     const validatedToken = this.jwtService.verify(refresh_token);
 

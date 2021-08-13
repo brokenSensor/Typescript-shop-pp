@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpStatus,
   Param,
   Post,
@@ -31,6 +32,14 @@ export class OrderController {
     @Req() req,
   ) {
     return this.orderService.createOrder(orderDto, req.user.id);
+  }
+
+  @ApiOperation({ summary: 'Get order by id' })
+  @ApiResponse({ status: HttpStatus.CREATED, type: Order })
+  @UseGuards(JwtAuthGuard)
+  @Get('/:id')
+  getOrderById(@Param('id') orderId: number, @Req() req) {
+    return this.orderService.getOrderById(orderId, req.user.id);
   }
 
   @ApiOperation({ summary: 'Update order to payed' })

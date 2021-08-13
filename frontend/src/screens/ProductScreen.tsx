@@ -32,7 +32,7 @@ const ProductScreen = () => {
 		refetch: refetchProduct,
 	} = useGetProductByIdQuery(parseInt(id))
 
-	const [createReviev] = useCreateReviewMutation()
+	const [createReview] = useCreateReviewMutation()
 	return (
 		<>
 			<Link className='btn btn-light my-3' to='/'>
@@ -169,7 +169,7 @@ const ProductScreen = () => {
 													e.preventDefault()
 													if (rating !== '') {
 														try {
-															await createReviev({
+															await createReview({
 																comment,
 																name: user.name,
 																productId: data.id,
