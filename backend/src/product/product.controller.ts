@@ -27,7 +27,7 @@ export class ProductController {
 
   @ApiOperation({ summary: 'Create new product. Admin only' })
   @ApiResponse({ status: HttpStatus.CREATED, type: Product })
-  @UseGuards(IsAdminGuard)
+  @UseGuards(JwtAuthGuard, IsAdminGuard)
   @Post()
   async createProduct(
     @Body(new ValidationPipe()) productDto: CreateProductDto,
@@ -70,7 +70,7 @@ export class ProductController {
 
   @ApiOperation({ summary: 'Update product by id. Admin only' })
   @ApiResponse({ status: HttpStatus.OK, type: Product })
-  @UseGuards(IsAdminGuard)
+  @UseGuards(JwtAuthGuard, IsAdminGuard)
   @Put('/:productId')
   updateProduct(
     @Body() updateProductDto: UpdateProductDto,

@@ -1,5 +1,5 @@
 import { shopApi } from '.'
-import { CreateOrderDto, Order } from '../types'
+import { CreateOrderDto, Order, PaymentResult } from '../types'
 
 const orderApi = shopApi.injectEndpoints({
 	endpoints: build => ({
@@ -11,8 +11,30 @@ const orderApi = shopApi.injectEndpoints({
 				credentials: 'include',
 			}),
 		}),
+		getPayPalConfig: build.query<{ clientId: string }, void>({
+			query: () => `/order/paypalconfig`,
+		}),
+		getOrderById: build.query<Order, number>({
+			query: id => `/order/${id}`,
+		}),
+		updateOrderToPayed: build.mutation<
+			Order,
+			{ orderId: number; paymentResult: PaymentResult }
+		>({
+			query: arg => ({
+				url: `/order/pay/${arg.orderId}`,
+				method: 'PUT',
+				body: arg.paymentResult,
+				credentials: 'include',
+			}),
+		}),
 	}),
 	overrideExisting: false,
 })
 
-export const { useCreateOrderMutation } = orderApi
+export const {
+	useCreateOrderMutation,
+	useGetOrderByIdQuery,
+	useUpdateOrderToPayedMutation,
+	useGetPayPalConfigQuery,
+} = orderApi

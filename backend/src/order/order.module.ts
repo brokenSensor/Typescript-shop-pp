@@ -5,9 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/users/users.model';
 import { Order } from './order.model';
 import { AuthModule } from 'src/auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Order]), AuthModule],
+  imports: [TypeOrmModule.forFeature([User, Order]), AuthModule, ConfigModule],
   providers: [OrderService],
   controllers: [OrderController],
 })

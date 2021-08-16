@@ -69,7 +69,7 @@ const LoginScreen: React.FC = () => {
 							try {
 								const res = await login(formState).unwrap()
 								dispatch(setCredentials(res))
-								history.push('/')
+								history.push(redirect)
 							} catch (error) {
 								if (Array.isArray(error.data.message)) {
 									setError(error.data.message.join(' '))

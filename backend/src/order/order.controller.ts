@@ -34,12 +34,19 @@ export class OrderController {
     return this.orderService.createOrder(orderDto, req.user.id);
   }
 
+  @ApiOperation({ summary: 'Get PayPal Config' })
+  @ApiResponse({ status: HttpStatus.OK })
+  @UseGuards(JwtAuthGuard)
+  @Get('/paypalconfig')
+  getPayPalConfig() {
+    return this.orderService.getPayPalConfig();
+  }
+
   @ApiOperation({ summary: 'Get order by id' })
   @ApiResponse({ status: HttpStatus.CREATED, type: Order })
-  @UseGuards(JwtAuthGuard)
   @Get('/:id')
   getOrderById(@Param('id') orderId: number, @Req() req) {
-    return this.orderService.getOrderById(orderId, req.user.id);
+    return this.orderService.getOrderById(orderId);
   }
 
   @ApiOperation({ summary: 'Update order to payed' })
