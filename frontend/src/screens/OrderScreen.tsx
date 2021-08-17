@@ -29,16 +29,15 @@ const OrderScreen = () => {
 		refetch: refetchOrder,
 	} = useGetOrderByIdQuery(parseInt(orderId))
 
-	if (!user?.isAdmin && data?.user.id !== user?.id) {
-		history.push('/')
-	}
-
 	const { data: PayPalConfig } = useGetPayPalConfigQuery()
 
 	const [updateToPayed, { isLoading: loadingPay, isSuccess: orderPaySuccess }] =
 		useUpdateOrderToPayedMutation()
 
 	useEffect(() => {
+		if (!user?.isAdmin && !isLoading && data?.user.id !== user?.id) {
+			history.push('/')
+		}
 		if (!user) {
 			history.push('/login')
 		}
@@ -67,6 +66,7 @@ const OrderScreen = () => {
 		PayPalConfig?.clientId,
 		data,
 		history,
+		isLoading,
 		orderPaySuccess,
 		refetchOrder,
 		user,

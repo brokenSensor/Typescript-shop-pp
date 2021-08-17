@@ -11,6 +11,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Request } from 'express';
 import { IsAdminGuard } from 'src/auth/isAdmin.guard';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -32,6 +33,16 @@ export class OrderController {
     @Req() req,
   ) {
     return this.orderService.createOrder(orderDto, req.user.id);
+  }
+
+  @ApiOperation({
+    summary: 'Get all orders if admin, or get all users order if dont',
+  })
+  @ApiResponse({ status: HttpStatus.CREATED, type: Order })
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  getAllOrders(@Req() req: Request) {
+    return this.orderService.getAllOrders(req);
   }
 
   @ApiOperation({ summary: 'Get PayPal Config' })

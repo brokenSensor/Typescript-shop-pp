@@ -47,6 +47,9 @@ const Header = () => {
 									<NavDropdown.Item as={Link} to='/profile'>
 										Profile
 									</NavDropdown.Item>
+									<NavDropdown.Item as={Link} to='/orderlist'>
+										Orders
+									</NavDropdown.Item>
 									<NavDropdown.Divider />
 									<NavDropdown.Item
 										onClick={async () => {

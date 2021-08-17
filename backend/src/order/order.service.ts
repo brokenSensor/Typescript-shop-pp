@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Request } from 'express-serve-static-core';
 import { UserDTO } from 'src/auth/auth.service';
 import { User } from 'src/users/users.model';
 import { Repository } from 'typeorm';
@@ -47,6 +48,16 @@ export class OrderService {
       throw new BadRequestException();
     }
     return order;
+  }
+
+  async getAllOrders(req) {
+    console.log(req.user);
+
+    if (req.user.isAdmin) {
+      return this.orderRepository.find();
+    } else {
+      return this.orderRepository.find({ where: { user: req.user.id } });
+    }
   }
 
   async updateOrderToPayed(
