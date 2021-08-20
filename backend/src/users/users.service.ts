@@ -12,6 +12,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './users.model';
 import * as bcrypt from 'bcrypt';
 import { v4 } from 'uuid';
+import { UserDTO } from 'src/auth/auth.service';
 
 @Injectable()
 export class UsersService {
@@ -36,20 +37,22 @@ export class UsersService {
     });
   }
 
-  async updateUser(dto: UpdateUserDto, userId: number): Promise<User> {
+  async updateUser(dto: UpdateUserDto, userId: number) {
     const userByEmail = await this.userRepository.findOne({
       where: {
         email: dto.email,
       },
     });
-    if (userByEmail) {
+    const user = await this.userRepository.findOne(userId, {
+      select: ['password', 'name', 'email', 'isActivated', 'activationLink'],
+    });
+    if (userByEmail && userByEmail.email && userByEmail.email !== user.email) {
       throw new BadRequestException({
         statusCode: HttpStatus.BAD_REQUEST,
         message: ['Email must be uniqe.'],
         error: 'Bad Request',
       });
     } else {
-      const user = await this.userRepository.findOne(userId);
       if (dto.password) user.password = await bcrypt.hash(dto.password, 10);
       if (dto.name) user.name = dto.name;
       if (dto.email) {
@@ -58,7 +61,7 @@ export class UsersService {
         user.activationLink = v4();
       }
       if (dto.refresh_token) user.refresh_token = dto.refresh_token;
-      return await this.userRepository.save(user);
+      await this.userRepository.update(userId, user);
     }
   }
 
@@ -83,5 +86,10 @@ export class UsersService {
         refresh_token,
       },
     });
+  }
+
+  async getCurrentUser(userId): Promise<UserDTO> {
+    const user = await this.userRepository.findOne(userId);
+    return new UserDTO(user);
   }
 }

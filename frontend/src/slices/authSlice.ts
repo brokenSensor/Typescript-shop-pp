@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { AuthState, TokensAndUser } from '../types'
+import { AuthState, TokensAndUser, UserDto } from '../types'
 
 const authSlice = createSlice({
 	name: 'auth',
@@ -15,6 +15,10 @@ const authSlice = createSlice({
 			state.refresh_token = payload.refresh_token
 			state.user = payload.user
 			localStorage.setItem('user', JSON.stringify(payload.user))
+		},
+		setUser: (state, { payload }: PayloadAction<UserDto>) => {
+			state.user = payload
+			localStorage.setItem('user', JSON.stringify(payload))
 		},
 		logout: state => {
 			state.access_token = null
@@ -34,6 +38,6 @@ const authSlice = createSlice({
 	},
 })
 
-export const { setCredentials, logout, refresh } = authSlice.actions
+export const { setCredentials, logout, refresh, setUser } = authSlice.actions
 
 export default authSlice.reducer

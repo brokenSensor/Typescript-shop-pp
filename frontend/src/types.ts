@@ -11,6 +11,7 @@ export type UserDto = {
 	isAdmin: boolean
 	createdAt: Date
 	updatedAt: Date
+	isActivated: boolean
 }
 
 export type LoginRequest = {
@@ -174,4 +175,10 @@ export type PaymentResult = {
 	status: string
 	update_time: string
 	email_address: string
+}
+
+export type UpdateUserDto = {
+	name?: string
+	email?: string
+	password?: string
 }

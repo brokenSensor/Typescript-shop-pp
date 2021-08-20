@@ -1,5 +1,11 @@
 import { shopApi } from '.'
-import { LoginRequest, RegisterRequest, TokensAndUser } from '../types'
+import {
+	LoginRequest,
+	RegisterRequest,
+	TokensAndUser,
+	UpdateUserDto,
+	UserDto,
+} from '../types'
 
 const authApi = shopApi.injectEndpoints({
 	endpoints: build => ({
@@ -26,6 +32,17 @@ const authApi = shopApi.injectEndpoints({
 				credentials: 'include',
 			}),
 		}),
+		updateUser: build.mutation<void, UpdateUserDto>({
+			query: updateUserDto => ({
+				url: '/users',
+				method: 'PUT',
+				body: updateUserDto,
+				credentials: 'include',
+			}),
+		}),
+		getUser: build.query<UserDto, void>({
+			query: () => `/users/me`,
+		}),
 	}),
 	overrideExisting: false,
 })
@@ -34,4 +51,6 @@ export const {
 	useLoginUserMutation,
 	useRegisterUserMutation,
 	useLogoutUserMutation,
+	useUpdateUserMutation,
+	useGetUserQuery,
 } = authApi
