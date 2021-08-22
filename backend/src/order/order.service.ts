@@ -7,6 +7,8 @@ import { User } from 'src/users/users.model';
 import { Repository } from 'typeorm';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { Order, PaymentResult } from './order.model';
+import * as paypal from '@paypal/checkout-server-sdk';
+// import paypal from 'paypal__checkout-server-sdk';
 
 @Injectable()
 export class OrderService {
@@ -85,5 +87,65 @@ export class OrderService {
   getPayPalConfig(): { clientId: string } {
     const clientId = this.configService.get('PAYPAL_CLIENT_ID');
     return { clientId };
+  }
+
+  async createPayPalOrder(orderId: number): Promise<{ orderId: string }> {
+    const Environment =
+      process.env.NODE_ENV === 'production'
+        ? paypal.core.LiveEnvironment
+        : paypal.core.SandboxEnvironment;
+
+    const paypalClient = new paypal.core.PayPalHttpClient(
+      new Environment(
+        this.configService.get('PAYPAL_CLIENT_ID'),
+        this.configService.get('PAYPAL_CLIENT_SECRET'),
+      ),
+    );
+    const order = await this.orderRepository.findOne({
+      where: { id: orderId },
+    });
+
+    const request = new paypal.orders.OrdersCreateRequest();
+    request.prefer('return=representation');
+    request.requestBody({
+      intent: 'CAPTURE',
+      purchase_units: [
+        {
+          amount: {
+            currency_code: 'USD',
+            value: order.totalPrice,
+            breakdown: {
+              shipping: {
+                currency_code: 'USD',
+                value: order.shippingPrice,
+              },
+              tax_total: {
+                currency_code: 'USD',
+                value: order.taxPrice,
+              },
+              item_total: {
+                currency_code: 'USD',
+                value: order.itemsPrice,
+              },
+            },
+          },
+          items: order.orderItems.map((item) => {
+            return {
+              name: item.name,
+              unit_amount: {
+                currency_code: 'USD',
+                value: item.price,
+              },
+              quantity: item.qty,
+            };
+          }),
+        },
+      ],
+    });
+
+    const orderPP = await paypalClient.execute(request);
+    console.log(orderPP);
+    const orderPPId: string = orderPP.result.id;
+    return { orderId: orderPPId };
   }
 }

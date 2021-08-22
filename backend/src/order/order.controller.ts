@@ -35,6 +35,16 @@ export class OrderController {
     return this.orderService.createOrder(orderDto, req.user.id);
   }
 
+  @ApiOperation({ summary: 'Create paypal order' })
+  @ApiResponse({ status: HttpStatus.CREATED, type: 'string' })
+  @UseGuards(JwtAuthGuard)
+  @Post('/PayPalOrder')
+  createPayPalOrder(
+    @Body(new ValidationPipe()) { orderId }: { orderId: number },
+  ) {
+    return this.orderService.createPayPalOrder(orderId);
+  }
+
   @ApiOperation({
     summary: 'Get all orders if admin, or get all users order if dont',
   })

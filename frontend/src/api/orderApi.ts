@@ -31,6 +31,14 @@ const orderApi = shopApi.injectEndpoints({
 				credentials: 'include',
 			}),
 		}),
+		createPayPalOrder: build.mutation<{ orderId: string }, number>({
+			query: orderId => ({
+				url: '/order/PayPalOrder',
+				method: 'POST',
+				body: { orderId },
+				credentials: 'include',
+			}),
+		}),
 	}),
 	overrideExisting: false,
 })
@@ -41,4 +49,5 @@ export const {
 	useUpdateOrderToPayedMutation,
 	useGetPayPalConfigQuery,
 	useGetAllOrdersQuery,
+	useCreatePayPalOrderMutation,
 } = orderApi

@@ -1,22 +1,23 @@
-import React, { useEffect, useState } from 'react'
+import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js'
+import React, { useEffect } from 'react'
 import { Button, Card, Col, Image, ListGroup, Row } from 'react-bootstrap'
 import { Link, useHistory, useParams } from 'react-router-dom'
 import {
+	useCreatePayPalOrderMutation,
 	useGetOrderByIdQuery,
-	useGetPayPalConfigQuery,
 	useUpdateOrderToPayedMutation,
 } from '../api/orderApi'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 import { useAppSelector } from '../hooks'
-import { PayPalButton } from 'react-paypal-button-v2'
 
 const OrderScreen = () => {
 	const { id: orderId } = useParams<{
 		id: string
 	}>()
 
-	const [sdkReady, setSdkReady] = useState(false)
+	const [{ isPending }] = usePayPalScriptReducer()
+	const [createPayPalOrder] = useCreatePayPalOrderMutation()
 
 	const history = useHistory()
 
@@ -29,8 +30,6 @@ const OrderScreen = () => {
 		refetch: refetchOrder,
 	} = useGetOrderByIdQuery(parseInt(orderId))
 
-	const { data: PayPalConfig } = useGetPayPalConfigQuery()
-
 	const [updateToPayed, { isLoading: loadingPay, isSuccess: orderPaySuccess }] =
 		useUpdateOrderToPayedMutation()
 
@@ -41,36 +40,10 @@ const OrderScreen = () => {
 		if (!user) {
 			history.push('/login')
 		}
-
-		const addPayPalScript = () => {
-			const script = document.createElement('script')
-			script.text = 'text/javascript'
-			script.src = `https://www.paypal.com/sdk/js?client-id=${PayPalConfig?.clientId}`
-			script.async = true
-			script.onload = () => {
-				setSdkReady(true)
-			}
-			document.body.appendChild(script)
-		}
-
-		if (!data || orderPaySuccess) {
+		if (orderPaySuccess) {
 			refetchOrder()
-		} else if (!data.isPaid) {
-			if (!window.paypal) {
-				addPayPalScript()
-			} else {
-				setSdkReady(true)
-			}
 		}
-	}, [
-		PayPalConfig?.clientId,
-		data,
-		history,
-		isLoading,
-		orderPaySuccess,
-		refetchOrder,
-		user,
-	])
+	}, [data, history, isLoading, orderPaySuccess, refetchOrder, user])
 
 	return isLoading ? (
 		<Loader />
@@ -185,32 +158,31 @@ const OrderScreen = () => {
 								</Row>
 							</ListGroup.Item>
 							{!data?.isPaid && (
-								<ListGroup.Item>
-									{loadingPay && <Loader />}
-									{!sdkReady ? (
-										<Loader />
-									) : (
-										data && (
-											<PayPalButton
-												amount={data?.totalPrice}
-												onSuccess={async (payPalRes: any) => {
-													try {
-														console.log(payPalRes)
+								<ListGroup.Item id='paypal-button-container'>
+									{(loadingPay || isPending) && <Loader />}
+									{data && (
+										<PayPalButtons
+											createOrder={async () => {
+												const PayPalOrderId = createPayPalOrder(
+													data.id
+												).unwrap()
 
-														await updateToPayed({
-															orderId: data?.id,
-															paymentResult: {
-																status: payPalRes.status,
-																update_time: payPalRes.update_time,
-																email_address: payPalRes.payer.email_address,
-															},
-														})
-													} catch (error) {
-														console.log(error)
-													}
-												}}
-											/>
-										)
+												return (await PayPalOrderId).orderId
+											}}
+											onApprove={(ppData, actions) => {
+												return actions.order.capture().then(details => {
+													updateToPayed({
+														orderId: data.id,
+														paymentResult: {
+															email_address: details.payer.email_address,
+															status: details.status,
+															update_time: details.update_time,
+														},
+													})
+													refetchOrder()
+												})
+											}}
+										/>
 									)}
 								</ListGroup.Item>
 							)}

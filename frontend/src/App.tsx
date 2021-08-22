@@ -14,28 +14,37 @@ import PlaceOrderScreen from './screens/PlaceOrderScreen'
 import OrderScreen from './screens/OrderScreen'
 import OrderListScreen from './screens/OrderListScreen'
 import ProfileScreen from './screens/ProfileScreen'
+import { PayPalScriptProvider } from '@paypal/react-paypal-js'
+import { useGetPayPalConfigQuery } from './api/orderApi'
 
 function App() {
+	const { data: PayPalConfig } = useGetPayPalConfigQuery()
 	return (
-		<BrowserRouter>
-			<Header />
-			<main className='py-3'>
-				<Container>
-					<Route path='/profile' component={ProfileScreen} />
-					<Route path='/order/:id' component={OrderScreen} />
-					<Route path='/orderlist' component={OrderListScreen} />
-					<Route path='/placeorder' component={PlaceOrderScreen} />
-					<Route path='/payment' component={PaymentScreen} />
-					<Route path='/shipping' component={ShippingScreen} />
-					<Route path='/cart' component={CartScreen} />
-					<Route path='/product/:id' component={ProductScreen} />
-					<Route path='/login' component={LoginScreen} />
-					<Route path='/register' component={RegisterScreen} />
-					<Route path='/' component={MainScreen} exact />
-				</Container>
-			</main>
-			<Footer />
-		</BrowserRouter>
+		<>
+			{PayPalConfig && (
+				<PayPalScriptProvider options={{ 'client-id': PayPalConfig.clientId }}>
+					<BrowserRouter>
+						<Header />
+						<main className='py-3'>
+							<Container>
+								<Route path='/profile' component={ProfileScreen} />
+								<Route path='/order/:id' component={OrderScreen} />
+								<Route path='/orderlist' component={OrderListScreen} />
+								<Route path='/placeorder' component={PlaceOrderScreen} />
+								<Route path='/payment' component={PaymentScreen} />
+								<Route path='/shipping' component={ShippingScreen} />
+								<Route path='/cart' component={CartScreen} />
+								<Route path='/product/:id' component={ProductScreen} />
+								<Route path='/login' component={LoginScreen} />
+								<Route path='/register' component={RegisterScreen} />
+								<Route path='/' component={MainScreen} exact />
+							</Container>
+						</main>
+						<Footer />
+					</BrowserRouter>
+				</PayPalScriptProvider>
+			)}
+		</>
 	)
 }
 
