@@ -17,8 +17,8 @@ const orderApi = shopApi.injectEndpoints({
 		getOrderById: build.query<Order, number>({
 			query: id => `/order/${id}`,
 		}),
-		getAllOrders: build.query<Order[], void>({
-			query: () => `/order/`,
+		getAllUserOrders: build.query<Order[], void>({
+			query: () => `/order/me`,
 		}),
 		updateOrderToPayed: build.mutation<
 			Order,
@@ -48,6 +48,6 @@ export const {
 	useGetOrderByIdQuery,
 	useUpdateOrderToPayedMutation,
 	useGetPayPalConfigQuery,
-	useGetAllOrdersQuery,
+	useGetAllUserOrdersQuery,
 	useCreatePayPalOrderMutation,
 } = orderApi

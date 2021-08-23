@@ -50,6 +50,14 @@ const Header = () => {
 									<NavDropdown.Item as={Link} to='/orderlist'>
 										Orders
 									</NavDropdown.Item>
+									{user.isAdmin && (
+										<>
+											<NavDropdown.Divider />
+											<NavDropdown.Item as={Link} to='/admin'>
+												Admin Panel
+											</NavDropdown.Item>
+										</>
+									)}
 									<NavDropdown.Divider />
 									<NavDropdown.Item
 										onClick={async () => {

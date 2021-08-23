@@ -182,3 +182,13 @@ export type UpdateUserDto = {
 	email?: string
 	password?: string
 }
+
+export type User = {
+	id: number
+	name: string
+	email: string
+	isActivated: boolean
+	isAdmin: boolean
+	createdAt: Date
+	updatedAt: Date
+}

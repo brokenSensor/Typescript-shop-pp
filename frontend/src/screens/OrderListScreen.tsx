@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { Button, Table } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 import { useHistory } from 'react-router-dom'
-import { useGetAllOrdersQuery } from '../api/orderApi'
+import { useGetAllUserOrdersQuery } from '../api/orderApi'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 import { useAppSelector } from '../hooks'
@@ -10,7 +10,7 @@ import { useAppSelector } from '../hooks'
 const OrderListScreen = () => {
 	const history = useHistory()
 
-	const { data: orders, error, isLoading } = useGetAllOrdersQuery()
+	const { data: orders, error, isLoading } = useGetAllUserOrdersQuery()
 
 	const userInfo = useAppSelector(state => state.authReducer.user)
 

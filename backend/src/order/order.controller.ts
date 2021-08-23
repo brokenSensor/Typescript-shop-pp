@@ -46,13 +46,23 @@ export class OrderController {
   }
 
   @ApiOperation({
-    summary: 'Get all orders if admin, or get all users order if dont',
+    summary: 'Get all orders',
   })
-  @ApiResponse({ status: HttpStatus.CREATED, type: Order })
-  @UseGuards(JwtAuthGuard)
+  @ApiResponse({ status: HttpStatus.CREATED, type: [Order] })
+  @UseGuards(JwtAuthGuard, IsAdminGuard)
   @Get()
-  getAllOrders(@Req() req: Request) {
-    return this.orderService.getAllOrders(req);
+  getAllOrders() {
+    return this.orderService.getAllOrders();
+  }
+
+  @ApiOperation({
+    summary: 'Get all users orders',
+  })
+  @ApiResponse({ status: HttpStatus.CREATED, type: [Order] })
+  @UseGuards(JwtAuthGuard)
+  @Get('/me')
+  getAllMyOrders(@Req() req: Request) {
+    return this.orderService.getAllMyOrders(req);
   }
 
   @ApiOperation({ summary: 'Get PayPal Config' })

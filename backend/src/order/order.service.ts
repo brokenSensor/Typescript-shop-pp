@@ -52,14 +52,12 @@ export class OrderService {
     return order;
   }
 
-  async getAllOrders(req) {
-    console.log(req.user);
+  async getAllOrders(): Promise<Order[]> {
+    return this.orderRepository.find({ relations: ['user'] });
+  }
 
-    if (req.user.isAdmin) {
-      return this.orderRepository.find();
-    } else {
-      return this.orderRepository.find({ where: { user: req.user.id } });
-    }
+  async getAllMyOrders(req): Promise<Order[]> {
+    return this.orderRepository.find({ where: { user: req.user.id } });
   }
 
   async updateOrderToPayed(
