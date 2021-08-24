@@ -1,7 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsString, Length } from 'class-validator';
+import { IsBoolean, IsEmail, IsString, Length } from 'class-validator';
 
 export class UpdateUserDto {
+  @ApiProperty({ example: '1', description: 'Unique identifier' })
+  id?: number;
+
   @ApiProperty({ example: 'Bob', description: 'User name' })
   @IsString({ message: 'Name must be a string.' })
   name?: string;
@@ -23,4 +26,11 @@ export class UpdateUserDto {
   })
   @IsString({ message: 'refresh_token must be a string.' })
   refresh_token?: string;
+
+  @ApiProperty({
+    example: 'false',
+    description: 'Is this user an administrator',
+  })
+  @IsBoolean()
+  isAdmin?: boolean;
 }

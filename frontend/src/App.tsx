@@ -17,6 +17,7 @@ import ProfileScreen from './screens/ProfileScreen'
 import { PayPalScriptProvider } from '@paypal/react-paypal-js'
 import { useGetPayPalConfigQuery } from './api/orderApi'
 import AdminScreen from './screens/AdminScreen'
+import EditUserScreen from './screens/EditUserScreen'
 
 function App() {
 	const { data: PayPalConfig } = useGetPayPalConfigQuery()
@@ -28,6 +29,7 @@ function App() {
 						<Header />
 						<main className='py-3'>
 							<Container>
+								<Route path='/user/edit/:id' component={EditUserScreen} />
 								<Route path='/admin' component={AdminScreen} />
 								<Route path='/profile' component={ProfileScreen} />
 								<Route path='/order/:id' component={OrderScreen} />

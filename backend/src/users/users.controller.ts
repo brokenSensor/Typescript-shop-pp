@@ -72,9 +72,21 @@ export class UsersController {
   @ApiOperation({ summary: 'Update user' })
   @ApiResponse({ status: HttpStatus.OK, type: User })
   @UseGuards(JwtAuthGuard)
-  @Put()
+  @Put('/me')
   updateUser(@Body() updateUserDto: UpdateUserDto, @Req() req) {
-    this.usersService.updateUser(updateUserDto, req.user.id);
+    this.usersService.updateUser(updateUserDto, req.user.id, req.user.isAdmin);
+  }
+
+  @ApiOperation({ summary: 'Update user' })
+  @ApiResponse({ status: HttpStatus.OK, type: User })
+  @UseGuards(JwtAuthGuard, IsAdminGuard)
+  @Put('/admin')
+  updateUserById(@Body() updateUserDto: UpdateUserDto, @Req() req) {
+    this.usersService.updateUser(
+      updateUserDto,
+      updateUserDto.id,
+      req.user.isAdmin,
+    );
   }
 
   @ApiOperation({ summary: 'Delete currently logged in user' })

@@ -37,7 +37,7 @@ export class UsersService {
     });
   }
 
-  async updateUser(dto: UpdateUserDto, userId: number) {
+  async updateUser(dto: UpdateUserDto, userId: number, isAdmin: boolean) {
     const userByEmail = await this.userRepository.findOne({
       where: {
         email: dto.email,
@@ -61,6 +61,9 @@ export class UsersService {
         user.activationLink = v4();
       }
       if (dto.refresh_token) user.refresh_token = dto.refresh_token;
+      if (isAdmin) {
+        user.isAdmin = dto.isAdmin;
+      }
       await this.userRepository.update(userId, user);
     }
   }

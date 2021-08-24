@@ -178,9 +178,11 @@ export type PaymentResult = {
 }
 
 export type UpdateUserDto = {
+	id?: number
 	name?: string
 	email?: string
 	password?: string
+	isAdmin?: boolean
 }
 
 export type User = {

@@ -34,7 +34,7 @@ const authApi = shopApi.injectEndpoints({
 		}),
 		updateUser: build.mutation<void, UpdateUserDto>({
 			query: updateUserDto => ({
-				url: '/users',
+				url: '/users/me',
 				method: 'PUT',
 				body: updateUserDto,
 				credentials: 'include',
