@@ -194,3 +194,24 @@ export type User = {
 	createdAt: Date
 	updatedAt: Date
 }
+
+export type CreateProductDto = {
+	name: string
+	image: string
+	brand: string
+	category: string
+	description: string
+	price: number
+	countInStock: number
+}
+
+export type UpdateProductDto = {
+	id: number
+	name?: string
+	image?: string
+	brand?: string
+	category?: string
+	description?: string
+	price?: number
+	countInStock?: number
+}

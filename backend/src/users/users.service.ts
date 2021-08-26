@@ -62,14 +62,16 @@ export class UsersService {
       }
       if (dto.refresh_token) user.refresh_token = dto.refresh_token;
       if (isAdmin) {
-        user.isAdmin = dto.isAdmin;
+        if (dto.isAdmin !== null) {
+          user.isAdmin = dto.isAdmin;
+        }
       }
       await this.userRepository.update(userId, user);
     }
   }
 
   async getAllUsers(): Promise<User[]> {
-    return await this.userRepository.find();
+    return await this.userRepository.find({ order: { id: 1 } });
   }
 
   async getUserById(id: number): Promise<User> {
@@ -79,7 +81,7 @@ export class UsersService {
   async getUserByEmail(email: string): Promise<User> {
     return await this.userRepository.findOne({ where: { email } });
   }
-  async deleteMe(id): Promise<{ message: string }> {
+  async deleteMe(id: number): Promise<{ message: string }> {
     await this.userRepository.delete(id);
     return { message: 'User deleted' };
   }

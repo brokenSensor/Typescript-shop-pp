@@ -32,10 +32,12 @@ export class ProductService {
     });
   }
 
-  async updateProduct(dto: UpdateProductDto, productId): Promise<Product> {
-    const product = await this.productRepository.findOne(productId);
+  async updateProduct(dto: UpdateProductDto): Promise<Product> {
+    const product = await this.productRepository.findOne({
+      where: { id: dto.id },
+    });
 
-    if (!product || !productId) {
+    if (!product) {
       throw new HttpException(
         {
           statusCode: HttpStatus.NOT_FOUND,
@@ -45,8 +47,15 @@ export class ProductService {
         HttpStatus.NOT_FOUND,
       );
     } else {
-      this.productRepository.update(productId, dto);
-      return this.getProductById(productId);
+      if (dto.name) product.name = dto.name;
+      if (dto.brand) product.brand = dto.brand;
+      if (dto.category) product.category = dto.category;
+      if (dto.countInStock) product.countInStock = dto.countInStock;
+      if (dto.description) product.description = dto.description;
+      if (dto.image) product.image = dto.image;
+      if (dto.price) product.price = dto.price;
+      this.productRepository.save(product);
+      return this.getProductById(dto.id);
     }
   }
 
@@ -107,5 +116,11 @@ export class ProductService {
       order: { rating: 'DESC' },
       take: 5,
     });
+  }
+
+  async upload(file: Express.Multer.File): Promise<{ filePath: string }> {
+    const fullPath = `${file.destination}/${file.filename}`;
+    const filePath = fullPath.split('./client')[1];
+    return { filePath };
   }
 }

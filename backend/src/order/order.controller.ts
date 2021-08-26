@@ -67,7 +67,6 @@ export class OrderController {
 
   @ApiOperation({ summary: 'Get PayPal Config' })
   @ApiResponse({ status: HttpStatus.OK })
-  @UseGuards(JwtAuthGuard)
   @Get('/paypalconfig')
   getPayPalConfig() {
     return this.orderService.getPayPalConfig();

@@ -6,7 +6,7 @@ const productApi = shopApi.injectEndpoints({
 		getAllProducts: build.query<Product[], void>({
 			query: () => '/product',
 		}),
-		getProductById: build.query<Product, number>({
+		getProductById: build.query<Product, string>({
 			query: id => `/product/${id}`,
 		}),
 		getTopProducts: build.query<Product[], void>({

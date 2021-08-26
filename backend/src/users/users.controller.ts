@@ -33,7 +33,7 @@ export class UsersController {
 
   @ApiOperation({ summary: 'Get all users. Admin only' })
   @ApiResponse({ status: HttpStatus.OK, type: [User] })
-  @UseGuards(IsAdminGuard)
+  @UseGuards(JwtAuthGuard, IsAdminGuard)
   @Get()
   getAllUsers() {
     return this.usersService.getAllUsers();

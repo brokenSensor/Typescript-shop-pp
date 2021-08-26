@@ -9,9 +9,12 @@ import {
   Post,
   Put,
   Req,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
   ValidationPipe,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { IsAdminGuard } from 'src/auth/isAdmin.guard';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -34,6 +37,19 @@ export class ProductController {
     @Req() req,
   ) {
     return this.productService.createProduct(productDto, req.user.id);
+  }
+
+  @ApiOperation({ summary: 'Upload product image' })
+  @ApiResponse({ status: HttpStatus.CREATED })
+  // @UseGuards(JwtAuthGuard, IsAdminGuard)
+  @Post('/upload')
+  @UseInterceptors(
+    FileInterceptor('image', {
+      dest: './client/images',
+    }),
+  )
+  upload(@UploadedFile() file: Express.Multer.File) {
+    return this.productService.upload(file);
   }
 
   @ApiOperation({ summary: 'Get all products' })
@@ -71,16 +87,9 @@ export class ProductController {
   @ApiOperation({ summary: 'Update product by id. Admin only' })
   @ApiResponse({ status: HttpStatus.OK, type: Product })
   @UseGuards(JwtAuthGuard, IsAdminGuard)
-  @Put('/:productId')
-  updateProduct(
-    @Body() updateProductDto: UpdateProductDto,
-    @Param(
-      'productId',
-      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
-    )
-    productId: number,
-  ) {
-    return this.productService.updateProduct(updateProductDto, productId);
+  @Put()
+  updateProduct(@Body() updateProductDto: UpdateProductDto) {
+    return this.productService.updateProduct(updateProductDto);
   }
 
   @ApiOperation({ summary: 'Delete product by id. Admin only' })

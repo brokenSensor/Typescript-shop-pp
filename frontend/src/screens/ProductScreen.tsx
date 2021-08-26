@@ -30,7 +30,7 @@ const ProductScreen = () => {
 		error,
 		isLoading,
 		refetch: refetchProduct,
-	} = useGetProductByIdQuery(parseInt(id))
+	} = useGetProductByIdQuery(id)
 
 	const [createReview] = useCreateReviewMutation()
 	return (

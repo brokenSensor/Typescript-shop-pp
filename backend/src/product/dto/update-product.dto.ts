@@ -2,6 +2,10 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsInt } from 'class-validator';
 
 export class UpdateProductDto {
+  @ApiProperty({ example: '1', description: 'Id of product' })
+  @IsString()
+  id: number;
+
   @ApiProperty({ example: 'Phone', description: 'Name of the product' })
   @IsString()
   name?: string;
