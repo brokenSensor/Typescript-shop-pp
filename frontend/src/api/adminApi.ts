@@ -42,6 +42,13 @@ const adminApi = shopApi.injectEndpoints({
 				credentials: 'include',
 			}),
 		}),
+		updateOrderToDelivered: build.mutation<void, number>({
+			query: id => ({
+				url: `/order/delivered/${id}`,
+				method: 'PUT',
+				credentials: 'include',
+			}),
+		}),
 	}),
 	overrideExisting: false,
 })
@@ -53,4 +60,5 @@ export const {
 	useUpdateUserByIdMutation,
 	useUpdateProductByIdMutation,
 	useCreateProductMutation,
+	useUpdateOrderToDeliveredMutation,
 } = adminApi

@@ -2,6 +2,7 @@ import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js'
 import React, { useEffect } from 'react'
 import { Button, Card, Col, Image, ListGroup, Row } from 'react-bootstrap'
 import { Link, useHistory, useParams } from 'react-router-dom'
+import { useUpdateOrderToDeliveredMutation } from '../api/adminApi'
 import {
 	useCreatePayPalOrderMutation,
 	useGetOrderByIdQuery,
@@ -18,6 +19,7 @@ const OrderScreen = () => {
 
 	const [{ isPending }] = usePayPalScriptReducer()
 	const [createPayPalOrder] = useCreatePayPalOrderMutation()
+	const [updateToDelivered] = useUpdateOrderToDeliveredMutation()
 
 	const history = useHistory()
 
@@ -193,7 +195,8 @@ const OrderScreen = () => {
 										className='btn-block'
 										size='lg'
 										onClick={() => {
-											console.log('asd')
+											updateToDelivered(data.id)
+											refetchOrder()
 										}}
 									>
 										Mark As Delivered

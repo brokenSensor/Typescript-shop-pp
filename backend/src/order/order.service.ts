@@ -74,7 +74,9 @@ export class OrderService {
   }
 
   async updateOrderToDelivered(orderId: number): Promise<Order> {
-    const order = await this.orderRepository.findOne(orderId);
+    const order = await this.orderRepository.findOne({
+      where: { id: orderId },
+    });
 
     order.isDelivered = true;
     order.deliveredAt = new Date();
