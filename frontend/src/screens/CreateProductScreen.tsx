@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Col, Form, Row } from 'react-bootstrap'
-import { useHistory, useParams } from 'react-router-dom'
-import { useUpdateProductByIdMutation } from '../api/adminApi'
-import { useGetProductByIdQuery } from '../api/productApi'
+import { useHistory } from 'react-router-dom'
+import { useCreateProductMutation } from '../api/adminApi'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 import { useAppSelector } from '../hooks'
 
-const EditProductScreen = () => {
-	const { id: productId }: { id: string } = useParams()
-
+const CreateProductScreen = () => {
 	const [name, setName] = useState('')
 	const [brand, setBrand] = useState('')
 	const [image, setImage] = useState('')
@@ -25,24 +22,13 @@ const EditProductScreen = () => {
 
 	const userDetails = useAppSelector(state => state.authReducer.user)
 
-	const [updateProduct] = useUpdateProductByIdMutation()
-	const { data, refetch: refetchProduct } = useGetProductByIdQuery(productId)
+	const [createProduct] = useCreateProductMutation()
 
 	useEffect(() => {
 		if (!userDetails || !userDetails.isAdmin) {
 			history.push('/')
-		} else {
-			if (data) {
-				setName(data.name)
-				setImage(data.image)
-				setBrand(data.brand)
-				setCategory(data.category)
-				setDescription(data.description)
-				setPrice(data.price)
-				setCountInStock(data.countInStock)
-			}
 		}
-	}, [data, history, userDetails])
+	}, [history, userDetails])
 
 	const fileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		let file
@@ -69,19 +55,16 @@ const EditProductScreen = () => {
 	const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
 		try {
-			if (data)
-				await updateProduct({
-					id: data.id,
-					name,
-					brand,
-					image,
-					category,
-					description,
-					price,
-					countInStock,
-				})
-			refetchProduct()
-			setMessage('Product Edited')
+			createProduct({
+				name,
+				brand,
+				image,
+				category,
+				description,
+				price,
+				countInStock,
+			})
+			setMessage('Product Created')
 		} catch (error) {
 			setMessage('Something went wrong. Please try again')
 		}
@@ -89,7 +72,7 @@ const EditProductScreen = () => {
 	return (
 		<Row className='justify-content-md-center'>
 			<Col md={5}>
-				<h2>Edit Product {data?.id}</h2>
+				<h2>Create product</h2>
 				{message && <Message variant='danger'>{message}</Message>}
 				<Form onSubmit={submitHandler} name='productForm'>
 					<Form.Group controlId='name'>
@@ -168,7 +151,7 @@ const EditProductScreen = () => {
 					</Form.Group>
 
 					<Button type='submit' variant='primary'>
-						Edit
+						Create
 					</Button>
 				</Form>
 			</Col>
@@ -176,4 +159,4 @@ const EditProductScreen = () => {
 	)
 }
 
-export default EditProductScreen
+export default CreateProductScreen

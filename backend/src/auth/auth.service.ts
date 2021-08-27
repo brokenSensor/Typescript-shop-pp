@@ -72,7 +72,7 @@ export class AuthService {
 
   async login(userDto: UserDTO): Promise<TokensAndUser> {
     const { access_token, refresh_token } = this.generateTokens(userDto);
-    this.usersService.updateUser(
+    await this.usersService.updateUser(
       { refresh_token },
       userDto.id,
       userDto.isAdmin,

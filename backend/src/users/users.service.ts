@@ -44,7 +44,14 @@ export class UsersService {
       },
     });
     const user = await this.userRepository.findOne(userId, {
-      select: ['password', 'name', 'email', 'isActivated', 'activationLink'],
+      select: [
+        'password',
+        'name',
+        'email',
+        'isActivated',
+        'activationLink',
+        'isAdmin',
+      ],
     });
     if (userByEmail && userByEmail.email && userByEmail.email !== user.email) {
       throw new BadRequestException({
@@ -62,10 +69,11 @@ export class UsersService {
       }
       if (dto.refresh_token) user.refresh_token = dto.refresh_token;
       if (isAdmin) {
-        if (dto.isAdmin !== null) {
+        if (dto.isAdmin !== undefined) {
           user.isAdmin = dto.isAdmin;
         }
       }
+
       await this.userRepository.update(userId, user);
     }
   }

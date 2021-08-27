@@ -1,5 +1,11 @@
 import { shopApi } from '.'
-import { Order, UpdateProductDto, UpdateUserDto, User } from '../types'
+import {
+	CreateProductDto,
+	Order,
+	UpdateProductDto,
+	UpdateUserDto,
+	User,
+} from '../types'
 
 const adminApi = shopApi.injectEndpoints({
 	endpoints: build => ({
@@ -28,13 +34,12 @@ const adminApi = shopApi.injectEndpoints({
 				credentials: 'include',
 			}),
 		}),
-		uploadFile: build.mutation<{ filePath: string }, FormData>({
-			query: formData => ({
-				url: `/product/upload`,
+		createProduct: build.mutation<void, CreateProductDto>({
+			query: createProductDto => ({
+				url: `/product`,
 				method: 'POST',
-				body: formData,
+				body: createProductDto,
 				credentials: 'include',
-				headers: [['Content-Type', 'multipart/form-data']],
 			}),
 		}),
 	}),
@@ -47,5 +52,5 @@ export const {
 	useGetUserByIdQuery,
 	useUpdateUserByIdMutation,
 	useUpdateProductByIdMutation,
-	useUploadFileMutation,
+	useCreateProductMutation,
 } = adminApi
