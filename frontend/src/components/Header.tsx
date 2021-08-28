@@ -1,9 +1,10 @@
 import React from 'react'
 import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, Route, useHistory } from 'react-router-dom'
 import { useLogoutUserMutation } from '../api/authApi'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { logout } from '../slices/authSlice'
+import SearchBox from './SearchBox'
 
 const Header = () => {
 	const dispatch = useAppDispatch()
@@ -20,21 +21,7 @@ const Header = () => {
 					</Navbar.Brand>
 					<Navbar.Toggle aria-controls='responsive-navbar-nav' />
 					<Navbar.Collapse id='responsive-navbar-nav'>
-						<Nav>
-							<NavDropdown title='Categories' id='collasible-nav-dropdown'>
-								<NavDropdown.Item href='#action/3.1'>Action</NavDropdown.Item>
-								<NavDropdown.Item href='#action/3.2'>
-									Another action
-								</NavDropdown.Item>
-								<NavDropdown.Item href='#action/3.3'>
-									Something
-								</NavDropdown.Item>
-								<NavDropdown.Divider />
-								<NavDropdown.Item href='#action/3.4'>
-									Separated link
-								</NavDropdown.Item>
-							</NavDropdown>
-						</Nav>
+						<Route render={({ history }) => <SearchBox />} />
 						<Nav className='ml-auto'>
 							<Nav.Link as={Link} to='/cart'>
 								<i className='fas fa-shopping-cart'> {cartItems.length}</i>

@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Query,
   Req,
   UploadedFile,
   UseGuards,
@@ -56,8 +57,11 @@ export class ProductController {
   @ApiOperation({ summary: 'Get all products' })
   @ApiResponse({ status: HttpStatus.OK, type: [Product] })
   @Get()
-  getAllProducts(@Req() req: Request) {
-    return this.productService.getAllProducts(req);
+  getAllProducts(
+    @Query('pageNumber') pageNumber: number,
+    @Query('keyword') keyword: string,
+  ) {
+    return this.productService.getAllProducts(pageNumber, keyword);
   }
 
   @ApiOperation({ summary: 'Get top 5 products' })

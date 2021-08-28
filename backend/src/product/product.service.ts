@@ -4,6 +4,7 @@ import { Request } from 'express';
 import { User } from 'src/users/users.model';
 import { UsersService } from 'src/users/users.service';
 import { Like, Repository } from 'typeorm';
+import { Query } from 'typeorm/driver/Query';
 import { products, users } from './dbseed';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -29,11 +30,13 @@ export class ProductService {
     return await this.productRepository.save(newProduct);
   }
 
-  async getAllProducts(req: Request): Promise<PaginatedProducts> {
-    const pageSize = 10;
-    const page = Number(req.query.pageNumber) || 1;
-    const keyword = req.query.keyword || '';
+  async getAllProducts(pageNumber, keyword): Promise<PaginatedProducts> {
+    const pageSize = 12;
+    const page = pageNumber === 'undefined' ? 1 : pageNumber;
+    keyword = keyword === 'undefined' ? '' : keyword;
+
     const [products, count] = await this.productRepository.findAndCount({
+      where: { name: Like('%' + keyword + '%') },
       take: pageSize,
       skip: pageSize * (page - 1),
     });
