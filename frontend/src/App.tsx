@@ -54,6 +54,17 @@ function App() {
 									<Route path='/product/:id' component={ProductScreen} exact />
 									<Route path='/login' component={LoginScreen} />
 									<Route path='/register' component={RegisterScreen} />
+									<Route path='/search/:keyword' component={MainScreen} exact />
+									<Route
+										path='/page/:pageNumber'
+										component={MainScreen}
+										exact
+									/>
+									<Route
+										path='/search/:keyword/page/:pageNumber'
+										component={MainScreen}
+										exact
+									/>
 									<Route path='/' component={MainScreen} exact />
 								</Switch>
 							</Container>

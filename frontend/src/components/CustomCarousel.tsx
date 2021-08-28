@@ -5,7 +5,7 @@ import { useGetTopProductsQuery } from '../api/productApi'
 import Loader from './Loader'
 import Message from './Message'
 
-const CastomCarousel = () => {
+const CustomCarousel = () => {
 	const { data, isLoading, error } = useGetTopProductsQuery()
 	return isLoading ? (
 		<Loader />
@@ -30,4 +30,4 @@ const CastomCarousel = () => {
 	)
 }
 
-export default CastomCarousel
+export default CustomCarousel

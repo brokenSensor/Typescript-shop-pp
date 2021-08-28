@@ -16,6 +16,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Request } from 'express';
 import { IsAdminGuard } from 'src/auth/isAdmin.guard';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -55,8 +56,8 @@ export class ProductController {
   @ApiOperation({ summary: 'Get all products' })
   @ApiResponse({ status: HttpStatus.OK, type: [Product] })
   @Get()
-  getAllProducts() {
-    return this.productService.getAllProducts();
+  getAllProducts(@Req() req: Request) {
+    return this.productService.getAllProducts(req);
   }
 
   @ApiOperation({ summary: 'Get top 5 products' })

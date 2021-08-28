@@ -215,3 +215,16 @@ export type UpdateProductDto = {
 	price?: number
 	countInStock?: number
 }
+
+export type PaginateProps = {
+	pages: number
+	page: number
+	isAdmin?: boolean
+	keyword?: string
+}
+
+export type PaginatedProducts = {
+	pages: number
+	page: number
+	products: Product[]
+}

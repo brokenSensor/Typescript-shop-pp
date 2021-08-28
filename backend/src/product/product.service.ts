@@ -1,12 +1,19 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Request } from 'express';
 import { User } from 'src/users/users.model';
 import { UsersService } from 'src/users/users.service';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { products, users } from './dbseed';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './product.model';
+
+export type PaginatedProducts = {
+  pages: number;
+  page: number;
+  products: Product[];
+};
 
 @Injectable()
 export class ProductService {
@@ -22,8 +29,16 @@ export class ProductService {
     return await this.productRepository.save(newProduct);
   }
 
-  async getAllProducts(): Promise<Product[]> {
-    return await this.productRepository.find();
+  async getAllProducts(req: Request): Promise<PaginatedProducts> {
+    const pageSize = 10;
+    const page = Number(req.query.pageNumber) || 1;
+    const keyword = req.query.keyword || '';
+    const [products, count] = await this.productRepository.findAndCount({
+      take: pageSize,
+      skip: pageSize * (page - 1),
+    });
+
+    return { page, pages: Math.ceil(count / pageSize), products };
   }
 
   async getProductById(id: number): Promise<Product> {

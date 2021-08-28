@@ -6,14 +6,17 @@ import { useGetAllProductsQuery } from '../../api/productApi'
 import Loader from '../Loader'
 
 const ProductsPanel = () => {
-	const { data: products, isLoading } = useGetAllProductsQuery()
+	const { data, isLoading } = useGetAllProductsQuery({
+		keyword: '',
+		pageNumber: '',
+	})
 
 	return (
 		<>
 			{isLoading ? (
 				<Loader />
 			) : (
-				products && (
+				data?.products && (
 					<Table striped bordered hover responsive className='table-sm'>
 						<thead>
 							<tr>
@@ -28,7 +31,7 @@ const ProductsPanel = () => {
 							</tr>
 						</thead>
 						<tbody>
-							{products?.map(product => (
+							{data.products?.map(product => (
 								<tr key={product.id}>
 									<td>{product.id}</td>
 									<td>
