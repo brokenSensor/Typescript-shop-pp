@@ -1,7 +1,8 @@
 import { shopApi } from '.'
 import {
 	CreateProductDto,
-	Order,
+	PaginatedOrders,
+	PaginatedUsers,
 	UpdateProductDto,
 	UpdateUserDto,
 	User,
@@ -9,11 +10,19 @@ import {
 
 const adminApi = shopApi.injectEndpoints({
 	endpoints: build => ({
-		getAllUsers: build.query<User[], void>({
-			query: () => `/users`,
+		getAllUsers: build.query<
+			PaginatedUsers,
+			{ pageNumber: string; keyword: string }
+		>({
+			query: ({ keyword, pageNumber }) =>
+				`/users?keyword=${keyword}&pageNumber=${pageNumber}`,
 		}),
-		getAllOrders: build.query<Order[], void>({
-			query: () => `/order`,
+		getAllOrders: build.query<
+			PaginatedOrders,
+			{ pageNumber: string; keyword: string }
+		>({
+			query: ({ keyword, pageNumber }) =>
+				`/order?keyword=${keyword}&pageNumber=${pageNumber}`,
 		}),
 		getUserById: build.query<User, string>({
 			query: id => `/users/id/${id}`,

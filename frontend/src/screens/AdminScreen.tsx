@@ -5,6 +5,7 @@ import { Link, useHistory, useParams } from 'react-router-dom'
 import OrdersPanel from '../components/AdminPanels/OrdersPanel'
 import ProductsPanel from '../components/AdminPanels/ProductsPanel'
 import UsersPanel from '../components/AdminPanels/UsersPanel'
+import SearchBox from '../components/SearchBox'
 import { useAppSelector } from '../hooks'
 
 const AdminScreen = () => {
@@ -47,10 +48,19 @@ const AdminScreen = () => {
 					<Nav.Link eventKey='products' onClick={tabHandler}>
 						Products
 					</Nav.Link>
-					{activeTab === 'products' && (
-						<Nav.Link as={Link} to='/product/new'>
-							Create new product
-						</Nav.Link>
+					{activeTab === 'users' ? (
+						<SearchBox from='/admin/users/' />
+					) : activeTab === 'orders' ? (
+						<SearchBox from='/admin/orders/' />
+					) : (
+						activeTab === 'products' && (
+							<>
+								<Nav.Link as={Link} to='/product/new'>
+									Create new product
+								</Nav.Link>
+								<SearchBox from='/admin/products/' />
+							</>
+						)
 					)}
 				</Nav>
 			</Col>

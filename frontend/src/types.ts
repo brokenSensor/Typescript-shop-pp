@@ -228,3 +228,15 @@ export type PaginatedProducts = {
 	page: number
 	products: Product[]
 }
+
+export type PaginatedOrders = {
+	pages: number
+	page: number
+	orders: Order[]
+}
+
+export type PaginatedUsers = {
+	pages: number
+	page: number
+	users: User[]
+}

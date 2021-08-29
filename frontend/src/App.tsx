@@ -44,6 +44,11 @@ function App() {
 									/>
 									<Route path='/user/edit/:id' component={EditUserScreen} />
 									<Route
+										path='/admin/:panel/search/:keyword'
+										component={AdminScreen}
+										exact
+									/>
+									<Route
 										path='/admin/:panel/page/:pageNumber'
 										component={AdminScreen}
 										exact

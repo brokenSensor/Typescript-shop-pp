@@ -7,6 +7,7 @@ import {
   Param,
   ParseIntPipe,
   Put,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -35,8 +36,11 @@ export class UsersController {
   @ApiResponse({ status: HttpStatus.OK, type: [User] })
   @UseGuards(JwtAuthGuard, IsAdminGuard)
   @Get()
-  getAllUsers() {
-    return this.usersService.getAllUsers();
+  getAllUsers(
+    @Query('pageNumber') pageNumber: number,
+    @Query('keyword') keyword: string,
+  ) {
+    return this.usersService.getAllUsers(pageNumber, keyword);
   }
 
   @ApiOperation({ summary: 'Get currently logged in user' })

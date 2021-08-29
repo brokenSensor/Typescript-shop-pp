@@ -10,6 +10,12 @@ import { Order, PaymentResult } from './order.model';
 import * as paypal from '@paypal/checkout-server-sdk';
 // import paypal from 'paypal__checkout-server-sdk';
 
+export type PaginatedOrders = {
+  pages: number;
+  page: number;
+  orders: Order[];
+};
+
 @Injectable()
 export class OrderService {
   constructor(
@@ -52,8 +58,24 @@ export class OrderService {
     return order;
   }
 
-  async getAllOrders(): Promise<Order[]> {
-    return this.orderRepository.find({ relations: ['user'] });
+  async getAllOrders(pageNumber, keyword): Promise<PaginatedOrders> {
+    const pageSize = 12;
+    const page =
+      pageNumber === 'undefined' || pageNumber === '' ? 1 : pageNumber;
+    keyword = keyword === 'undefined' ? '' : keyword;
+
+    const [orders, count] = await this.orderRepository
+      .createQueryBuilder('order')
+      .leftJoinAndSelect('order.user', 'user')
+      // .where('LOWER(name) LIKE :name', {
+      //   name: `%${keyword.toLowerCase()}%`,
+      // })
+      .take(pageSize)
+      .skip(pageSize * (page - 1))
+      .orderBy('order.id')
+      .getManyAndCount();
+
+    return { page, pages: Math.ceil(count / pageSize), orders };
   }
 
   async getAllMyOrders(req): Promise<Order[]> {

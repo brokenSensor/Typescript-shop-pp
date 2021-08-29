@@ -14,6 +14,12 @@ import * as bcrypt from 'bcrypt';
 import { v4 } from 'uuid';
 import { UserDTO } from 'src/auth/auth.service';
 
+export type PaginatedUsers = {
+  pages: number;
+  page: number;
+  users: User[];
+};
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -78,8 +84,23 @@ export class UsersService {
     }
   }
 
-  async getAllUsers(): Promise<User[]> {
-    return await this.userRepository.find({ order: { id: 1 } });
+  async getAllUsers(pageNumber, keyword): Promise<PaginatedUsers> {
+    const pageSize = 12;
+    const page =
+      pageNumber === 'undefined' || pageNumber === '' ? 1 : pageNumber;
+    keyword = keyword === 'undefined' ? '' : keyword;
+
+    const [users, count] = await this.userRepository
+      .createQueryBuilder()
+      .where('LOWER(name) LIKE :name', {
+        name: `%${keyword.toLowerCase()}%`,
+      })
+      .take(pageSize)
+      .skip(pageSize * (page - 1))
+      .orderBy('id')
+      .getManyAndCount();
+
+    return { page, pages: Math.ceil(count / pageSize), users };
   }
 
   async getUserById(id: number): Promise<User> {

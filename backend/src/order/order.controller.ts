@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Req,
   UseGuards,
   ValidationPipe,
@@ -51,8 +52,11 @@ export class OrderController {
   @ApiResponse({ status: HttpStatus.CREATED, type: [Order] })
   @UseGuards(JwtAuthGuard, IsAdminGuard)
   @Get()
-  getAllOrders() {
-    return this.orderService.getAllOrders();
+  getAllOrders(
+    @Query('pageNumber') pageNumber: number,
+    @Query('keyword') keyword: string,
+  ) {
+    return this.orderService.getAllOrders(pageNumber, keyword);
   }
 
   @ApiOperation({
