@@ -35,11 +35,20 @@ export class ProductService {
     const page = pageNumber === 'undefined' ? 1 : pageNumber;
     keyword = keyword === 'undefined' ? '' : keyword;
 
-    const [products, count] = await this.productRepository.findAndCount({
-      where: { name: Like('%' + keyword + '%') },
-      take: pageSize,
-      skip: pageSize * (page - 1),
-    });
+    const [products, count] = await this.productRepository
+      .createQueryBuilder()
+      .where('LOWER(name) LIKE :name', {
+        name: `%${keyword.toLowerCase()}%`,
+      })
+      .take(pageSize)
+      .skip(pageSize * (page - 1))
+      .getManyAndCount();
+
+    // const [products, count] = await this.productRepository.findAndCount({
+    //   where: { name: Like('%' + keyword + '%') },
+    //   take: pageSize,
+    //   skip: pageSize * (page - 1),
+    // });
 
     return { page, pages: Math.ceil(count / pageSize), products };
   }

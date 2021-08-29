@@ -12,7 +12,7 @@ const Paginate = ({
 	return (
 		<>
 			{pages > 1 && (
-				<Pagination>
+				<Pagination className='justify-content-center'>
 					{Array.from({ length: pages }, (v, k) => k + 1).map(x => (
 						<LinkContainer
 							key={x}
