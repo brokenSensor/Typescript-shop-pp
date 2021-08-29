@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
-import { Button, Form } from 'react-bootstrap'
+import { Form } from 'react-bootstrap'
 import { useHistory } from 'react-router-dom'
 
 const SearchBox = ({ from }: { from: string }) => {

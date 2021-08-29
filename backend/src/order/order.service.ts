@@ -67,12 +67,13 @@ export class OrderService {
     const [orders, count] = await this.orderRepository
       .createQueryBuilder('order')
       .leftJoinAndSelect('order.user', 'user')
-      // .where('LOWER(name) LIKE :name', {
-      //   name: `%${keyword.toLowerCase()}%`,
-      // })
+      .where('LOWER(user.name) LIKE :name', {
+        name: `%${keyword.toLowerCase()}%`,
+      })
       .take(pageSize)
       .skip(pageSize * (page - 1))
-      .orderBy('order.id')
+      .orderBy('order.deliveredAt', 'DESC')
+      .addOrderBy('order.paidAt', 'ASC')
       .getManyAndCount();
 
     return { page, pages: Math.ceil(count / pageSize), orders };
