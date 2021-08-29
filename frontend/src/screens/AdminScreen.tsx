@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState } from 'react'
 import { Col, Nav, Row } from 'react-bootstrap'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useHistory, useParams } from 'react-router-dom'
 import OrdersPanel from '../components/AdminPanels/OrdersPanel'
 import ProductsPanel from '../components/AdminPanels/ProductsPanel'
 import UsersPanel from '../components/AdminPanels/UsersPanel'
@@ -9,6 +9,11 @@ import { useAppSelector } from '../hooks'
 
 const AdminScreen = () => {
 	const history = useHistory()
+	const { panel } = useParams<{
+		panel: 'users' | 'orders' | 'products'
+		keyword: string
+		pageNumber: string
+	}>()
 
 	const user = useAppSelector(state => state.authReducer.user)
 
@@ -16,24 +21,32 @@ const AdminScreen = () => {
 		history.push('/')
 	}
 
-	const [activeTab, setActiveTab] = useState<string | null>('users')
+	const [activeTab, setActiveTab] = useState<string>(panel ? panel : 'users')
+
+	const tabHandler = (e: React.MouseEvent<HTMLElement>) => {
+		setActiveTab(`${e.currentTarget.dataset.rbEventKey}`)
+		history.push(`/admin/${e.currentTarget.dataset.rbEventKey}`)
+	}
 
 	return (
 		<Row>
 			<Col md={2}>
 				<Nav
-					defaultActiveKey='users'
+					defaultActiveKey={activeTab}
 					className='flex-column'
 					variant='tabs'
-					onSelect={selectedKey => {
-						setActiveTab(selectedKey)
-					}}
 				>
-					<Nav.Link eventKey='users'>Users</Nav.Link>
+					<Nav.Link eventKey='users' onClick={tabHandler}>
+						Users
+					</Nav.Link>
 
-					<Nav.Link eventKey='orders'>Orders</Nav.Link>
+					<Nav.Link eventKey='orders' onClick={tabHandler}>
+						Orders
+					</Nav.Link>
 
-					<Nav.Link eventKey='products'>Products</Nav.Link>
+					<Nav.Link eventKey='products' onClick={tabHandler}>
+						Products
+					</Nav.Link>
 					{activeTab === 'products' && (
 						<Nav.Link as={Link} to='/product/new'>
 							Create new product

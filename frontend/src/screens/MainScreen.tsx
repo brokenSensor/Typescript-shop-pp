@@ -21,11 +21,7 @@ const MainScreen: React.FC = () => {
 		<>
 			<Meta />
 			{!keyword && <CustomCarousel />}
-			{isLoading ? (
-				<Loader />
-			) : error ? (
-				<h1>{error}</h1>
-			) : (
+			{
 				<>
 					<h1>Latest Products</h1>
 					{isLoading ? (
@@ -44,6 +40,7 @@ const MainScreen: React.FC = () => {
 							</Row>
 							{data && (
 								<Paginate
+									from=''
 									pages={data.pages}
 									page={data.page}
 									keyword={keyword ? keyword : ''}
@@ -52,7 +49,7 @@ const MainScreen: React.FC = () => {
 						</>
 					)}
 				</>
-			)}
+			}
 		</>
 	)
 }

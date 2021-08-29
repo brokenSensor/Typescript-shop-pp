@@ -43,7 +43,18 @@ function App() {
 										exact
 									/>
 									<Route path='/user/edit/:id' component={EditUserScreen} />
-									<Route path='/admin' component={AdminScreen} />
+									<Route
+										path='/admin/:panel/page/:pageNumber'
+										component={AdminScreen}
+										exact
+									/>
+									<Route
+										path='/admin/:panel/search/:keyword/page/:pageNumber'
+										component={AdminScreen}
+										exact
+									/>
+									<Route path='/admin/:panel' component={AdminScreen} exact />
+									<Route path='/admin' component={AdminScreen} exact />
 									<Route path='/profile' component={ProfileScreen} />
 									<Route path='/order/:id' component={OrderScreen} />
 									<Route path='/orderlist' component={OrderListScreen} />

@@ -32,7 +32,8 @@ export class ProductService {
 
   async getAllProducts(pageNumber, keyword): Promise<PaginatedProducts> {
     const pageSize = 12;
-    const page = pageNumber === 'undefined' ? 1 : pageNumber;
+    const page =
+      pageNumber === 'undefined' || pageNumber === '' ? 1 : pageNumber;
     keyword = keyword === 'undefined' ? '' : keyword;
 
     const [products, count] = await this.productRepository
@@ -42,13 +43,8 @@ export class ProductService {
       })
       .take(pageSize)
       .skip(pageSize * (page - 1))
+      .orderBy('id')
       .getManyAndCount();
-
-    // const [products, count] = await this.productRepository.findAndCount({
-    //   where: { name: Like('%' + keyword + '%') },
-    //   take: pageSize,
-    //   skip: pageSize * (page - 1),
-    // });
 
     return { page, pages: Math.ceil(count / pageSize), products };
   }

@@ -219,7 +219,7 @@ export type UpdateProductDto = {
 export type PaginateProps = {
 	pages: number
 	page: number
-	isAdmin?: boolean
+	from: string
 	keyword?: string
 }
 

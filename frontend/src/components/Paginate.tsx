@@ -1,31 +1,29 @@
 import React from 'react'
 import { Pagination } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
+import { useHistory } from 'react-router-dom'
 import { PaginateProps } from '../types'
 
-const Paginate = ({
-	pages,
-	page,
-	isAdmin = false,
-	keyword = '',
-}: PaginateProps) => {
+const Paginate = ({ pages, page, from, keyword = '' }: PaginateProps) => {
+	const history = useHistory()
 	return (
 		<>
 			{pages > 1 && (
 				<Pagination className='justify-content-center'>
 					{Array.from({ length: pages }, (v, k) => k + 1).map(x => (
-						<LinkContainer
+						<Pagination.Item
 							key={x}
-							to={
-								!isAdmin
-									? keyword
-										? `/search/${keyword}/page/${x}`
-										: `/page/${x}`
-									: `/admin/productlist/${x}`
-							}
+							onClick={() => {
+								history.push(
+									keyword
+										? `${from}/search/${keyword}/page/${x}`
+										: `${from}/page/${x}`
+								)
+							}}
+							active={x === Number(page)}
 						>
-							<Pagination.Item active={x === page}>{x}</Pagination.Item>
-						</LinkContainer>
+							{x}
+						</Pagination.Item>
 					))}
 				</Pagination>
 			)}
