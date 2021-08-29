@@ -58,6 +58,27 @@ const adminApi = shopApi.injectEndpoints({
 				credentials: 'include',
 			}),
 		}),
+		deleteUserById: build.mutation<void, number>({
+			query: id => ({
+				url: `/users/${id}`,
+				method: 'DELETE',
+				credentials: 'include',
+			}),
+		}),
+		deleteOrderById: build.mutation<void, number>({
+			query: id => ({
+				url: `/order/${id}`,
+				method: 'DELETE',
+				credentials: 'include',
+			}),
+		}),
+		deleteProductById: build.mutation<void, number>({
+			query: id => ({
+				url: `/product/${id}`,
+				method: 'DELETE',
+				credentials: 'include',
+			}),
+		}),
 	}),
 	overrideExisting: false,
 })
@@ -70,4 +91,7 @@ export const {
 	useUpdateProductByIdMutation,
 	useCreateProductMutation,
 	useUpdateOrderToDeliveredMutation,
+	useDeleteOrderByIdMutation,
+	useDeleteProductByIdMutation,
+	useDeleteUserByIdMutation,
 } = adminApi

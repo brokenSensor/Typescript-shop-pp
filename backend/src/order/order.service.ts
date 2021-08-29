@@ -167,8 +167,11 @@ export class OrderService {
     });
 
     const orderPP = await paypalClient.execute(request);
-    console.log(orderPP);
     const orderPPId: string = orderPP.result.id;
     return { orderId: orderPPId };
+  }
+
+  async deleteOrder(orderId: number): Promise<void> {
+    this.orderRepository.delete(orderId);
   }
 }

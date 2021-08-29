@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpStatus,
   Param,
@@ -100,5 +101,13 @@ export class OrderController {
   @Put('/delivered/:orderId')
   updateOrderToDelivered(@Param('orderId') orderId: number) {
     return this.orderService.updateOrderToDelivered(orderId);
+  }
+
+  @ApiOperation({ summary: 'Delete order. Admin only' })
+  @ApiResponse({ status: HttpStatus.OK })
+  @UseGuards(IsAdminGuard)
+  @Delete('/:orderId')
+  deleteOrder(@Param('orderId') orderId: number) {
+    return this.orderService.deleteOrder(orderId);
   }
 }

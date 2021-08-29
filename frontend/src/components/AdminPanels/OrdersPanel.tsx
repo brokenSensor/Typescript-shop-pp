@@ -2,7 +2,10 @@ import React from 'react'
 import { Button, Table } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 import { useParams } from 'react-router-dom'
-import { useGetAllOrdersQuery } from '../../api/adminApi'
+import {
+	useDeleteOrderByIdMutation,
+	useGetAllOrdersQuery,
+} from '../../api/adminApi'
 import Loader from '../Loader'
 import Paginate from '../Paginate'
 
@@ -13,10 +16,12 @@ const OrdersPanel = () => {
 		pageNumber: string
 	}>()
 
-	const { data, isLoading } = useGetAllOrdersQuery({
+	const { data, isLoading, refetch } = useGetAllOrdersQuery({
 		keyword,
 		pageNumber,
 	})
+
+	const [deleteOrder] = useDeleteOrderByIdMutation()
 
 	return (
 		<>
@@ -34,6 +39,7 @@ const OrdersPanel = () => {
 									<th>TOTAL</th>
 									<th>PAID</th>
 									<th>DELIVERED</th>
+									<th></th>
 									<th></th>
 								</tr>
 							</thead>
@@ -70,6 +76,24 @@ const OrdersPanel = () => {
 													Details
 												</Button>
 											</LinkContainer>
+										</td>
+										<td>
+											<Button
+												variant='danger'
+												size='sm'
+												onClick={() => {
+													if (
+														window.confirm(
+															'Order will be permanently deleted! Are you sure?'
+														)
+													) {
+														deleteOrder(order.id)
+														refetch()
+													}
+												}}
+											>
+												<i className='fas fa-trash-alt'></i>
+											</Button>
 										</td>
 									</tr>
 								))}

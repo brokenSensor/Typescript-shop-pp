@@ -2,7 +2,10 @@ import React from 'react'
 import { Button, Table } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 import { useParams } from 'react-router-dom'
-import { useGetAllUsersQuery } from '../../api/adminApi'
+import {
+	useDeleteUserByIdMutation,
+	useGetAllUsersQuery,
+} from '../../api/adminApi'
 import Loader from '../Loader'
 import Paginate from '../Paginate'
 
@@ -12,10 +15,12 @@ const UsersPanel = () => {
 		keyword: string
 		pageNumber: string
 	}>()
-	const { data, isLoading } = useGetAllUsersQuery({
+	const { data, isLoading, refetch } = useGetAllUsersQuery({
 		keyword,
 		pageNumber,
 	})
+
+	const [deleteUser] = useDeleteUserByIdMutation()
 
 	return (
 		<>
@@ -34,6 +39,7 @@ const UsersPanel = () => {
 									<th>IS ADMIN</th>
 									<th>CREATED AT</th>
 									<th>UPDATED AT</th>
+									<th></th>
 									<th></th>
 								</tr>
 							</thead>
@@ -77,6 +83,24 @@ const UsersPanel = () => {
 													Edit
 												</Button>
 											</LinkContainer>
+										</td>
+										<td>
+											<Button
+												variant='danger'
+												size='sm'
+												onClick={() => {
+													if (
+														window.confirm(
+															'User will be permanently deleted! Are you sure?'
+														)
+													) {
+														deleteUser(user.id)
+														refetch()
+													}
+												}}
+											>
+												<i className='fas fa-trash-alt'></i>
+											</Button>
 										</td>
 									</tr>
 								))}

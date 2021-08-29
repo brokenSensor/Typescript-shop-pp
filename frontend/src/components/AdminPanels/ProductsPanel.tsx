@@ -2,6 +2,7 @@ import React from 'react'
 import { Button, Table } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 import { Link, useParams } from 'react-router-dom'
+import { useDeleteProductByIdMutation } from '../../api/adminApi'
 import { useGetAllProductsQuery } from '../../api/productApi'
 import Loader from '../Loader'
 import Paginate from '../Paginate'
@@ -12,10 +13,12 @@ const ProductsPanel = () => {
 		keyword: string
 		pageNumber: string
 	}>()
-	const { data, isLoading } = useGetAllProductsQuery({
+	const { data, isLoading, refetch } = useGetAllProductsQuery({
 		keyword,
 		pageNumber,
 	})
+
+	const [deleteProduct] = useDeleteProductByIdMutation()
 
 	return (
 		<>
@@ -34,6 +37,7 @@ const ProductsPanel = () => {
 									<th>RATING</th>
 									<th>CREATED AT</th>
 									<th>UPDATED AT</th>
+									<th></th>
 									<th></th>
 								</tr>
 							</thead>
@@ -55,6 +59,24 @@ const ProductsPanel = () => {
 													Edit
 												</Button>
 											</LinkContainer>
+										</td>
+										<td>
+											<Button
+												variant='danger'
+												size='sm'
+												onClick={() => {
+													if (
+														window.confirm(
+															'Product will be permanently deleted! Are you sure?'
+														)
+													) {
+														deleteProduct(product.id)
+														refetch()
+													}
+												}}
+											>
+												<i className='fas fa-trash-alt'></i>
+											</Button>
 										</td>
 									</tr>
 								))}

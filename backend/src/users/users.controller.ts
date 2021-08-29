@@ -100,4 +100,12 @@ export class UsersController {
   deleteMe(@Req() req) {
     return this.usersService.deleteMe(req.user.id);
   }
+
+  @ApiOperation({ summary: 'Delete user by id' })
+  @ApiResponse({ status: HttpStatus.OK })
+  @UseGuards(JwtAuthGuard, IsAdminGuard)
+  @Delete('/:id')
+  deleteUser(@Param('id') userId: number) {
+    return this.usersService.deleteUser(userId);
+  }
 }

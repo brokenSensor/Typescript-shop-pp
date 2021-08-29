@@ -82,22 +82,8 @@ export class ProductService {
     }
   }
 
-  async deleteProduct(id: number): Promise<{ message: string }> {
-    const product = await this.productRepository.findOne(id);
-
-    if (!product || !id) {
-      throw new HttpException(
-        {
-          statusCode: HttpStatus.NOT_FOUND,
-          message: ['Product not found.'],
-          error: 'Not Found',
-        },
-        HttpStatus.NOT_FOUND,
-      );
-    } else {
-      this.productRepository.delete(id);
-      return { message: 'Product deleted' };
-    }
+  async deleteProduct(id: number): Promise<void> {
+    await this.productRepository.delete(id);
   }
 
   async updateProductReviewsSum(productId): Promise<Product> {

@@ -126,4 +126,8 @@ export class UsersService {
     const user = await this.userRepository.findOne(userId);
     return new UserDTO(user);
   }
+
+  async deleteUser(userId: number): Promise<void> {
+    await this.userRepository.delete(userId);
+  }
 }
