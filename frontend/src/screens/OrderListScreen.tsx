@@ -32,7 +32,6 @@ const OrderListScreen = () => {
 					<thead>
 						<tr>
 							<th>ID</th>
-							{userInfo?.isAdmin && <th>USER</th>}
 							<th>DATE</th>
 							<th>TOTAL</th>
 							<th>PAID</th>
@@ -44,7 +43,6 @@ const OrderListScreen = () => {
 						{orders?.map(order => (
 							<tr key={order.id}>
 								<td>{order.id}</td>
-								{userInfo?.isAdmin && <td>{order.user && order.user.name}</td>}
 								<td>{new Date(order.createdAt).toUTCString()}</td>
 								<td>{order.totalPrice} $</td>
 								<td>

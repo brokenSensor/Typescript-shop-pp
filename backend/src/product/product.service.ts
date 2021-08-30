@@ -1,10 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Request } from 'express';
 import { User } from 'src/users/users.model';
 import { UsersService } from 'src/users/users.service';
-import { Like, Repository } from 'typeorm';
-import { Query } from 'typeorm/driver/Query';
+import { Repository } from 'typeorm';
 import { products, users } from './dbseed';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -128,8 +126,10 @@ export class ProductService {
   }
 
   async upload(file: Express.Multer.File): Promise<{ filePath: string }> {
-    const fullPath = `${file.destination}/${file.filename}`;
-    const filePath = fullPath.split('./client')[1];
-    return { filePath };
+    if (file) {
+      const fullPath = `${file.destination}/${file.filename}`;
+      const filePath = fullPath.split('./client')[1];
+      return { filePath };
+    }
   }
 }

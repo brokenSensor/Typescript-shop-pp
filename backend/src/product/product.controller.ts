@@ -18,12 +18,18 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
+import { diskStorage } from 'multer';
 import { IsAdminGuard } from 'src/auth/isAdmin.guard';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './product.model';
 import { ProductService } from './product.service';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const path = require('path');
+import { v4 } from 'uuid';
+
+const validMimeTypes = ['image/png', 'image/jpg', 'image/jpeg'];
 
 @ApiTags('Product')
 @Controller('product')
@@ -47,7 +53,20 @@ export class ProductController {
   @Post('/upload')
   @UseInterceptors(
     FileInterceptor('image', {
-      dest: './client/images',
+      storage: diskStorage({
+        destination: './client/images',
+        filename: (req, file, cd) => {
+          const fileExtension: string = path.extname(file.originalname);
+          const fileName: string = v4() + fileExtension;
+          cd(null, fileName);
+        },
+      }),
+      fileFilter: (req, file, cb) => {
+        const allowedMimeTypes = validMimeTypes;
+        allowedMimeTypes.includes(file.mimetype)
+          ? cb(null, true)
+          : cb(null, false);
+      },
     }),
   )
   upload(@UploadedFile() file: Express.Multer.File) {

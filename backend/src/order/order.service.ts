@@ -1,8 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Request } from 'express-serve-static-core';
-import { UserDTO } from 'src/auth/auth.service';
 import { User } from 'src/users/users.model';
 import { Repository } from 'typeorm';
 import { CreateOrderDto } from './dto/create-order.dto';
