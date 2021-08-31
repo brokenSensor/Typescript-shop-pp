@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PaginatedProducts } from 'types';
+import { PaginatedProducts } from 'src/types';
 import { User } from 'src/users/users.model';
 import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
