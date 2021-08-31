@@ -4,15 +4,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/users.model';
 import { Repository } from 'typeorm';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { Order, PaymentResult } from './order.model';
+import { Order } from './order.model';
 import * as paypal from '@paypal/checkout-server-sdk';
-// import paypal from 'paypal__checkout-server-sdk';
-
-export type PaginatedOrders = {
-  pages: number;
-  page: number;
-  orders: Order[];
-};
+import { PaginatedOrders, PaymentResult } from 'src/types';
 
 @Injectable()
 export class OrderService {

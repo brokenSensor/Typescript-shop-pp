@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   HttpStatus,
   Param,
   ParseIntPipe,
@@ -17,7 +18,6 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Request } from 'express';
 import { diskStorage } from 'multer';
 import { IsAdminGuard } from 'src/auth/isAdmin.guard';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -25,11 +25,9 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './product.model';
 import { ProductService } from './product.service';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const path = require('path');
+import * as path from 'path';
 import { v4 } from 'uuid';
-
-const validMimeTypes = ['image/png', 'image/jpg', 'image/jpeg'];
+import { validMimeTypes } from 'src/types';
 
 @ApiTags('Product')
 @Controller('product')
@@ -37,7 +35,7 @@ export class ProductController {
   constructor(private productService: ProductService) {}
 
   @ApiOperation({ summary: 'Create new product. Admin only' })
-  @ApiResponse({ status: HttpStatus.CREATED, type: Product })
+  @ApiResponse({ status: HttpStatus.CREATED })
   @UseGuards(JwtAuthGuard, IsAdminGuard)
   @Post()
   async createProduct(
@@ -49,7 +47,6 @@ export class ProductController {
 
   @ApiOperation({ summary: 'Upload product image' })
   @ApiResponse({ status: HttpStatus.CREATED })
-  // @UseGuards(JwtAuthGuard, IsAdminGuard)
   @Post('/upload')
   @UseInterceptors(
     FileInterceptor('image', {

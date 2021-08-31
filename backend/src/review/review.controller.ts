@@ -13,7 +13,6 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { Product } from 'src/product/product.model';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { ReviewService } from './review.service';
 
@@ -23,7 +22,7 @@ export class ReviewController {
   constructor(private reviewService: ReviewService) {}
 
   @ApiOperation({ summary: 'Create review' })
-  @ApiResponse({ status: HttpStatus.CREATED, type: Product })
+  @ApiResponse({ status: HttpStatus.CREATED })
   @UseGuards(JwtAuthGuard)
   @Post('/:productId')
   async createReview(

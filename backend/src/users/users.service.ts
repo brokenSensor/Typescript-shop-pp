@@ -1,30 +1,19 @@
-import {
-  BadRequestException,
-  HttpException,
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './users.model';
 import * as bcrypt from 'bcrypt';
 import { v4 } from 'uuid';
-import { UserDTO } from 'src/auth/auth.service';
-
-export type PaginatedUsers = {
-  pages: number;
-  page: number;
-  users: User[];
-};
+import { PaginatedUsers, UserDTO } from 'src/types';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
+
   async createUser(dto: CreateUserDto): Promise<User> {
     const user = await this.userRepository.findOne({
       where: { email: dto.email },
@@ -38,7 +27,7 @@ export class UsersService {
     }
     throw new BadRequestException({
       statusCode: HttpStatus.BAD_REQUEST,
-      message: 'Email must be uniqe.',
+      message: 'Email must be unique.',
       error: 'Bad Request',
     });
   }
@@ -84,7 +73,10 @@ export class UsersService {
     }
   }
 
-  async getAllUsers(pageNumber, keyword): Promise<PaginatedUsers> {
+  async getAllUsers(
+    pageNumber: number | 'undefined' | '',
+    keyword: string,
+  ): Promise<PaginatedUsers> {
     const pageSize = 12;
     const page =
       pageNumber === 'undefined' || pageNumber === '' ? 1 : pageNumber;
@@ -110,9 +102,8 @@ export class UsersService {
   async getUserByEmail(email: string): Promise<User> {
     return await this.userRepository.findOne({ where: { email } });
   }
-  async deleteMe(id: number): Promise<{ message: string }> {
+  async deleteMe(id: number): Promise<void> {
     await this.userRepository.delete(id);
-    return { message: 'User deleted' };
   }
   async getUserByRefreshToken(refresh_token: string): Promise<User> {
     return await this.userRepository.findOne({
@@ -122,7 +113,7 @@ export class UsersService {
     });
   }
 
-  async getCurrentUser(userId): Promise<UserDTO> {
+  async getCurrentUser(userId: number): Promise<UserDTO> {
     const user = await this.userRepository.findOne(userId);
     return new UserDTO(user);
   }

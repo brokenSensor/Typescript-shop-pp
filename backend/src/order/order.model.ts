@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { OrderItem, PaymentResult, ShippingAddress } from 'src/types';
 import { User } from 'src/users/users.model';
 import {
   Column,
@@ -8,36 +9,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-
-export interface OrderItem {
-  name: string;
-
-  qty: number;
-
-  image: string;
-
-  price: number;
-
-  productId: number;
-}
-
-export interface ShippingAddress {
-  address: string;
-
-  city: string;
-
-  postalCode: string;
-
-  country: string;
-}
-
-export interface PaymentResult {
-  status: string;
-
-  update_time: string;
-
-  email_address: string;
-}
 
 @Entity()
 export class Order {

@@ -41,7 +41,7 @@ export class Product {
     description: 'Category of the product',
   })
   @Column()
-  category: string; //!!!!
+  category: string;
 
   @ApiProperty({ description: 'Description of the product' })
   @Column()

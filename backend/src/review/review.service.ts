@@ -20,7 +20,7 @@ export class ReviewService {
     dto: CreateReviewDto,
     userId: number,
     productId: number,
-  ): Promise<Product> {
+  ): Promise<void> {
     const user = await this.userRepository.findOne({
       where: {
         id: userId,
@@ -81,14 +81,14 @@ export class ReviewService {
 
     await this.reviewRepository.save(this.reviewRepository.create(newReview));
 
-    return await this.productService.updateProductReviewsSum(productId);
+    await this.productService.updateProductReviewsSum(productId);
   }
 
   async deleteReview(
     productId: number,
     reviewId: number,
     userId: number,
-  ): Promise<{ message: string }> {
+  ): Promise<void> {
     const review = await this.reviewRepository.findOne(reviewId, {
       relations: ['user', 'product'],
     });
@@ -123,7 +123,6 @@ export class ReviewService {
 
     await this.reviewRepository.delete(reviewId);
     await this.productService.updateProductReviewsSum(productId);
-    return { message: 'Review deleted' };
   }
 
   async seedReviews() {

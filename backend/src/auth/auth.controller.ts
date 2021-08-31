@@ -1,9 +1,7 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Get,
-  HttpException,
   HttpStatus,
   Post,
   Req,
@@ -82,7 +80,7 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Refresh access token' })
   @ApiResponse({
-    status: HttpStatus.CREATED,
+    status: HttpStatus.OK,
     schema: {
       properties: {
         access_token: { type: 'string', description: 'Users JWT Token' },

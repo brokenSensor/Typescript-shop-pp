@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  HttpException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -9,41 +8,15 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/users/users.model';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-
-export interface TokensAndUser {
-  user: UserDTO;
-  access_token: string;
-  refresh_token: string;
-}
-
-export class UserDTO {
-  constructor(user: User) {
-    this.id = user.id;
-    this.name = user.name;
-    this.email = user.email;
-    this.isAdmin = user.isAdmin;
-    this.createdAt = user.createdAt;
-    this.updatedAt = user.updatedAt;
-    this.isActivated = user.isActivated;
-  }
-  id: number;
-  name: string;
-  email: string;
-  isAdmin: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  isActivated: boolean;
-}
+import { TokensAndUser, UserDTO } from 'src/types';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
-    private configService: ConfigService,
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 

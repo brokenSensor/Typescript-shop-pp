@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PaginatedProducts } from 'src/types';
 import { User } from 'src/users/users.model';
 import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
@@ -8,12 +9,6 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './product.model';
 
-export type PaginatedProducts = {
-  pages: number;
-  page: number;
-  products: Product[];
-};
-
 @Injectable()
 export class ProductService {
   constructor(
@@ -21,14 +16,17 @@ export class ProductService {
     @InjectRepository(User) private userRepository: Repository<User>,
     private usersService: UsersService,
   ) {}
-  async createProduct(dto: CreateProductDto, userId: number): Promise<Product> {
+  async createProduct(dto: CreateProductDto, userId: number): Promise<void> {
     const user = await this.userRepository.findOne(userId);
     const newProduct = this.productRepository.create({ ...dto, user });
 
-    return await this.productRepository.save(newProduct);
+    await this.productRepository.save(newProduct);
   }
 
-  async getAllProducts(pageNumber, keyword): Promise<PaginatedProducts> {
+  async getAllProducts(
+    pageNumber: number | 'undefined' | '',
+    keyword: string,
+  ): Promise<PaginatedProducts> {
     const pageSize = 12;
     const page =
       pageNumber === 'undefined' || pageNumber === '' ? 1 : pageNumber;
@@ -53,7 +51,7 @@ export class ProductService {
     });
   }
 
-  async updateProduct(dto: UpdateProductDto): Promise<Product> {
+  async updateProduct(dto: UpdateProductDto): Promise<void> {
     const product = await this.productRepository.findOne({
       where: { id: dto.id },
     });
@@ -75,8 +73,7 @@ export class ProductService {
       if (dto.description) product.description = dto.description;
       if (dto.image) product.image = dto.image;
       if (dto.price) product.price = dto.price;
-      this.productRepository.save(product);
-      return this.getProductById(dto.id);
+      await this.productRepository.save(product);
     }
   }
 
@@ -84,7 +81,7 @@ export class ProductService {
     await this.productRepository.delete(id);
   }
 
-  async updateProductReviewsSum(productId): Promise<Product> {
+  async updateProductReviewsSum(productId: number): Promise<void> {
     const product = await this.productRepository.findOne(productId, {
       relations: ['reviews'],
     });
@@ -95,7 +92,7 @@ export class ProductService {
       0,
     );
     product.rating = parseFloat((sumRating / product.numReviews).toFixed(1));
-    return await this.productRepository.save(product);
+    await this.productRepository.save(product);
   }
 
   async seed(): Promise<void> {
