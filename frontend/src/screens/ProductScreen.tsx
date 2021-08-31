@@ -162,6 +162,7 @@ const ProductScreen = () => {
 										)}
 										{user ? (
 											<Form
+												className='d-grid gap-2'
 												onSubmit={async e => {
 													e.preventDefault()
 													if (rating !== '') {
@@ -212,7 +213,16 @@ const ProductScreen = () => {
 														onChange={e => setComment(e.target.value)}
 													></Form.Control>
 												</Form.Group>
-												<Button type='submit' variant='primary'>
+												{!user.isActivated && (
+													<Message variant='warning'>
+														Please confirm your email to leave a review!
+													</Message>
+												)}
+												<Button
+													disabled={!user.isActivated}
+													type='submit'
+													variant='primary'
+												>
 													Submit
 												</Button>
 											</Form>

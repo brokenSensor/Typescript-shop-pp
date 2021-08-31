@@ -9,6 +9,7 @@ const CartScreen = () => {
 	const dispatch = useAppDispatch()
 	const history = useHistory()
 	const cartItems = useAppSelector(state => state.cartReducer.items)
+	const userInfo = useAppSelector(state => state.authReducer.user)
 
 	const checkoutHandler = () => {
 		history.push('/login?redirect=shipping')
@@ -85,11 +86,16 @@ const CartScreen = () => {
 								.reduce((acc, item) => acc + item.qty * item.price, 0)
 								.toFixed(2)}
 						</ListGroup.Item>
-						<ListGroup.Item>
+						<ListGroup.Item className='d-grid gap-2'>
+							{!userInfo?.isActivated && (
+								<Message variant='warning'>
+									Please confirm your email to make a purchase!
+								</Message>
+							)}
 							<Button
 								type='button'
 								className='btn-block'
-								disabled={cartItems.length === 0}
+								disabled={cartItems.length === 0 || !userInfo?.isActivated}
 								onClick={checkoutHandler}
 							>
 								Proceed To Checkout

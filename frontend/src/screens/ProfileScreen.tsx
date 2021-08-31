@@ -59,9 +59,9 @@ const ProfileScreen = () => {
 	return (
 		<Row className='justify-content-md-center'>
 			{!data?.isActivated && (
-				<Message>
+				<Message variant='warning'>
 					Your email has not been confirmed yet!{' '}
-					<Button onClick={resendActivationHandler}>
+					<Button variant='warning' onClick={resendActivationHandler}>
 						Resend activation link
 					</Button>
 				</Message>
