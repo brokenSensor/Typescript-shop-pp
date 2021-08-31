@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { OrderItem, PaymentResult, ShippingAddress } from 'src/types';
+import { OrderItem, PaymentResult, ShippingAddress } from 'types';
 import { User } from 'src/users/users.model';
 import {
   Column,

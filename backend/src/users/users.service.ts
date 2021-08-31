@@ -6,7 +6,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './users.model';
 import * as bcrypt from 'bcrypt';
 import { v4 } from 'uuid';
-import { PaginatedUsers, UserDTO } from 'src/types';
+import { PaginatedUsers, UserDTO } from 'types';
 
 @Injectable()
 export class UsersService {

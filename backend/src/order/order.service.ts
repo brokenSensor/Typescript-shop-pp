@@ -6,7 +6,7 @@ import { Repository } from 'typeorm';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { Order } from './order.model';
 import * as paypal from '@paypal/checkout-server-sdk';
-import { PaginatedOrders, PaymentResult } from 'src/types';
+import { PaginatedOrders, PaymentResult } from 'types';
 
 @Injectable()
 export class OrderService {

@@ -27,7 +27,7 @@ import { Product } from './product.model';
 import { ProductService } from './product.service';
 import * as path from 'path';
 import { v4 } from 'uuid';
-import { validMimeTypes } from 'src/types';
+import { validMimeTypes } from 'types';
 
 @ApiTags('Product')
 @Controller('product')

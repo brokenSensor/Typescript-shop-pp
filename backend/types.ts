@@ -1,6 +1,6 @@
-import { Order } from './order/order.model';
-import { Product } from './product/product.model';
-import { User } from './users/users.model';
+import { Order } from './src/order/order.model';
+import { Product } from './src/product/product.model';
+import { User } from './src/users/users.model';
 
 export type PaginatedUsers = {
   pages: number;

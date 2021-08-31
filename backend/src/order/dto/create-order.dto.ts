@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsDefined, IsInt, IsNumber } from 'class-validator';
-import { OrderItem, ShippingAddress } from 'src/types';
+import { OrderItem, ShippingAddress } from 'types';
 
 export class CreateOrderDto {
   @ApiProperty({ description: 'List of orderd items', type: [Object] })
