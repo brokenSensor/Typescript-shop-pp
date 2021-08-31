@@ -2,7 +2,11 @@ import React, { useEffect } from 'react'
 import { useState } from 'react'
 import { Button, Col, Form, Row } from 'react-bootstrap'
 import { useHistory } from 'react-router-dom'
-import { useGetUserQuery, useUpdateUserMutation } from '../api/authApi'
+import {
+	useGetUserQuery,
+	useResendActivationMutation,
+	useUpdateUserMutation,
+} from '../api/authApi'
 import Message from '../components/Message'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { setUser } from '../slices/authSlice'
@@ -21,6 +25,7 @@ const ProfileScreen = () => {
 
 	const [updateUser] = useUpdateUserMutation()
 	const { data, refetch: refetchUser } = useGetUserQuery()
+	const [resendActivation] = useResendActivationMutation()
 
 	useEffect(() => {
 		if (!userDetails) {
@@ -47,8 +52,20 @@ const ProfileScreen = () => {
 			}
 		}
 	}
+
+	const resendActivationHandler = () => {
+		resendActivation()
+	}
 	return (
 		<Row className='justify-content-md-center'>
+			{!data?.isActivated && (
+				<Message>
+					Your email has not been confirmed yet!{' '}
+					<Button onClick={resendActivationHandler}>
+						Resend activation link
+					</Button>
+				</Message>
+			)}
 			<Col md={5}>
 				<h2>User Profile</h2>
 				{message && <Message variant='danger'>{message}</Message>}

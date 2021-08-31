@@ -11,6 +11,9 @@ import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TokensAndUser, UserDTO } from 'types';
+import { ConfigService } from '@nestjs/config';
+import * as nodemailer from 'nodemailer';
+import { emailHTMLMaker } from './emailHTML';
 
 @Injectable()
 export class AuthService {
@@ -18,6 +21,7 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
     @InjectRepository(User) private userRepository: Repository<User>,
+    private configService: ConfigService,
   ) {}
 
   async validateUser(email: string, pass: string): Promise<UserDTO> {
@@ -70,6 +74,7 @@ export class AuthService {
 
   async registerUser(createUserDto: CreateUserDto) {
     const user = await this.usersService.createUser(createUserDto);
+    await this.sendActivationEmail(user.name, user.email, user.activationLink);
     if (user) {
       const userDto = new UserDTO(user);
       return this.login({ ...userDto });
@@ -117,5 +122,58 @@ export class AuthService {
       };
     }
     throw new UnauthorizedException();
+  }
+
+  async sendActivationEmail(
+    name: string,
+    email: string,
+    activationLink: string,
+  ): Promise<void> {
+    const transporter = nodemailer.createTransport({
+      host: this.configService.get('SMTP_HOST'),
+      port: this.configService.get('SMTP_PORT'),
+      secure: true,
+      auth: {
+        user: this.configService.get('SMTP_USER'),
+        pass: this.configService.get('SMTP_PASSWORD'),
+      },
+    });
+
+    transporter.sendMail({
+      from: this.configService.get('SMTP_USER'),
+      to: email,
+      subject: `Account activation for ${this.configService.get('SITE_URL')}`,
+      text: '',
+      html: emailHTMLMaker(
+        name,
+        `${this.configService.get(
+          'API_URL',
+        )}/auth/emailActivation/${activationLink}`,
+      ),
+    });
+  }
+
+  async emailActivation(activationLink: string): Promise<'success' | 'failed'> {
+    const user = await this.usersService.getUserByActivationLink(
+      activationLink,
+    );
+    if (user) {
+      user.isActivated = true;
+      await this.userRepository.save(user);
+      return 'success';
+    } else {
+      return 'failed';
+    }
+  }
+
+  async resendActivationEmail(userId): Promise<void> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      select: ['name', 'email', 'activationLink'],
+    });
+
+    if (user) {
+      this.sendActivationEmail(user.name, user.email, user.activationLink);
+    }
   }
 }

@@ -102,6 +102,11 @@ export class UsersService {
   async getUserByEmail(email: string): Promise<User> {
     return await this.userRepository.findOne({ where: { email } });
   }
+
+  async getUserByActivationLink(activationLink: string): Promise<User> {
+    return await this.userRepository.findOne({ where: { activationLink } });
+  }
+
   async deleteMe(id: number): Promise<void> {
     await this.userRepository.delete(id);
   }

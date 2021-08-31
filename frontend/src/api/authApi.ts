@@ -43,6 +43,9 @@ const authApi = shopApi.injectEndpoints({
 		getUser: build.query<UserDto, void>({
 			query: () => `/users/me`,
 		}),
+		resendActivation: build.mutation<void, void>({
+			query: () => `/auth/emailActivation`,
+		}),
 	}),
 	overrideExisting: false,
 })
@@ -53,4 +56,5 @@ export const {
 	useLogoutUserMutation,
 	useUpdateUserMutation,
 	useGetUserQuery,
+	useResendActivationMutation,
 } = authApi
