@@ -14,8 +14,8 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
-import { IsAdminGuard } from 'src/auth/isAdmin.guard';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { IsAdminGuard } from 'src/auth/guards/isAdmin.guard';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderToPayedDto } from './dto/update-order-to-payed.dto';
 import { Order } from './order.model';

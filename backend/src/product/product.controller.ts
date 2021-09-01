@@ -19,8 +19,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { diskStorage } from 'multer';
-import { IsAdminGuard } from 'src/auth/isAdmin.guard';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { IsAdminGuard } from 'src/auth/guards/isAdmin.guard';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './product.model';
@@ -28,6 +27,7 @@ import { ProductService } from './product.service';
 import * as path from 'path';
 import { v4 } from 'uuid';
 import { validMimeTypes } from 'src/types';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @ApiTags('Product')
 @Controller('product')

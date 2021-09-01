@@ -12,8 +12,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { IsAdminGuard } from 'src/auth/isAdmin.guard';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { IsAdminGuard } from 'src/auth/guards/isAdmin.guard';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { UserDTO } from 'src/types';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './users.model';

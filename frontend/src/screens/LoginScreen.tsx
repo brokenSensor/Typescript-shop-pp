@@ -63,27 +63,29 @@ const LoginScreen: React.FC = () => {
 				{isLoading ? (
 					<h3>Loading</h3>
 				) : (
-					<Button
-						variant='primary'
-						onClick={async () => {
-							try {
-								const res = await login(formState).unwrap()
-								dispatch(setCredentials(res))
-								history.push(redirect)
-							} catch (error) {
-								if (Array.isArray(error.data.message)) {
-									setError(error.data.message.join(' '))
-								} else {
-									setError(error.data.message)
+					<>
+						<Button
+							variant='primary'
+							onClick={async () => {
+								try {
+									const res = await login(formState).unwrap()
+									dispatch(setCredentials(res))
+									history.push(redirect)
+								} catch (error) {
+									if (Array.isArray(error.data.message)) {
+										setError(error.data.message.join(' '))
+									} else {
+										setError(error.data.message)
+									}
+									setTimeout(() => {
+										setError('')
+									}, 10000)
 								}
-								setTimeout(() => {
-									setError('')
-								}, 10000)
-							}
-						}}
-					>
-						Sign In
-					</Button>
+							}}
+						>
+							Sign In
+						</Button>
+					</>
 				)}
 				<Row className='py-3'>
 					<Col>
