@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from '../hooks'
 import { setCredentials } from '../slices/authSlice'
 import { LoginRequest } from '../types'
 import { GoogleLogin, GoogleLoginResponse } from 'react-google-login'
+import Meta from '../components/Meta'
 
 const LoginScreen: React.FC = () => {
 	const dispatch = useAppDispatch()
@@ -40,82 +41,88 @@ const LoginScreen: React.FC = () => {
 		setFormState(prev => ({ ...prev, [name]: value }))
 
 	return (
-		<FormContainer>
-			<h1>Sign In</h1>
-			{error && <Message variant='danger'>{error}</Message>}
-			<Form>
-				<Form.Group controlId='email'>
-					<Form.Label>Email Address</Form.Label>
-					<Form.Control
-						name='email'
-						type='email'
-						placeholder='Enter email'
-						onChange={handleChange}
-					></Form.Control>
-				</Form.Group>
-				<Form.Group controlId='password'>
-					<Form.Label>Password</Form.Label>
-					<Form.Control
-						name='password'
-						type='password'
-						placeholder='Enter password'
-						onChange={handleChange}
-					></Form.Control>
-				</Form.Group>
-				{isLoading ? (
-					<h3>Loading</h3>
-				) : (
-					<>
-						<Button
-							variant='primary'
-							onClick={async () => {
-								try {
-									const res = await login(formState).unwrap()
-									dispatch(setCredentials(res))
-									history.push(redirect)
-								} catch (error) {
-									if (Array.isArray(error.data.message)) {
-										setError(error.data.message.join(' '))
-									} else {
-										setError(error.data.message)
+		<>
+			<Meta
+				title={`Login To My Shop for Portfolio`}
+				description={`Login page`}
+			/>
+			<FormContainer>
+				<h1>Sign In</h1>
+				{error && <Message variant='danger'>{error}</Message>}
+				<Form>
+					<Form.Group controlId='email'>
+						<Form.Label>Email Address</Form.Label>
+						<Form.Control
+							name='email'
+							type='email'
+							placeholder='Enter email'
+							onChange={handleChange}
+						></Form.Control>
+					</Form.Group>
+					<Form.Group controlId='password'>
+						<Form.Label>Password</Form.Label>
+						<Form.Control
+							name='password'
+							type='password'
+							placeholder='Enter password'
+							onChange={handleChange}
+						></Form.Control>
+					</Form.Group>
+					{isLoading ? (
+						<h3>Loading</h3>
+					) : (
+						<>
+							<Button
+								variant='primary'
+								onClick={async () => {
+									try {
+										const res = await login(formState).unwrap()
+										dispatch(setCredentials(res))
+										history.push(redirect)
+									} catch (error) {
+										if (Array.isArray(error.data.message)) {
+											setError(error.data.message.join(' '))
+										} else {
+											setError(error.data.message)
+										}
+										setTimeout(() => {
+											setError('')
+										}, 10000)
 									}
-									setTimeout(() => {
-										setError('')
-									}, 10000)
-								}
+								}}
+							>
+								Sign In
+							</Button>
+						</>
+					)}
+					<Row className='py-3'>
+						<GoogleLogin
+							clientId='575968030484-80eiauos77cnv8qt6o7ce3dpd92sdlg6.apps.googleusercontent.com'
+							buttonText='Log in with Google'
+							onSuccess={async e => {
+								const res = await google(
+									(e as GoogleLoginResponse).profileObj
+								).unwrap()
+								dispatch(setCredentials(res))
+								history.push(redirect)
 							}}
-						>
-							Sign In
-						</Button>
-					</>
-				)}
-				<Row className='py-3'>
-					<GoogleLogin
-						clientId='575968030484-80eiauos77cnv8qt6o7ce3dpd92sdlg6.apps.googleusercontent.com'
-						buttonText='Log in with Google'
-						onSuccess={async e => {
-							const res = await google(
-								(e as GoogleLoginResponse).profileObj
-							).unwrap()
-							dispatch(setCredentials(res))
-							history.push(redirect)
-						}}
-						onFailure={e => {
-							console.log(e)
-						}}
-						cookiePolicy={'single_host_origin'}
-					/>
-					<Col>
-						New Customer?{' '}
-						<Link
-							to={redirect ? `/register?redirect=${redirect}` : '/register'}
-						>
-							Register
-						</Link>
-					</Col>
-				</Row>
-			</Form>
-		</FormContainer>
+							onFailure={e => {
+								console.log(e)
+							}}
+							cookiePolicy={'single_host_origin'}
+						/>
+						<Col>
+							New Customer?{' '}
+							<Link
+								to={redirect ? `/register?redirect=${redirect}` : '/register'}
+							>
+								Register
+							</Link>
+						</Col>
+					</Row>
+				</Form>
+			</FormContainer>
+		</>
 	)
 }
 

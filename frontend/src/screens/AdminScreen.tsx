@@ -5,6 +5,7 @@ import { Link, useHistory, useParams } from 'react-router-dom'
 import OrdersPanel from '../components/AdminPanels/OrdersPanel'
 import ProductsPanel from '../components/AdminPanels/ProductsPanel'
 import UsersPanel from '../components/AdminPanels/UsersPanel'
+import Meta from '../components/Meta'
 import SearchBox from '../components/SearchBox'
 import { useAppSelector } from '../hooks'
 
@@ -30,46 +31,49 @@ const AdminScreen = () => {
 	}
 
 	return (
-		<Row>
-			<Col md={2}>
-				<Nav
-					defaultActiveKey={activeTab}
-					className='flex-column'
-					variant='tabs'
-				>
-					<Nav.Link eventKey='users' onClick={tabHandler}>
-						Users
-					</Nav.Link>
+		<>
+			<Meta title={`Admin Panel | ${activeTab.toUpperCase()}`} />
+			<Row>
+				<Col md={2}>
+					<Nav
+						defaultActiveKey={activeTab}
+						className='flex-column'
+						variant='tabs'
+					>
+						<Nav.Link eventKey='users' onClick={tabHandler}>
+							Users
+						</Nav.Link>
 
-					<Nav.Link eventKey='orders' onClick={tabHandler}>
-						Orders
-					</Nav.Link>
+						<Nav.Link eventKey='orders' onClick={tabHandler}>
+							Orders
+						</Nav.Link>
 
-					<Nav.Link eventKey='products' onClick={tabHandler}>
-						Products
-					</Nav.Link>
-					{activeTab === 'users' ? (
-						<SearchBox from='/admin/users/' />
-					) : activeTab === 'orders' ? (
-						<SearchBox from='/admin/orders/' />
-					) : (
-						activeTab === 'products' && (
-							<>
-								<Nav.Link as={Link} to='/product/new'>
-									Create new product
-								</Nav.Link>
-								<SearchBox from='/admin/products/' />
-							</>
-						)
-					)}
-				</Nav>
-			</Col>
-			<Col md={10}>
-				{activeTab === 'users' && <UsersPanel />}
-				{activeTab === 'orders' && <OrdersPanel />}
-				{activeTab === 'products' && <ProductsPanel />}
-			</Col>
-		</Row>
+						<Nav.Link eventKey='products' onClick={tabHandler}>
+							Products
+						</Nav.Link>
+						{activeTab === 'users' ? (
+							<SearchBox from='/admin/users/' />
+						) : activeTab === 'orders' ? (
+							<SearchBox from='/admin/orders/' />
+						) : (
+							activeTab === 'products' && (
+								<>
+									<Nav.Link as={Link} to='/product/new'>
+										Create new product
+									</Nav.Link>
+									<SearchBox from='/admin/products/' />
+								</>
+							)
+						)}
+					</Nav>
+				</Col>
+				<Col md={10}>
+					{activeTab === 'users' && <UsersPanel />}
+					{activeTab === 'orders' && <OrdersPanel />}
+					{activeTab === 'products' && <ProductsPanel />}
+				</Col>
+			</Row>
+		</>
 	)
 }
 

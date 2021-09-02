@@ -6,6 +6,7 @@ import { Link, useHistory } from 'react-router-dom'
 import { useCreateOrderMutation } from '../api/orderApi'
 import CheckoutSteps from '../components/CheckoutSteps'
 import Message from '../components/Message'
+import Meta from '../components/Meta'
 import { useAppSelector } from '../hooks'
 
 const PlaceOrderScreen = () => {
@@ -61,6 +62,7 @@ const PlaceOrderScreen = () => {
 	const [errorMassage, setErrorMassage] = useState('')
 	return (
 		<>
+			<Meta title={`Place Order`} description={`Place order page`} />
 			<CheckoutSteps step1 step2 step3 step4 />
 			<Row>
 				<Col md={8}>

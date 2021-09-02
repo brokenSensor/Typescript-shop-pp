@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom'
 import { useGetAllUserOrdersQuery } from '../api/orderApi'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
+import Meta from '../components/Meta'
 import { useAppSelector } from '../hooks'
 
 const OrderListScreen = () => {
@@ -22,6 +23,10 @@ const OrderListScreen = () => {
 
 	return (
 		<>
+			<Meta
+				title={`Orders | ${userInfo?.name}`}
+				description={`Registration page`}
+			/>
 			<h1>Orders</h1>
 			{isLoading ? (
 				<Loader />

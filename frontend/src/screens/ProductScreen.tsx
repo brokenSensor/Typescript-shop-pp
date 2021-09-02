@@ -19,8 +19,7 @@ const ProductScreen = () => {
 	const [rating, setRating] = useState('')
 	const [reviewError, setReviewError] = useState('')
 
-	const authReducer = useAppSelector(state => state.authReducer)
-	const { user } = authReducer
+	const userInfo = useAppSelector(state => state.authReducer.user)
 
 	const { id } = useParams<{
 		id: string
@@ -42,7 +41,11 @@ const ProductScreen = () => {
 			) : (
 				data && (
 					<>
-						<Meta title={data.name} />
+						<Meta
+							title={data.name}
+							description={`${data.name} product screen`}
+							keywords={`${data.name}, ${data.brand}, ${data.category}`}
+						/>
 
 						<Row>
 							<Col md={6}>
@@ -160,7 +163,7 @@ const ProductScreen = () => {
 										{reviewError && (
 											<Message variant='danger'>{reviewError}</Message>
 										)}
-										{user ? (
+										{userInfo ? (
 											<Form
 												className='d-grid gap-2'
 												onSubmit={async e => {
@@ -169,7 +172,7 @@ const ProductScreen = () => {
 														try {
 															await createReview({
 																comment,
-																name: user.name,
+																name: userInfo.name,
 																productId: data.id,
 																rating: Number(rating),
 															}).unwrap()
@@ -213,13 +216,13 @@ const ProductScreen = () => {
 														onChange={e => setComment(e.target.value)}
 													></Form.Control>
 												</Form.Group>
-												{!user.isActivated && (
+												{!userInfo.isActivated && (
 													<Message variant='warning'>
 														Please confirm your email to leave a review!
 													</Message>
 												)}
 												<Button
-													disabled={!user.isActivated}
+													disabled={!userInfo.isActivated}
 													type='submit'
 													variant='primary'
 												>

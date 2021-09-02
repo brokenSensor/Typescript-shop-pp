@@ -13,7 +13,7 @@ const Meta = ({ title, description, keywords }: MetaProps) => {
 }
 
 Meta.defaultProps = {
-	title: 'Welcome To My First Shop',
+	title: 'Welcome To My Shop for Portfolio',
 }
 
 export default Meta

@@ -19,7 +19,7 @@ const MainScreen: React.FC = () => {
 	})
 	return (
 		<>
-			<Meta />
+			<Meta description='Shops main page' keywords='shop, best products' />
 			{!keyword && <CustomCarousel />}
 			{
 				<>

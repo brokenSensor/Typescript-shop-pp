@@ -8,6 +8,7 @@ import {
 	useUpdateUserMutation,
 } from '../api/authApi'
 import Message from '../components/Message'
+import Meta from '../components/Meta'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { setUser } from '../slices/authSlice'
 
@@ -57,65 +58,79 @@ const ProfileScreen = () => {
 		resendActivation()
 	}
 	return (
-		<Row className='justify-content-md-center'>
-			{!data?.isActivated && (
-				<Message variant='warning'>
-					Your email has not been confirmed yet!{' '}
-					<Button variant='warning' onClick={resendActivationHandler}>
-						Resend activation link
-					</Button>
-				</Message>
-			)}
-			<Col md={5}>
-				<h2>User Profile</h2>
-				{message && <Message variant='danger'>{message}</Message>}
-				<Form onSubmit={submitHandler}>
-					<Form.Group controlId='name'>
-						<Form.Label>Name</Form.Label>
-						<Form.Control
-							type='name'
-							placeholder='Enter name'
-							value={name}
-							onChange={e => setName(e.target.value)}
-						></Form.Control>
-					</Form.Group>
+		<>
+			<Meta
+				title={`Profile | ${data?.name}`}
+				description={`${data?.name} profile page`}
+			/>
+			<Row className='justify-content-md-center'>
+				{data && !data.isActivated && (
+					<Message variant='warning'>
+						Your email has not been confirmed yet!{' '}
+						<Button variant='warning' onClick={resendActivationHandler}>
+							Resend activation link
+						</Button>
+					</Message>
+				)}
+				<Col md={5}>
+					<h2>User Profile</h2>
+					{message && <Message variant='danger'>{message}</Message>}
+					<Form onSubmit={submitHandler}>
+						<Form.Group controlId='name'>
+							<Form.Label>Name</Form.Label>
+							<Form.Control
+								disabled={data?.strategy === 'local' ? false : true}
+								type='name'
+								placeholder='Enter name'
+								value={name}
+								onChange={e => setName(e.target.value)}
+							></Form.Control>
+						</Form.Group>
 
-					<Form.Group controlId='email'>
-						<Form.Label>Email</Form.Label>
-						<Form.Control
-							type='email'
-							placeholder='Enter email'
-							value={email}
-							onChange={e => setEmail(e.target.value)}
-						></Form.Control>
-					</Form.Group>
+						<Form.Group controlId='email'>
+							<Form.Label>Email</Form.Label>
+							<Form.Control
+								disabled={data?.strategy === 'local' ? false : true}
+								type='email'
+								placeholder='Enter email'
+								value={email}
+								onChange={e => setEmail(e.target.value)}
+							></Form.Control>
+						</Form.Group>
 
-					<Form.Group controlId='password'>
-						<Form.Label>Password</Form.Label>
-						<Form.Control
-							type='password'
-							placeholder='Enter password'
-							value={password}
-							onChange={e => setPassword(e.target.value)}
-						></Form.Control>
-					</Form.Group>
+						<Form.Group controlId='password'>
+							<Form.Label>Password</Form.Label>
+							<Form.Control
+								disabled={data?.strategy === 'local' ? false : true}
+								type='password'
+								placeholder='Enter password'
+								value={password}
+								onChange={e => setPassword(e.target.value)}
+							></Form.Control>
+						</Form.Group>
 
-					<Form.Group controlId='confirmPassword'>
-						<Form.Label>Confirm Password</Form.Label>
-						<Form.Control
-							type='password'
-							placeholder='Confirm Password'
-							value={confirmPassword}
-							onChange={e => setConfirmPassword(e.target.value)}
-						></Form.Control>
-					</Form.Group>
+						<Form.Group controlId='confirmPassword'>
+							<Form.Label>Confirm Password</Form.Label>
+							<Form.Control
+								disabled={data?.strategy === 'local' ? false : true}
+								type='password'
+								placeholder='Confirm Password'
+								value={confirmPassword}
+								onChange={e => setConfirmPassword(e.target.value)}
+							></Form.Control>
+						</Form.Group>
 
-					<Button type='submit' variant='primary'>
-						Update
-					</Button>
-				</Form>
-			</Col>
-		</Row>
+						<Button
+							type='submit'
+							variant='primary'
+							disabled={data?.strategy === 'local' ? false : true}
+						>
+							Update
+						</Button>
+					</Form>
+				</Col>
+			</Row>
+		</>
 	)
 }
 

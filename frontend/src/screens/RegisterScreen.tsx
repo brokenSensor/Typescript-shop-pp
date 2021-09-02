@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from '../hooks'
 import { setCredentials } from '../slices/authSlice'
 import { RegisterRequest } from '../types'
 import { GoogleLogin, GoogleLoginResponse } from 'react-google-login'
+import Meta from '../components/Meta'
 
 const RegisterScreen = () => {
 	const dispatch = useAppDispatch()
@@ -41,87 +42,93 @@ const RegisterScreen = () => {
 		setFormState(prev => ({ ...prev, [name]: value }))
 
 	return (
-		<FormContainer>
-			<h1>Sign Up</h1>
-			{error && <Message variant='danger'>{error}</Message>}
-			<Form>
-				<Form.Group controlId='name'>
-					<Form.Label>Full Name</Form.Label>
-					<Form.Control
-						name='name'
-						type='text'
-						placeholder='Enter full name'
-						onChange={handleChange}
-					></Form.Control>
-				</Form.Group>
-				<Form.Group controlId='email'>
-					<Form.Label>Email Address</Form.Label>
-					<Form.Control
-						name='email'
-						type='email'
-						placeholder='Enter email'
-						onChange={handleChange}
-					></Form.Control>
-				</Form.Group>
-				<Form.Group controlId='password'>
-					<Form.Label>Password</Form.Label>
-					<Form.Control
-						name='password'
-						type='password'
-						placeholder='Enter password'
-						onChange={handleChange}
-					></Form.Control>
-				</Form.Group>
-				{isLoading ? (
-					<h3>Loading</h3>
-				) : (
-					<Button
-						variant='primary'
-						onClick={async () => {
-							try {
-								const res = await register(formState).unwrap()
-								dispatch(setCredentials(res))
-								history.push('/')
-							} catch (error) {
-								if (Array.isArray(error.data.message)) {
-									setError(error.data.message.join(' '))
-								} else {
-									setError(error.data.message)
+		<>
+			<Meta
+				title={`Register On My Shop for Portfolio`}
+				description={`Registration page`}
+			/>
+			<FormContainer>
+				<h1>Sign Up</h1>
+				{error && <Message variant='danger'>{error}</Message>}
+				<Form>
+					<Form.Group controlId='name'>
+						<Form.Label>Full Name</Form.Label>
+						<Form.Control
+							name='name'
+							type='text'
+							placeholder='Enter full name'
+							onChange={handleChange}
+						></Form.Control>
+					</Form.Group>
+					<Form.Group controlId='email'>
+						<Form.Label>Email Address</Form.Label>
+						<Form.Control
+							name='email'
+							type='email'
+							placeholder='Enter email'
+							onChange={handleChange}
+						></Form.Control>
+					</Form.Group>
+					<Form.Group controlId='password'>
+						<Form.Label>Password</Form.Label>
+						<Form.Control
+							name='password'
+							type='password'
+							placeholder='Enter password'
+							onChange={handleChange}
+						></Form.Control>
+					</Form.Group>
+					{isLoading ? (
+						<h3>Loading</h3>
+					) : (
+						<Button
+							variant='primary'
+							onClick={async () => {
+								try {
+									const res = await register(formState).unwrap()
+									dispatch(setCredentials(res))
+									history.push('/')
+								} catch (error) {
+									if (Array.isArray(error.data.message)) {
+										setError(error.data.message.join(' '))
+									} else {
+										setError(error.data.message)
+									}
+									setTimeout(() => {
+										setError('')
+									}, 10000)
 								}
-								setTimeout(() => {
-									setError('')
-								}, 10000)
-							}
-						}}
-					>
-						Sign Up
-					</Button>
-				)}
-				<Row className='py-3'>
-					<GoogleLogin
-						clientId='575968030484-80eiauos77cnv8qt6o7ce3dpd92sdlg6.apps.googleusercontent.com'
-						buttonText='Register with Google'
-						onSuccess={async e => {
-							const res = await google(
-								(e as GoogleLoginResponse).profileObj
-							).unwrap()
-							dispatch(setCredentials(res))
-							history.push(redirect)
-						}}
-						onFailure={e => {
-							console.log(e)
-						}}
-						cookiePolicy={'single_host_origin'}
-					/>
-					<Col>
-						Have an Account?{' '}
-						<Link to={redirect ? `/login?redirect=${redirect}` : '/login'}>
-							Login
-						</Link>
-					</Col>
-				</Row>
-			</Form>
-		</FormContainer>
+							}}
+						>
+							Sign Up
+						</Button>
+					)}
+					<Row className='py-3'>
+						<GoogleLogin
+							clientId='575968030484-80eiauos77cnv8qt6o7ce3dpd92sdlg6.apps.googleusercontent.com'
+							buttonText='Register with Google'
+							onSuccess={async e => {
+								const res = await google(
+									(e as GoogleLoginResponse).profileObj
+								).unwrap()
+								dispatch(setCredentials(res))
+								history.push(redirect)
+							}}
+							onFailure={e => {
+								console.log(e)
+							}}
+							cookiePolicy={'single_host_origin'}
+						/>
+						<Col>
+							Have an Account?{' '}
+							<Link to={redirect ? `/login?redirect=${redirect}` : '/login'}>
+								Login
+							</Link>
+						</Col>
+					</Row>
+				</Form>
+			</FormContainer>
+		</>
 	)
 }
 
