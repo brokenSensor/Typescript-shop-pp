@@ -19,6 +19,7 @@ import { useGetPayPalConfigQuery } from './api/orderApi'
 import AdminScreen from './screens/AdminScreen'
 import EditUserScreen from './screens/EditUserScreen'
 import EditProductScreen from './screens/EditProductScreen'
+import EmailActivationResultScreen from './screens/EmailActivationResultScreen'
 import CreateProductScreen from './screens/CreateProductScreen'
 
 function App() {
@@ -32,6 +33,11 @@ function App() {
 						<main className='py-3'>
 							<Container>
 								<Switch>
+									<Route
+										path='/activation/:result'
+										component={EmailActivationResultScreen}
+										exact
+									/>
 									<Route
 										path='/product/new'
 										component={CreateProductScreen}

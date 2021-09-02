@@ -57,8 +57,10 @@ const ProductScreen = () => {
 										<h3>{data.name}</h3>
 									</ListGroup.Item>
 									<ListGroup.Item>
-										<Rating value={parseFloat(data.rating)} />
-										<p>{data.numReviews} Reviews</p>
+										<Rating
+											value={parseFloat(data.rating)}
+											text={`(${data.numReviews})`}
+										/>
 									</ListGroup.Item>
 									<ListGroup.Item>Price: ${data.price}</ListGroup.Item>
 									<ListGroup.Item>
