@@ -19,8 +19,10 @@ const Product = ({ product }: ProductProps) => {
 				</Link>
 
 				<Card.Text as='div'>
-					<Rating value={parseFloat(product.rating)} />
-					<p>{product.numReviews} Reviews</p>
+					<Rating
+						value={parseFloat(product.rating)}
+						text={`(${product.numReviews})`}
+					/>
 				</Card.Text>
 
 				<Card.Text as='h4'>${product.price}</Card.Text>
