@@ -19,6 +19,10 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ApiProperty({ example: 'local', description: 'Auth strategy' })
+  @Column()
+  strategy: string;
+
   @ApiProperty({ example: 'Bob', description: 'User name' })
   @Column()
   name: string;
@@ -30,7 +34,7 @@ export class User {
   @ApiProperty({
     description: 'Uuid link for email activation',
   })
-  @Column({ select: false })
+  @Column({ select: false, nullable: true })
   activationLink: string;
 
   @ApiProperty({
@@ -40,7 +44,7 @@ export class User {
   isActivated: boolean;
 
   @ApiProperty({ example: '12345678', description: 'User password' })
-  @Column({ select: false })
+  @Column({ select: false, nullable: true })
   password: string;
 
   @ApiProperty({
@@ -77,6 +81,8 @@ export class User {
 
   @BeforeInsert()
   private async hashPassword() {
-    this.password = await bcrypt.hash(this.password, 10);
+    if (this.password) {
+      this.password = await bcrypt.hash(this.password, 10);
+    }
   }
 }

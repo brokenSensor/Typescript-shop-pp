@@ -20,9 +20,13 @@ export class UsersService {
     });
 
     if (!user) {
-      const activationLink = v4();
+      const activationLink = dto.strategy === 'local' ? v4() : null;
       return await this.userRepository.save(
-        this.userRepository.create({ ...dto, activationLink }),
+        this.userRepository.create({
+          ...dto,
+          activationLink,
+          isActivated: dto.strategy === 'local' ? false : true,
+        }),
       );
     }
     throw new BadRequestException({

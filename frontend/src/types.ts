@@ -9,6 +9,7 @@ export type UserDto = {
 	name: string
 	email: string
 	isAdmin: boolean
+	strategy: string
 	createdAt: Date
 	updatedAt: Date
 	isActivated: boolean
@@ -23,6 +24,7 @@ export type RegisterRequest = {
 	name: string
 	email: string
 	password: string
+	strategy: string
 }
 
 export type CastomError = {
@@ -239,4 +241,13 @@ export type PaginatedUsers = {
 	pages: number
 	page: number
 	users: User[]
+}
+
+export type GoogleProfile = {
+	googleId: string
+	imageUrl: string
+	email: string
+	name: string
+	givenName: string
+	familyName: string
 }

@@ -20,9 +20,11 @@ export class CreateUserDto {
   email: string;
 
   @ApiProperty({ example: '12345678', description: 'User password' })
-  @IsDefined()
   @Length(6, 16, {
     message: 'The password must be between 6 and 16 characters long.',
   })
-  password: string;
+  password?: string;
+
+  @ApiProperty({ example: 'local', description: 'Auth strategy' })
+  strategy: string;
 }

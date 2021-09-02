@@ -97,7 +97,7 @@ export class ProductService {
 
   async seed(): Promise<void> {
     users.forEach(async (user) => {
-      await this.usersService.createUser({ ...user });
+      await this.usersService.createUser({ ...user, strategy: 'local' });
     });
 
     const notAdmin = await this.userRepository.findOne({

@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Col, Form, Row } from 'react-bootstrap'
 import { Link, useHistory, useLocation } from 'react-router-dom'
-import { useRegisterUserMutation } from '../api/authApi'
+import { useGoogleAuthMutation, useRegisterUserMutation } from '../api/authApi'
 import FormContainer from '../components/FormContainer'
 import Message from '../components/Message'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { setCredentials } from '../slices/authSlice'
 import { RegisterRequest } from '../types'
+import { GoogleLogin, GoogleLoginResponse } from 'react-google-login'
 
 const RegisterScreen = () => {
 	const dispatch = useAppDispatch()
@@ -28,9 +29,11 @@ const RegisterScreen = () => {
 		name: '',
 		email: '',
 		password: '',
+		strategy: 'local',
 	})
 
 	const [register, { isLoading }] = useRegisterUserMutation()
+	const [google] = useGoogleAuthMutation()
 
 	const handleChange = ({
 		target: { name, value },
@@ -95,6 +98,21 @@ const RegisterScreen = () => {
 					</Button>
 				)}
 				<Row className='py-3'>
+					<GoogleLogin
+						clientId='575968030484-80eiauos77cnv8qt6o7ce3dpd92sdlg6.apps.googleusercontent.com'
+						buttonText='Register with Google'
+						onSuccess={async e => {
+							const res = await google(
+								(e as GoogleLoginResponse).profileObj
+							).unwrap()
+							dispatch(setCredentials(res))
+							history.push(redirect)
+						}}
+						onFailure={e => {
+							console.log(e)
+						}}
+						cookiePolicy={'single_host_origin'}
+					/>
 					<Col>
 						Have an Account?{' '}
 						<Link to={redirect ? `/login?redirect=${redirect}` : '/login'}>

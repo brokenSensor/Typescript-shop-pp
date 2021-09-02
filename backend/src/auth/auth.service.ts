@@ -10,7 +10,7 @@ import { User } from 'src/users/users.model';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { TokensAndUser, UserDTO } from 'src/types';
+import { GoogleProfile, TokensAndUser, UserDTO } from 'src/types';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
 import { emailHTMLMaker } from './emailHTML';
@@ -74,8 +74,14 @@ export class AuthService {
 
   async registerUser(createUserDto: CreateUserDto) {
     const user = await this.usersService.createUser(createUserDto);
-    await this.sendActivationEmail(user.name, user.email, user.activationLink);
     if (user) {
+      if (user.strategy === 'local') {
+        await this.sendActivationEmail(
+          user.name,
+          user.email,
+          user.activationLink,
+        );
+      }
       const userDto = new UserDTO(user);
       return this.login({ ...userDto });
     }
@@ -186,5 +192,25 @@ export class AuthService {
       message: 'User information from google',
       user: req.user,
     };
+  }
+
+  async googleAuth(profile: GoogleProfile): Promise<TokensAndUser> {
+    const user = await this.userRepository.findOne({
+      where: { email: profile.email },
+    });
+
+    if (user) {
+      return await this.login({ ...new UserDTO(user) });
+    } else {
+      const user = await this.usersService.createUser({
+        email: profile.email,
+        name: `${profile.givenName} ${profile.familyName}`,
+        strategy: 'google',
+      });
+
+      if (user) {
+        return await this.login({ ...new UserDTO(user) });
+      }
+    }
   }
 }

@@ -1,5 +1,6 @@
 import { shopApi } from '.'
 import {
+	GoogleProfile,
 	LoginRequest,
 	RegisterRequest,
 	TokensAndUser,
@@ -23,6 +24,14 @@ const authApi = shopApi.injectEndpoints({
 				method: 'POST',
 				body: registerCredentials,
 				credentials: 'include',
+			}),
+		}),
+		googleAuth: build.mutation<TokensAndUser, GoogleProfile>({
+			query: googleProfile => ({
+				url: `/auth/google/`,
+				method: 'POST',
+				credentials: 'include',
+				body: googleProfile,
 			}),
 		}),
 		logoutUser: build.mutation<void, void>({
@@ -57,4 +66,5 @@ export const {
 	useUpdateUserMutation,
 	useGetUserQuery,
 	useResendActivationMutation,
+	useGoogleAuthMutation,
 } = authApi

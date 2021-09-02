@@ -3,16 +3,20 @@ import {
   Controller,
   Get,
   HttpStatus,
+  Next,
   Param,
   Post,
   Req,
   Res,
+  UnauthorizedException,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
+import { authenticate, AuthenticateOptions } from 'passport';
+import { AuthProvider, GoogleProfile } from 'src/types';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -75,6 +79,30 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response,
   ) {
     const body = await this.authService.registerUser(createUserDto);
+    if (body) {
+      response.cookie('refreshToken', body.refresh_token, {
+        httpOnly: true,
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+      });
+      return body;
+    }
+  }
+
+  @ApiOperation({ summary: 'Google auth' })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    schema: {
+      properties: {
+        token: { type: 'string', description: 'Users JWT Token' },
+      },
+    },
+  })
+  @Post('/google')
+  async googleAuth(
+    @Body(new ValidationPipe()) googleProfile: GoogleProfile,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const body = await this.authService.googleAuth(googleProfile);
     if (body) {
       response.cookie('refreshToken', body.refresh_token, {
         httpOnly: true,

@@ -65,6 +65,7 @@ export class UserDTO {
     this.createdAt = user.createdAt;
     this.updatedAt = user.updatedAt;
     this.isActivated = user.isActivated;
+    this.strategy = user.strategy;
   }
   id: number;
   name: string;
@@ -73,6 +74,18 @@ export class UserDTO {
   createdAt: Date;
   updatedAt: Date;
   isActivated: boolean;
+  strategy: string;
 }
 
 export const validMimeTypes = ['image/png', 'image/jpg', 'image/jpeg'];
+
+export type AuthProvider = 'google' | 'facebook';
+
+export type GoogleProfile = {
+  googleId: string;
+  imageUrl: string;
+  email: string;
+  name: string;
+  givenName: string;
+  familyName: string;
+};
