@@ -50,21 +50,21 @@ const OrderListScreen = () => {
 								<td>{order.id}</td>
 								<td>{new Date(order.createdAt).toUTCString()}</td>
 								<td>{order.totalPrice} $</td>
-								<td>
+								<td className='text-center'>
 									{order.isPaid ? (
 										new Date(order.paidAt).toUTCString()
 									) : (
 										<i className='fas fa-times' style={{ color: 'red' }}></i>
 									)}
 								</td>
-								<td>
+								<td className='text-center'>
 									{order.isDelivered ? (
 										new Date(order.deliveredAt).toUTCString()
 									) : (
 										<i className='fas fa-times' style={{ color: 'red' }}></i>
 									)}
 								</td>
-								<td>
+								<td className='text-center'>
 									<LinkContainer to={`/order/${order.id}`}>
 										<Button variant='light' size='sm'>
 											Details

@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PaginatedProducts } from 'src/types';
+import { Review } from 'src/review/review.model';
+import { PaginatedProduct, PaginatedProducts } from 'src/types';
 import { User } from 'src/users/users.model';
 import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
@@ -14,6 +15,7 @@ export class ProductService {
   constructor(
     @InjectRepository(Product) private productRepository: Repository<Product>,
     @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(Review) private reviewRepository: Repository<Review>,
     private usersService: UsersService,
   ) {}
   async createProduct(dto: CreateProductDto, userId: number): Promise<void> {
@@ -45,10 +47,26 @@ export class ProductService {
     return { page, pages: Math.ceil(count / pageSize), products };
   }
 
-  async getProductById(id: number): Promise<Product> {
-    return await this.productRepository.findOne(id, {
-      relations: ['reviews'],
-    });
+  async getProductById(
+    id: number,
+    reviewPageNumber: number | 'undefined' | '',
+  ): Promise<PaginatedProduct> {
+    const pageSize = 4;
+    const page =
+      reviewPageNumber === 'undefined' || reviewPageNumber === ''
+        ? 1
+        : reviewPageNumber;
+    const product = await this.productRepository.findOne({ where: { id } });
+    const [reviews, count] = await this.reviewRepository
+      .createQueryBuilder('review')
+      .where('review.productId = :productId', { productId: id })
+      .take(pageSize)
+      .skip(pageSize * (page - 1))
+      .orderBy('review.createdAt')
+      .getManyAndCount();
+
+    product.reviews = reviews;
+    return { page, pages: Math.ceil(count / pageSize), product };
   }
 
   async updateProduct(dto: UpdateProductDto): Promise<void> {

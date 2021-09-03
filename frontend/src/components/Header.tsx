@@ -17,11 +17,11 @@ const Header = () => {
 			<Navbar collapseOnSelect expand='lg' bg='secondary' variant='light'>
 				<Container>
 					<Navbar.Brand as={Link} to='/'>
-						Example Shop
+						My Shop For Portfolio
 					</Navbar.Brand>
 					<Navbar.Toggle aria-controls='responsive-navbar-nav' />
 					<Navbar.Collapse id='responsive-navbar-nav'>
-						<Route render={({ history }) => <SearchBox />} />
+						<Route render={() => <SearchBox />} />
 						<Nav className='ml-auto'>
 							<Nav.Link as={Link} to='/cart'>
 								<i className='fas fa-shopping-cart'> {cartItems.length}</i>

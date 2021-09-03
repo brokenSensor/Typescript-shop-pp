@@ -6,6 +6,7 @@ import { useCreateReviewMutation } from '../api/reviewApi'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 import Meta from '../components/Meta'
+import Paginate from '../components/Paginate'
 import Rating from '../components/Rating'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { addToCart } from '../slices/cartSlice'
@@ -21,15 +22,19 @@ const ProductScreen = () => {
 
 	const userInfo = useAppSelector(state => state.authReducer.user)
 
-	const { id } = useParams<{
+	const { id, reviewPageNumber } = useParams<{
 		id: string
+		reviewPageNumber: string
 	}>()
 	const {
 		data,
 		error,
 		isLoading,
 		refetch: refetchProduct,
-	} = useGetProductByIdQuery(id)
+	} = useGetProductByIdQuery({
+		productId: id,
+		reviewPageNumber: reviewPageNumber,
+	})
 
 	const [createReview] = useCreateReviewMutation()
 	return (
@@ -42,29 +47,29 @@ const ProductScreen = () => {
 				data && (
 					<>
 						<Meta
-							title={data.name}
-							description={`${data.name} product screen`}
-							keywords={`${data.name}, ${data.brand}, ${data.category}`}
+							title={data.product.name}
+							description={`${data.product.name} product screen`}
+							keywords={`${data.product.name}, ${data.product.brand}, ${data.product.category}`}
 						/>
 
 						<Row>
 							<Col md={6}>
-								<Image src={data.image} alt={data.name} fluid />
+								<Image src={data.product.image} alt={data.product.name} fluid />
 							</Col>
 							<Col md={3}>
 								<ListGroup variant='flush'>
 									<ListGroup.Item>
-										<h3>{data.name}</h3>
+										<h3>{data.product.name}</h3>
 									</ListGroup.Item>
 									<ListGroup.Item>
 										<Rating
-											value={parseFloat(data.rating)}
-											text={`(${data.numReviews})`}
+											value={parseFloat(data.product.rating)}
+											text={`(${data.product.numReviews})`}
 										/>
 									</ListGroup.Item>
-									<ListGroup.Item>Price: ${data.price}</ListGroup.Item>
+									<ListGroup.Item>Price: ${data.product.price}</ListGroup.Item>
 									<ListGroup.Item>
-										Description: {data.description}
+										Description: {data.product.description}
 									</ListGroup.Item>
 								</ListGroup>
 							</Col>
@@ -75,7 +80,7 @@ const ProductScreen = () => {
 											<Row>
 												<Col>Price:</Col>
 												<Col>
-													<strong>${data.price}</strong>
+													<strong>${data.product.price}</strong>
 												</Col>
 											</Row>
 										</ListGroup.Item>
@@ -83,11 +88,13 @@ const ProductScreen = () => {
 											<Row>
 												<Col>Status:</Col>
 												<Col>
-													{data.countInStock > 0 ? 'In Stock' : 'Out Of Stock'}
+													{data.product.countInStock > 0
+														? 'In Stock'
+														: 'Out Of Stock'}
 												</Col>
 											</Row>
 										</ListGroup.Item>
-										{data.countInStock > 0 && (
+										{data.product.countInStock > 0 && (
 											<ListGroup.Item>
 												<Row>
 													<Col>Qty:</Col>
@@ -103,7 +110,7 @@ const ProductScreen = () => {
 															}}
 														>
 															{Array.from(
-																{ length: data.countInStock },
+																{ length: data.product.countInStock },
 																(v, k) => k + 1
 															).map(x => (
 																<option key={x} value={x}>
@@ -121,15 +128,17 @@ const ProductScreen = () => {
 												onClick={() => {
 													dispatch(
 														addToCart({
-															image: data.image,
-															name: data.name,
-															price: data.price,
-															productId: data.id,
+															image: data.product.image,
+															name: data.product.name,
+															price: data.product.price,
+															productId: data.product.id,
 															qty: qty,
-															countInStock: data.countInStock,
+															countInStock: data.product.countInStock,
 														})
 													)
-													setMessage(`${qty}  ${data.name} added to cart!`)
+													setMessage(
+														`${qty}  ${data.product.name} added to cart!`
+													)
 
 													setTimeout(() => {
 														setMessage('')
@@ -138,7 +147,7 @@ const ProductScreen = () => {
 												className='btn-block'
 												type='button'
 												size='lg'
-												disabled={data.countInStock === 0}
+												disabled={data.product.countInStock === 0}
 											>
 												Add To Cart
 											</Button>
@@ -150,9 +159,11 @@ const ProductScreen = () => {
 						<Row>
 							<Col md={6}>
 								<h2>Reviews</h2>
-								{data.reviews.length === 0 && <Message>No Reviews</Message>}
+								{data.product.reviews.length === 0 && (
+									<Message>No Reviews</Message>
+								)}
 								<ListGroup variant='flush'>
-									{data.reviews.map(review => (
+									{data.product.reviews.map(review => (
 										<ListGroup.Item key={review.id}>
 											<strong>{review.name}</strong>
 											<Rating value={parseFloat(review.rating)} />
@@ -160,6 +171,11 @@ const ProductScreen = () => {
 											<p>{review.comment}</p>
 										</ListGroup.Item>
 									))}
+									<Paginate
+										from={`/product/${id}`}
+										page={data.page}
+										pages={data.pages}
+									/>
 									<ListGroup.Item>
 										<h2>Write a Customer Review</h2>
 										{reviewError && (
@@ -175,7 +191,7 @@ const ProductScreen = () => {
 															await createReview({
 																comment,
 																name: userInfo.name,
-																productId: data.id,
+																productId: data.product.id,
 																rating: Number(rating),
 															}).unwrap()
 															refetchProduct()

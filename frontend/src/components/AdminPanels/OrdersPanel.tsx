@@ -70,14 +70,14 @@ const OrdersPanel = () => {
 												></i>
 											)}
 										</td>
-										<td>
+										<td className='text-center'>
 											<LinkContainer to={`/order/${order.id}`}>
 												<Button variant='light' size='sm'>
 													Details
 												</Button>
 											</LinkContainer>
 										</td>
-										<td>
+										<td className='text-center'>
 											<Button
 												variant='danger'
 												size='sm'

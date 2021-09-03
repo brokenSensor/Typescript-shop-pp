@@ -27,20 +27,23 @@ const EditProductScreen = () => {
 	const userDetails = useAppSelector(state => state.authReducer.user)
 
 	const [updateProduct] = useUpdateProductByIdMutation()
-	const { data, refetch: refetchProduct } = useGetProductByIdQuery(productId)
+	const { data, refetch: refetchProduct } = useGetProductByIdQuery({
+		productId,
+		reviewPageNumber: '1',
+	})
 
 	useEffect(() => {
 		if (!userDetails || !userDetails.isAdmin) {
 			history.push('/')
 		} else {
 			if (data) {
-				setName(data.name)
-				setImage(data.image)
-				setBrand(data.brand)
-				setCategory(data.category)
-				setDescription(data.description)
-				setPrice(data.price)
-				setCountInStock(data.countInStock)
+				setName(data.product.name)
+				setImage(data.product.image)
+				setBrand(data.product.brand)
+				setCategory(data.product.category)
+				setDescription(data.product.description)
+				setPrice(data.product.price)
+				setCountInStock(data.product.countInStock)
 			}
 		}
 	}, [data, history, userDetails])
@@ -72,7 +75,7 @@ const EditProductScreen = () => {
 		try {
 			if (data)
 				await updateProduct({
-					id: data.id,
+					id: data.product.id,
 					name,
 					brand,
 					image,
@@ -90,12 +93,12 @@ const EditProductScreen = () => {
 	return (
 		<>
 			<Meta
-				title={`Admin Panel | Edit Product ${data?.id}`}
+				title={`Admin Panel | Edit Product ${data?.product.id}`}
 				description={`Edit product page`}
 			/>
 			<Row className='justify-content-md-center'>
 				<Col md={5}>
-					<h2>Edit Product {data?.id}</h2>
+					<h2>Edit Product {data?.product.id}</h2>
 					{message && <Message variant='danger'>{message}</Message>}
 					<Form onSubmit={submitHandler} name='productForm'>
 						<Form.Group controlId='name'>

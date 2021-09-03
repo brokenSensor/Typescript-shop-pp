@@ -49,7 +49,7 @@ const UsersPanel = () => {
 										<td>{user.id}</td>
 										<td>{user.name}</td>
 										<td>{user.email}</td>
-										<td>
+										<td className='text-center'>
 											{user.isActivated ? (
 												<i
 													className='fas fa-check'
@@ -62,7 +62,7 @@ const UsersPanel = () => {
 												></i>
 											)}
 										</td>
-										<td>
+										<td className='text-center'>
 											{user.isAdmin ? (
 												<i
 													className='fas fa-check'
@@ -77,14 +77,14 @@ const UsersPanel = () => {
 										</td>
 										<td>{new Date(user.createdAt).toUTCString()}</td>
 										<td>{new Date(user.updatedAt).toUTCString()}</td>
-										<td>
+										<td className='text-center'>
 											<LinkContainer to={`/user/edit/${user.id}`}>
 												<Button variant='light' size='sm'>
 													Edit
 												</Button>
 											</LinkContainer>
 										</td>
-										<td>
+										<td className='text-center'>
 											<Button
 												variant='danger'
 												size='sm'

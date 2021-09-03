@@ -53,14 +53,14 @@ const ProductsPanel = () => {
 										<td>{product.rating}</td>
 										<td>{new Date(product.createdAt).toUTCString()}</td>
 										<td>{new Date(product.updatedAt).toUTCString()}</td>
-										<td>
+										<td className='text-center'>
 											<LinkContainer to={`/product/edit/${product.id}`}>
 												<Button variant='light' size='sm'>
 													Edit
 												</Button>
 											</LinkContainer>
 										</td>
-										<td>
+										<td className='text-center'>
 											<Button
 												variant='danger'
 												size='sm'

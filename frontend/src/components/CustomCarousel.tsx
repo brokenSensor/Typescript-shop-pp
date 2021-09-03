@@ -16,7 +16,7 @@ const CustomCarousel = () => {
 			{data &&
 				data.map(product => (
 					<Carousel.Item key={product.id}>
-						<Link to={`/product/${product.id}`}>
+						<Link to={`/product/${product.id}/page/1`}>
 							<Image src={product.image} alt={product.name} fluid />
 							<Carousel.Caption className='carousel-caption'>
 								<h2>

@@ -231,6 +231,12 @@ export type PaginatedProducts = {
 	products: Product[]
 }
 
+export type PaginatedProduct = {
+	pages: number
+	page: number
+	product: Product
+}
+
 export type PaginatedOrders = {
 	pages: number
 	page: number

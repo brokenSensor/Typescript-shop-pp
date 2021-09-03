@@ -73,7 +73,11 @@ function App() {
 									<Route path='/payment' component={PaymentScreen} />
 									<Route path='/shipping' component={ShippingScreen} />
 									<Route path='/cart' component={CartScreen} />
-									<Route path='/product/:id' component={ProductScreen} exact />
+									<Route
+										path='/product/:id/page/:reviewPageNumber'
+										component={ProductScreen}
+										exact
+									/>
 									<Route path='/login' component={LoginScreen} />
 									<Route path='/register' component={RegisterScreen} />
 									<Route path='/search/:keyword' component={MainScreen} exact />
