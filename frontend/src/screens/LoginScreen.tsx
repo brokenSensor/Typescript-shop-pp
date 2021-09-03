@@ -12,7 +12,11 @@ import Message from '../components/Message'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { setCredentials } from '../slices/authSlice'
 import { LoginRequest } from '../types'
-import { GoogleLogin, GoogleLoginResponse } from 'react-google-login'
+import {
+	GoogleLogin,
+	GoogleLoginResponse,
+	GoogleLoginResponseOffline,
+} from 'react-google-login'
 import Meta from '../components/Meta'
 
 const LoginScreen: React.FC = () => {
@@ -46,6 +50,43 @@ const LoginScreen: React.FC = () => {
 	}: React.ChangeEvent<HTMLInputElement>) =>
 		setFormState(prev => ({ ...prev, [name]: value }))
 
+	const submitHandler = async () => {
+		try {
+			const res = await login(formState).unwrap()
+			dispatch(setCredentials(res))
+			history.push(redirect)
+		} catch (error) {
+			if (Array.isArray(error.data.message)) {
+				setError(error.data.message.join(' '))
+			} else {
+				setError(error.data.message)
+			}
+			setTimeout(() => {
+				setError('')
+			}, 10000)
+		}
+	}
+
+	const googleAuthSuccessHandler = async (
+		response: GoogleLoginResponse | GoogleLoginResponseOffline
+	) => {
+		const res = await google(
+			(response as GoogleLoginResponse).profileObj
+		).unwrap()
+		dispatch(setCredentials(res))
+		history.push(redirect)
+	}
+
+	const googleAuthFailureHandler = (response: {
+		error: string
+		details: string
+	}) => {
+		setError(response.details)
+		setTimeout(() => {
+			setError('')
+		}, 10000)
+	}
+
 	return (
 		<>
 			<Meta
@@ -78,25 +119,7 @@ const LoginScreen: React.FC = () => {
 						<h3>Loading</h3>
 					) : (
 						<>
-							<Button
-								variant='primary'
-								onClick={async () => {
-									try {
-										const res = await login(formState).unwrap()
-										dispatch(setCredentials(res))
-										history.push(redirect)
-									} catch (error) {
-										if (Array.isArray(error.data.message)) {
-											setError(error.data.message.join(' '))
-										} else {
-											setError(error.data.message)
-										}
-										setTimeout(() => {
-											setError('')
-										}, 10000)
-									}
-								}}
-							>
+							<Button variant='primary' onClick={submitHandler}>
 								Sign In
 							</Button>
 						</>
@@ -107,16 +130,8 @@ const LoginScreen: React.FC = () => {
 								<GoogleLogin
 									clientId={data.googleClientId}
 									buttonText='Log in with Google'
-									onSuccess={async e => {
-										const res = await google(
-											(e as GoogleLoginResponse).profileObj
-										).unwrap()
-										dispatch(setCredentials(res))
-										history.push(redirect)
-									}}
-									onFailure={e => {
-										console.log(e)
-									}}
+									onSuccess={googleAuthSuccessHandler}
+									onFailure={googleAuthFailureHandler}
 									cookiePolicy={'single_host_origin'}
 								/>
 							)}
