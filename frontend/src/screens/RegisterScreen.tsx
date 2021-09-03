@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Col, Form, Row } from 'react-bootstrap'
 import { Link, useHistory, useLocation } from 'react-router-dom'
-import { useGoogleAuthMutation, useRegisterUserMutation } from '../api/authApi'
+import {
+	useGetGoogleClientIdQuery,
+	useGoogleAuthMutation,
+	useRegisterUserMutation,
+} from '../api/authApi'
 import FormContainer from '../components/FormContainer'
 import Message from '../components/Message'
 import { useAppDispatch, useAppSelector } from '../hooks'
@@ -32,6 +36,8 @@ const RegisterScreen = () => {
 		password: '',
 		strategy: 'local',
 	})
+
+	const { data } = useGetGoogleClientIdQuery()
 
 	const [register, { isLoading }] = useRegisterUserMutation()
 	const [google] = useGoogleAuthMutation()
@@ -104,22 +110,26 @@ const RegisterScreen = () => {
 						</Button>
 					)}
 					<Row className='py-3'>
-						<GoogleLogin
-							clientId='575968030484-80eiauos77cnv8qt6o7ce3dpd92sdlg6.apps.googleusercontent.com'
-							buttonText='Register with Google'
-							onSuccess={async e => {
-								const res = await google(
-									(e as GoogleLoginResponse).profileObj
-								).unwrap()
-								dispatch(setCredentials(res))
-								history.push(redirect)
-							}}
-							onFailure={e => {
-								console.log(e)
-							}}
-							cookiePolicy={'single_host_origin'}
-						/>
-						<Col>
+						<Col md={8}>
+							{data && (
+								<GoogleLogin
+									clientId={data.googleClientId}
+									buttonText='Register with Google'
+									onSuccess={async e => {
+										const res = await google(
+											(e as GoogleLoginResponse).profileObj
+										).unwrap()
+										dispatch(setCredentials(res))
+										history.push(redirect)
+									}}
+									onFailure={e => {
+										console.log(e)
+									}}
+									cookiePolicy={'single_host_origin'}
+								/>
+							)}
+						</Col>
+						<Col md={4}>
 							Have an Account?{' '}
 							<Link to={redirect ? `/login?redirect=${redirect}` : '/login'}>
 								Login

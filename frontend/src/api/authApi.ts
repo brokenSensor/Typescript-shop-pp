@@ -52,6 +52,9 @@ const authApi = shopApi.injectEndpoints({
 		getUser: build.query<UserDto, void>({
 			query: () => `/users/me`,
 		}),
+		getGoogleClientId: build.query<{ googleClientId: string }, void>({
+			query: () => `/auth/googleId`,
+		}),
 		resendActivation: build.mutation<void, void>({
 			query: () => `/auth/emailActivation`,
 		}),
@@ -67,4 +70,5 @@ export const {
 	useGetUserQuery,
 	useResendActivationMutation,
 	useGoogleAuthMutation,
+	useGetGoogleClientIdQuery,
 } = authApi

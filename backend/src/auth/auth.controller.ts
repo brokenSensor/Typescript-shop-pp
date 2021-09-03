@@ -161,4 +161,13 @@ export class AuthController {
       `${this.configService.get('SITE_URL')}/activation/${result}`,
     );
   }
+
+  @ApiOperation({ summary: 'Get Google Client Id' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+  })
+  @Get('/googleId')
+  async getGoogleClientId() {
+    return { googleClientId: this.configService.get('GOOGLE_CLIENT_ID') };
+  }
 }
