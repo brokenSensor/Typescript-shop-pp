@@ -1,5 +1,6 @@
 import { shopApi } from '.'
 import {
+	CreateCategoryDto,
 	CreateProductDto,
 	PaginatedOrders,
 	PaginatedUsers,
@@ -51,6 +52,14 @@ const adminApi = shopApi.injectEndpoints({
 				credentials: 'include',
 			}),
 		}),
+		createCategory: build.mutation<void, CreateCategoryDto>({
+			query: createCategoryDto => ({
+				url: `/category`,
+				method: 'POST',
+				body: createCategoryDto,
+				credentials: 'include',
+			}),
+		}),
 		updateOrderToDelivered: build.mutation<void, number>({
 			query: id => ({
 				url: `/order/delivered/${id}`,
@@ -94,4 +103,5 @@ export const {
 	useDeleteOrderByIdMutation,
 	useDeleteProductByIdMutation,
 	useDeleteUserByIdMutation,
+	useCreateCategoryMutation,
 } = adminApi

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, Col, Form, Row } from 'react-bootstrap'
 import { useHistory, useParams } from 'react-router-dom'
 import { useUpdateProductByIdMutation } from '../api/adminApi'
+import { useGetAllCategoriesQuery } from '../api/categoryApi'
 import { useGetProductByIdQuery } from '../api/productApi'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
@@ -14,7 +15,7 @@ const EditProductScreen = () => {
 	const [name, setName] = useState('')
 	const [brand, setBrand] = useState('')
 	const [image, setImage] = useState('')
-	const [category, setCategory] = useState('')
+	const [category, setCategory] = useState('0')
 	const [description, setDescription] = useState('')
 	const [price, setPrice] = useState(0)
 	const [countInStock, setCountInStock] = useState(0)
@@ -31,22 +32,25 @@ const EditProductScreen = () => {
 		productId,
 		reviewPageNumber: '1',
 	})
+	const { data: categories } = useGetAllCategoriesQuery()
 
 	useEffect(() => {
 		if (!userDetails || !userDetails.isAdmin) {
 			history.push('/')
 		} else {
-			if (data) {
+			if (data && categories) {
 				setName(data.product.name)
 				setImage(data.product.image)
 				setBrand(data.product.brand)
-				setCategory(data.product.category)
+				setCategory(
+					`${categories.findIndex(v => v.id === data.product.category.id)}`
+				)
 				setDescription(data.product.description)
 				setPrice(data.product.price)
 				setCountInStock(data.product.countInStock)
 			}
 		}
-	}, [data, history, userDetails])
+	}, [categories, data, history, userDetails])
 
 	const fileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		let file
@@ -70,24 +74,30 @@ const EditProductScreen = () => {
 		}
 	}
 
+	const setCategoryHandler = (e: React.FormEvent<HTMLSelectElement>) => {
+		setCategory(e.currentTarget.value)
+	}
+
 	const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
-		try {
-			if (data)
-				await updateProduct({
-					id: data.product.id,
-					name,
-					brand,
-					image,
-					category,
-					description,
-					price,
-					countInStock,
-				})
-			refetchProduct()
-			setMessage('Product Edited')
-		} catch (error) {
-			setMessage('Something went wrong. Please try again')
+		if (categories) {
+			try {
+				if (data)
+					await updateProduct({
+						id: data.product.id,
+						name,
+						brand,
+						image,
+						category: categories[parseInt(category)],
+						description,
+						price,
+						countInStock,
+					})
+				refetchProduct()
+				setMessage('Product Edited')
+			} catch (error) {
+				setMessage('Something went wrong. Please try again')
+			}
 		}
 	}
 	return (
@@ -143,12 +153,19 @@ const EditProductScreen = () => {
 
 						<Form.Group controlId='category'>
 							<Form.Label>Category</Form.Label>
-							<Form.Control
-								type='text'
-								placeholder='Enter category'
-								value={category}
-								onChange={e => setCategory(e.target.value)}
-							></Form.Control>
+							{categories && (
+								<Form.Select
+									aria-label='Category'
+									onChange={setCategoryHandler}
+									value={category}
+								>
+									{categories.map((category, index) => (
+										<option key={index} value={index}>
+											{category.name}
+										</option>
+									))}
+								</Form.Select>
+							)}
 						</Form.Group>
 
 						<Form.Group controlId='image'>

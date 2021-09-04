@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Category } from 'src/category/category.model';
 import { Review } from 'src/review/review.model';
 import { PaginatedProduct, PaginatedProducts } from 'src/types';
 import { User } from 'src/users/users.model';
@@ -16,6 +17,8 @@ export class ProductService {
     @InjectRepository(Product) private productRepository: Repository<Product>,
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(Review) private reviewRepository: Repository<Review>,
+    @InjectRepository(Category)
+    private categoryRepository: Repository<Category>,
     private usersService: UsersService,
   ) {}
   async createProduct(dto: CreateProductDto, userId: number): Promise<void> {
@@ -35,13 +38,14 @@ export class ProductService {
     keyword = keyword === 'undefined' ? '' : keyword;
 
     const [products, count] = await this.productRepository
-      .createQueryBuilder()
-      .where('LOWER(name) LIKE :name', {
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.category', 'category')
+      .where('LOWER(product.name) LIKE :name', {
         name: `%${keyword.toLowerCase()}%`,
       })
       .take(pageSize)
       .skip(pageSize * (page - 1))
-      .orderBy('id')
+      .orderBy('product.id')
       .getManyAndCount();
 
     return { page, pages: Math.ceil(count / pageSize), products };
@@ -56,7 +60,10 @@ export class ProductService {
       reviewPageNumber === 'undefined' || reviewPageNumber === ''
         ? 1
         : reviewPageNumber;
-    const product = await this.productRepository.findOne({ where: { id } });
+    const product = await this.productRepository.findOne({
+      where: { id },
+      relations: ['category'],
+    });
     const [reviews, count] = await this.reviewRepository
       .createQueryBuilder('review')
       .where('review.productId = :productId', { productId: id })
@@ -128,8 +135,25 @@ export class ProductService {
 
     const admin = await this.usersService.getUserByEmail('bobAdmin@mail.com');
 
-    products.forEach(async (product) => {
-      await this.createProduct({ ...product }, admin.id);
+    async function asyncForEach(array, callback) {
+      for (let index = 0; index < array.length; index++) {
+        await callback(array[index], index, array);
+      }
+    }
+
+    asyncForEach(products, async (product) => {
+      let category = await this.categoryRepository.findOne({
+        where: { name: product.category },
+      });
+
+      if (!category) {
+        category = new Category();
+        category.name = product.category;
+        category.user = admin;
+
+        category = await this.categoryRepository.save(category);
+      }
+      await this.createProduct({ ...product, category: category }, admin.id);
     });
   }
 

@@ -21,13 +21,16 @@ export class UsersService {
 
     if (!user) {
       const activationLink = dto.strategy === 'local' ? v4() : null;
-      return await this.userRepository.save(
-        this.userRepository.create({
-          ...dto,
-          activationLink,
-          isActivated: dto.strategy === 'local' ? false : true,
-        }),
-      );
+
+      const newUser = new User();
+      newUser.email = dto.email;
+      newUser.name = dto.name;
+      newUser.strategy = dto.strategy;
+      if (dto.password) newUser.password = dto.password;
+      newUser.activationLink = activationLink;
+      newUser.isActivated = dto.strategy === 'local' ? false : true;
+
+      return await this.userRepository.save(newUser);
     }
     throw new BadRequestException({
       statusCode: HttpStatus.BAD_REQUEST,

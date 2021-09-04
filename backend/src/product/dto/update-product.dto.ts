@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsInt } from 'class-validator';
+import { Category } from 'src/category/category.model';
 
 export class UpdateProductDto {
   @ApiProperty({ example: '1', description: 'Id of product' })
@@ -25,8 +26,7 @@ export class UpdateProductDto {
     example: 'Mobile phones',
     description: 'Category of the product',
   })
-  @IsString()
-  category?: string;
+  category?: Category;
 
   @ApiProperty({ description: 'Description of the product' })
   @IsString()

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, Col, Form, Row } from 'react-bootstrap'
 import { useHistory } from 'react-router-dom'
 import { useCreateProductMutation } from '../api/adminApi'
+import { useGetAllCategoriesQuery } from '../api/categoryApi'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 import Meta from '../components/Meta'
@@ -11,7 +12,7 @@ const CreateProductScreen = () => {
 	const [name, setName] = useState('')
 	const [brand, setBrand] = useState('')
 	const [image, setImage] = useState('')
-	const [category, setCategory] = useState('')
+	const [category, setCategory] = useState('0')
 	const [description, setDescription] = useState('')
 	const [price, setPrice] = useState(0)
 	const [countInStock, setCountInStock] = useState(0)
@@ -22,6 +23,8 @@ const CreateProductScreen = () => {
 	const history = useHistory()
 
 	const userDetails = useAppSelector(state => state.authReducer.user)
+
+	const { data: categories } = useGetAllCategoriesQuery()
 
 	const [createProduct] = useCreateProductMutation()
 
@@ -53,21 +56,27 @@ const CreateProductScreen = () => {
 		}
 	}
 
+	const setCategoryHandler = (e: React.FormEvent<HTMLSelectElement>) => {
+		setCategory(e.currentTarget.value)
+	}
+
 	const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
-		try {
-			createProduct({
-				name,
-				brand,
-				image,
-				category,
-				description,
-				price,
-				countInStock,
-			})
-			setMessage('Product Created')
-		} catch (error) {
-			setMessage('Something went wrong. Please try again')
+		if (categories) {
+			try {
+				createProduct({
+					name,
+					brand,
+					image,
+					category: categories[parseInt(category)],
+					description,
+					price,
+					countInStock,
+				})
+				setMessage('Product Created')
+			} catch (error) {
+				setMessage('Something went wrong. Please try again')
+			}
 		}
 	}
 	return (
@@ -123,12 +132,19 @@ const CreateProductScreen = () => {
 
 						<Form.Group controlId='category'>
 							<Form.Label>Category</Form.Label>
-							<Form.Control
-								type='text'
-								placeholder='Enter category'
-								value={category}
-								onChange={e => setCategory(e.target.value)}
-							></Form.Control>
+							{categories && (
+								<Form.Select
+									aria-label='Category'
+									onChange={setCategoryHandler}
+									value={category}
+								>
+									{categories.map((category, index) => (
+										<option key={index} value={index}>
+											{category.name}
+										</option>
+									))}
+								</Form.Select>
+							)}
 						</Form.Group>
 
 						<Form.Group controlId='image'>

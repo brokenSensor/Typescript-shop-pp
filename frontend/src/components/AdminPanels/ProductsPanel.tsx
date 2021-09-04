@@ -32,6 +32,7 @@ const ProductsPanel = () => {
 								<tr>
 									<th>ID</th>
 									<th>NAME</th>
+									<th>CATEGORY</th>
 									<th>PRICE</th>
 									<th>COUNT IN STOCK</th>
 									<th>RATING</th>
@@ -48,6 +49,7 @@ const ProductsPanel = () => {
 										<td>
 											<Link to={`/product/${product.id}`}>{product.name}</Link>
 										</td>
+										<td>{product.category.name}</td>
 										<td>{product.price}</td>
 										<td>{product.countInStock}</td>
 										<td>{product.rating}</td>

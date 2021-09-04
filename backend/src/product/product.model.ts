@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Category } from 'src/category/category.model';
 import { Review } from 'src/review/review.model';
 import { User } from 'src/users/users.model';
 import {
@@ -39,9 +40,10 @@ export class Product {
   @ApiProperty({
     example: 'Mobile phones',
     description: 'Category of the product',
+    type: () => Category,
   })
-  @Column()
-  category: string;
+  @ManyToOne(() => Category, (category) => category.products)
+  category: Category;
 
   @ApiProperty({ description: 'Description of the product' })
   @Column()

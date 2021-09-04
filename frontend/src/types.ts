@@ -40,7 +40,7 @@ export type Product = {
 	name: string
 	image: string
 	brand: string
-	category: string
+	category: Category
 	description: string
 	rating: string
 	numReviews: number
@@ -201,7 +201,7 @@ export type CreateProductDto = {
 	name: string
 	image: string
 	brand: string
-	category: string
+	category: Category
 	description: string
 	price: number
 	countInStock: number
@@ -212,7 +212,7 @@ export type UpdateProductDto = {
 	name?: string
 	image?: string
 	brand?: string
-	category?: string
+	category?: Category
 	description?: string
 	price?: number
 	countInStock?: number
@@ -256,4 +256,17 @@ export type GoogleProfile = {
 	name: string
 	givenName: string
 	familyName: string
+}
+
+export type Category = {
+	id: number
+	name: string
+	user: User
+	createdAt: Date
+	updatedAt: Date
+}
+
+export type CreateCategoryDto = {
+	name: string
+	userId: number
 }
