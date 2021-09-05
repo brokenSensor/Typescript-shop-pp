@@ -31,17 +31,22 @@ export class ProductService {
   async getAllProducts(
     pageNumber: number | 'undefined' | '',
     keyword: string,
+    category: string,
   ): Promise<PaginatedProducts> {
     const pageSize = 12;
     const page =
       pageNumber === 'undefined' || pageNumber === '' ? 1 : pageNumber;
     keyword = keyword === 'undefined' ? '' : keyword;
+    category = category === 'undefined' ? '' : category;
 
     const [products, count] = await this.productRepository
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.category', 'category')
       .where('LOWER(product.name) LIKE :name', {
         name: `%${keyword.toLowerCase()}%`,
+      })
+      .andWhere('LOWER(category.name) LIKE :category', {
+        category: `%${category.toLowerCase()}%`,
       })
       .take(pageSize)
       .skip(pageSize * (page - 1))

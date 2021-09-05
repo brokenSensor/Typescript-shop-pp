@@ -13,14 +13,14 @@ const adminApi = shopApi.injectEndpoints({
 	endpoints: build => ({
 		getAllUsers: build.query<
 			PaginatedUsers,
-			{ pageNumber: string; keyword: string }
+			{ pageNumber?: string; keyword?: string }
 		>({
 			query: ({ keyword, pageNumber }) =>
 				`/users?keyword=${keyword}&pageNumber=${pageNumber}`,
 		}),
 		getAllOrders: build.query<
 			PaginatedOrders,
-			{ pageNumber: string; keyword: string }
+			{ pageNumber?: string; keyword?: string }
 		>({
 			query: ({ keyword, pageNumber }) =>
 				`/order?keyword=${keyword}&pageNumber=${pageNumber}`,

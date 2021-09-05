@@ -5,10 +5,10 @@ const productApi = shopApi.injectEndpoints({
 	endpoints: build => ({
 		getAllProducts: build.query<
 			PaginatedProducts,
-			{ keyword: string; pageNumber: string }
+			{ keyword?: string; pageNumber?: string; category?: string }
 		>({
-			query: ({ keyword, pageNumber }) =>
-				`/product?keyword=${keyword}&pageNumber=${pageNumber}`,
+			query: ({ keyword, pageNumber, category }) =>
+				`/product?keyword=${keyword}&pageNumber=${pageNumber}&category=${category}`,
 		}),
 		getProductById: build.query<
 			PaginatedProduct,

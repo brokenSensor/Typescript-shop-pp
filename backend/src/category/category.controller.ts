@@ -17,12 +17,12 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 export class CategoryController {
   constructor(private categoryService: CategoryService) {}
 
-  @ApiOperation({ summary: 'Get all categories' })
+  @ApiOperation({ summary: 'Add new category' })
   @ApiResponse({
-    status: HttpStatus.OK,
+    status: HttpStatus.CREATED,
   })
-  @Post()
   @UseGuards(JwtAuthGuard, IsAdminGuard)
+  @Post()
   async addNewCategory(@Body(new ValidationPipe()) dto: CreateCategoryDto) {
     return await this.categoryService.addNewCategory(dto);
   }

@@ -134,6 +134,7 @@ const CreateProductScreen = () => {
 							<Form.Label>Category</Form.Label>
 							{categories && (
 								<Form.Select
+									className='text-dark'
 									aria-label='Category'
 									onChange={setCategoryHandler}
 									value={category}

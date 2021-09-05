@@ -49,7 +49,7 @@ const ProductScreen = () => {
 						<Meta
 							title={data.product.name}
 							description={`${data.product.name} product screen`}
-							keywords={`${data.product.name}, ${data.product.brand}, ${data.product.category}`}
+							keywords={`${data.product.name}, ${data.product.brand}, ${data.product.category.name}`}
 						/>
 
 						<Row>
@@ -195,7 +195,7 @@ const ProductScreen = () => {
 																rating: Number(rating),
 															}).unwrap()
 															refetchProduct()
-														} catch (error) {
+														} catch (error: any) {
 															if (Array.isArray(error.data.message)) {
 																setReviewError(error.data.message.join(' '))
 															} else {

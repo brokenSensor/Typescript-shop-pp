@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Table } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
-import { useParams } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import {
 	useDeleteUserByIdMutation,
 	useGetAllUsersQuery,
@@ -10,14 +10,15 @@ import Loader from '../Loader'
 import Paginate from '../Paginate'
 
 const UsersPanel = () => {
-	const { keyword, pageNumber } = useParams<{
-		panel: 'users' | 'orders' | 'products'
-		keyword: string
-		pageNumber: string
-	}>()
+	const search = useLocation().search
+
+	const keyword = new URLSearchParams(search).get('keyword')
+	const pageNumber = new URLSearchParams(search).get('pageNumber')
+	const panel = new URLSearchParams(search).get('panel')
+
 	const { data, isLoading, refetch } = useGetAllUsersQuery({
-		keyword,
-		pageNumber,
+		keyword: keyword ? keyword : undefined,
+		pageNumber: pageNumber ? pageNumber : undefined,
 	})
 
 	const [deleteUser] = useDeleteUserByIdMutation()
@@ -106,7 +107,12 @@ const UsersPanel = () => {
 								))}
 							</tbody>
 						</Table>
-						<Paginate from='/admin/users' page={data.page} pages={data.pages} />
+						<Paginate
+							from='/admin'
+							panel={panel ? panel : undefined}
+							page={data.page}
+							pages={data.pages}
+						/>
 					</>
 				)
 			)}

@@ -76,8 +76,9 @@ export class ProductController {
   getAllProducts(
     @Query('pageNumber') pageNumber: number,
     @Query('keyword') keyword: string,
+    @Query('category') category: string,
   ) {
-    return this.productService.getAllProducts(pageNumber, keyword);
+    return this.productService.getAllProducts(pageNumber, keyword, category);
   }
 
   @ApiOperation({ summary: 'Get top 5 products' })

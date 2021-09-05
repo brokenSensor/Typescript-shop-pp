@@ -3,7 +3,14 @@ import { Pagination } from 'react-bootstrap'
 import { useHistory } from 'react-router-dom'
 import { PaginateProps } from '../types'
 
-const Paginate = ({ pages, page, from, keyword = '' }: PaginateProps) => {
+const Paginate = ({
+	pages,
+	page,
+	from,
+	keyword,
+	category,
+	panel,
+}: PaginateProps) => {
 	const history = useHistory()
 	return (
 		<>
@@ -13,11 +20,11 @@ const Paginate = ({ pages, page, from, keyword = '' }: PaginateProps) => {
 						<Pagination.Item
 							key={x}
 							onClick={() => {
-								history.push(
-									keyword
-										? `${from}/search/${keyword}/page/${x}`
-										: `${from}/page/${x}`
-								)
+								let pathString = `${from}?pageNumber=${x}`
+								if (keyword) pathString = pathString + `&keyword=${keyword}`
+								if (category) pathString = pathString + `&category=${category}`
+								if (panel) pathString = pathString + `&panel=${panel}`
+								history.push(pathString)
 							}}
 							active={x === Number(page)}
 						>

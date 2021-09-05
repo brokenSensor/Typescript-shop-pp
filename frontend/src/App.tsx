@@ -49,7 +49,7 @@ function App() {
 										exact
 									/>
 									<Route path='/user/edit/:id' component={EditUserScreen} />
-									<Route
+									{/* <Route
 										path='/admin/:panel/search/:keyword'
 										component={AdminScreen}
 										exact
@@ -64,7 +64,7 @@ function App() {
 										component={AdminScreen}
 										exact
 									/>
-									<Route path='/admin/:panel' component={AdminScreen} exact />
+									<Route path='/admin/:panel' component={AdminScreen} exact /> */}
 									<Route path='/admin' component={AdminScreen} exact />
 									<Route path='/profile' component={ProfileScreen} />
 									<Route path='/order/:id' component={OrderScreen} />
@@ -80,7 +80,7 @@ function App() {
 									/>
 									<Route path='/login' component={LoginScreen} />
 									<Route path='/register' component={RegisterScreen} />
-									<Route path='/search/:keyword' component={MainScreen} exact />
+									{/* <Route path='/search/:keyword' component={MainScreen} exact />
 									<Route
 										path='/page/:pageNumber'
 										component={MainScreen}
@@ -90,7 +90,7 @@ function App() {
 										path='/search/:keyword/page/:pageNumber'
 										component={MainScreen}
 										exact
-									/>
+									/> */}
 									<Route path='/' component={MainScreen} exact />
 								</Switch>
 							</Container>

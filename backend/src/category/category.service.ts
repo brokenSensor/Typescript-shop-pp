@@ -27,6 +27,6 @@ export class CategoryService {
   }
 
   async getAllCategories(): Promise<Category[]> {
-    return await this.categoryRepository.find();
+    return await this.categoryRepository.find({ order: { name: 'ASC' } });
   }
 }

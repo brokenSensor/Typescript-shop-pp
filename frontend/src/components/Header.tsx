@@ -2,15 +2,20 @@ import React from 'react'
 import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap'
 import { Link, Route, useHistory } from 'react-router-dom'
 import { useLogoutUserMutation } from '../api/authApi'
+import { useGetAllCategoriesQuery } from '../api/categoryApi'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { logout } from '../slices/authSlice'
 import SearchBox from './SearchBox'
 
 const Header = () => {
 	const dispatch = useAppDispatch()
-	const { push } = useHistory()
+	const history = useHistory()
+
 	const user = useAppSelector(state => state.authReducer.user)
 	const cartItems = useAppSelector(state => state.cartReducer.items)
+
+	const { data: categories } = useGetAllCategoriesQuery()
+
 	const [logoutServer] = useLogoutUserMutation()
 	return (
 		<header>
@@ -21,6 +26,19 @@ const Header = () => {
 					</Navbar.Brand>
 					<Navbar.Toggle aria-controls='responsive-navbar-nav' />
 					<Navbar.Collapse id='responsive-navbar-nav'>
+						{categories && (
+							<NavDropdown title='Categories' id='basic-nav-dropdown'>
+								{categories.map((category, index) => (
+									<NavDropdown.Item
+										key={index}
+										as={Link}
+										to={`/?category=${category.name}`}
+									>
+										{category.name}
+									</NavDropdown.Item>
+								))}
+							</NavDropdown>
+						)}
 						<Route render={() => <SearchBox />} />
 						<Nav className='ml-auto'>
 							<Nav.Link as={Link} to='/cart'>
@@ -50,7 +68,7 @@ const Header = () => {
 										onClick={async () => {
 											await logoutServer()
 											dispatch(logout())
-											push('/')
+											history.push('/')
 										}}
 									>
 										Logout

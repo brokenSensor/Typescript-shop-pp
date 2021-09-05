@@ -223,6 +223,8 @@ export type PaginateProps = {
 	page: number
 	from: string
 	keyword?: string
+	category?: string
+	panel?: string
 }
 
 export type PaginatedProducts = {

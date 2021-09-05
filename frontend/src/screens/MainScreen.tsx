@@ -1,6 +1,6 @@
 import React from 'react'
 import { Col, Row } from 'react-bootstrap'
-import { useParams } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { useGetAllProductsQuery } from '../api/productApi'
 import CustomCarousel from '../components/CustomCarousel'
 import Loader from '../components/Loader'
@@ -10,12 +10,16 @@ import Paginate from '../components/Paginate'
 import Product from '../components/Product'
 
 const MainScreen: React.FC = () => {
-	const { keyword, pageNumber } =
-		useParams<{ keyword: string; pageNumber: string }>()
+	const search = useLocation().search
+
+	const keyword = new URLSearchParams(search).get('keyword')
+	const pageNumber = new URLSearchParams(search).get('pageNumber')
+	const category = new URLSearchParams(search).get('category')
 
 	const { isLoading, data, error } = useGetAllProductsQuery({
-		keyword,
-		pageNumber,
+		keyword: keyword ? keyword : undefined,
+		pageNumber: pageNumber ? pageNumber : undefined,
+		category: category ? category : undefined,
 	})
 	return (
 		<>

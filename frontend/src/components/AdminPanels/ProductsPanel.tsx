@@ -1,21 +1,22 @@
 import React from 'react'
 import { Button, Table } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useDeleteProductByIdMutation } from '../../api/adminApi'
 import { useGetAllProductsQuery } from '../../api/productApi'
 import Loader from '../Loader'
 import Paginate from '../Paginate'
 
 const ProductsPanel = () => {
-	const { keyword, pageNumber } = useParams<{
-		panel: 'users' | 'orders' | 'products'
-		keyword: string
-		pageNumber: string
-	}>()
+	const search = useLocation().search
+
+	const keyword = new URLSearchParams(search).get('keyword')
+	const pageNumber = new URLSearchParams(search).get('pageNumber')
+	const panel = new URLSearchParams(search).get('panel')
+
 	const { data, isLoading, refetch } = useGetAllProductsQuery({
-		keyword,
-		pageNumber,
+		keyword: keyword ? keyword : undefined,
+		pageNumber: pageNumber ? pageNumber : undefined,
 	})
 
 	const [deleteProduct] = useDeleteProductByIdMutation()
@@ -85,7 +86,8 @@ const ProductsPanel = () => {
 							</tbody>
 						</Table>
 						<Paginate
-							from='/admin/products'
+							from='/admin'
+							panel={panel ? panel : undefined}
 							page={data.page}
 							pages={data.pages}
 						/>
