@@ -6,7 +6,7 @@ import CustomCarousel from '../components/CustomCarousel'
 import Loader from '../components/Loader'
 import Meta from '../components/Meta'
 import Paginate from '../components/Paginate'
-import Product from '../components/Product'
+import Product from '../components/ProductCard'
 
 const MainScreen = () => {
 	const search = useLocation().search

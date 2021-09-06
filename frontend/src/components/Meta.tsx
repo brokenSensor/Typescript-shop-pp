@@ -5,9 +5,9 @@ import { MetaProps } from '../types'
 const Meta = ({ title, description, keywords }: MetaProps) => {
 	return (
 		<Helmet>
-			<title>{title}</title>
-			<meta name='description' content={description} />
-			<meta name='keywords' content={keywords} />
+			{title && <title>{title}</title>}
+			{description && <meta name='description' content={description} />}
+			{keywords && <meta name='keywords' content={keywords} />}
 		</Helmet>
 	)
 }
