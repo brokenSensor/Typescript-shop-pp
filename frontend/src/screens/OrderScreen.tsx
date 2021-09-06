@@ -8,6 +8,7 @@ import {
 	useGetOrderByIdQuery,
 	useUpdateOrderToPayedMutation,
 } from '../api/orderApi'
+import CheckoutSteps from '../components/CheckoutSteps'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 import Meta from '../components/Meta'
@@ -60,6 +61,7 @@ const OrderScreen = () => {
 				<Message variant='danger'>{error}</Message>
 			) : (
 				<>
+					<CheckoutSteps step={data?.isDelivered ? 7 : data?.isPaid ? 6 : 5} />
 					<h1>Order {data?.id}</h1>
 					<Row>
 						<Col md={8}>

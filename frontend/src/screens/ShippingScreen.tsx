@@ -40,7 +40,7 @@ const ShippingScreen = () => {
 		<>
 			<Meta title={`Shipping Address`} description={`Shipping address page`} />
 			<FormContainer>
-				<CheckoutSteps step1 step2 />
+				<CheckoutSteps step={2} />
 				<h1>Shipping</h1>
 				<Form onSubmit={submitHandler}>
 					<Form.Group controlId='address'>

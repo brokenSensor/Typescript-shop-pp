@@ -130,10 +130,7 @@ export type DeleteReviewDto = {
 export type PaymentMethod = string
 
 export type CheckoutStepsProps = {
-	step1?: any
-	step2?: any
-	step3?: any
-	step4?: any
+	step: number
 }
 
 export type CreateOrderDto = {

@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Col, Form, Row } from 'react-bootstrap'
-import { useHistory, useParams } from 'react-router-dom'
-import {
-	useCreateCategoryMutation,
-	useUpdateCategoryByIdMutation,
-} from '../api/adminApi'
-import { useGetCategoryByIdQuery } from '../api/categoryApi'
+import { useHistory } from 'react-router-dom'
+import { useCreateCategoryMutation } from '../api/adminApi'
 import Message from '../components/Message'
 import Meta from '../components/Meta'
-import { useAppDispatch, useAppSelector } from '../hooks'
+import { useAppSelector } from '../hooks'
 
 const CreateCategoryScreen = () => {
 	const [name, setName] = useState('')
@@ -16,7 +12,6 @@ const CreateCategoryScreen = () => {
 	const [message, setMessage] = useState<string | null>(null)
 
 	const history = useHistory()
-	const dispatch = useAppDispatch()
 
 	const userDetails = useAppSelector(state => state.authReducer.user)
 

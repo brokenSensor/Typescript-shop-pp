@@ -84,6 +84,7 @@ const CategoryPanel = () => {
 							panel={panel ? panel : undefined}
 							page={data.page}
 							pages={data.pages}
+							keyword={keyword ? keyword : undefined}
 						/>
 					</>
 				)

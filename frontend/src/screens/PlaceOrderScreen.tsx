@@ -47,7 +47,7 @@ const PlaceOrderScreen = () => {
 				taxPrice: Number(taxPrice),
 				totalPrice: Number(totalPrice),
 			}).unwrap()
-		} catch (error) {
+		} catch (error: any) {
 			if (Array.isArray(error.data.message)) {
 				setErrorMassage(error.data.message.join(' '))
 			} else {
@@ -63,7 +63,7 @@ const PlaceOrderScreen = () => {
 	return (
 		<>
 			<Meta title={`Place Order`} description={`Place order page`} />
-			<CheckoutSteps step1 step2 step3 step4 />
+			<CheckoutSteps step={4} />
 			<Row>
 				<Col md={8}>
 					<ListGroup variant='flush'>
