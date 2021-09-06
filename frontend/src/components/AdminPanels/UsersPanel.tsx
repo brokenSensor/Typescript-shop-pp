@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button, Table } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 import { useLocation } from 'react-router-dom'
@@ -22,6 +22,10 @@ const UsersPanel = () => {
 	})
 
 	const [deleteUser] = useDeleteUserByIdMutation()
+
+	useEffect(() => {
+		refetch()
+	}, [refetch])
 
 	return (
 		<>

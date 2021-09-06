@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button, Table } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 import { Link, useLocation } from 'react-router-dom'
@@ -20,6 +20,10 @@ const ProductsPanel = () => {
 	})
 
 	const [deleteProduct] = useDeleteProductByIdMutation()
+
+	useEffect(() => {
+		refetch()
+	}, [refetch])
 
 	return (
 		<>
