@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Button, Card, Col, Form, Image, ListGroup, Row } from 'react-bootstrap'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useLocation } from 'react-router-dom'
 import { useGetProductByIdQuery } from '../api/productApi'
 import { useCreateReviewMutation } from '../api/reviewApi'
 import Loader from '../components/Loader'
@@ -22,10 +22,14 @@ const ProductScreen = () => {
 
 	const userInfo = useAppSelector(state => state.authReducer.user)
 
-	const { id, reviewPageNumber } = useParams<{
+	const { id } = useParams<{
 		id: string
-		reviewPageNumber: string
 	}>()
+
+	const search = useLocation().search
+
+	const pageNumber = new URLSearchParams(search).get('pageNumber')
+
 	const {
 		data,
 		error,
@@ -33,7 +37,7 @@ const ProductScreen = () => {
 		refetch: refetchProduct,
 	} = useGetProductByIdQuery({
 		productId: id,
-		reviewPageNumber: reviewPageNumber,
+		reviewPageNumber: pageNumber ? pageNumber : '1',
 	})
 
 	const [createReview] = useCreateReviewMutation()

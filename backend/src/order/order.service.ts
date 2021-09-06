@@ -7,10 +7,12 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { Order } from './order.model';
 import * as paypal from '@paypal/checkout-server-sdk';
 import { PaginatedOrders, PaymentResult } from 'src/types';
+import { Product } from 'src/product/product.model';
 
 @Injectable()
 export class OrderService {
   constructor(
+    @InjectRepository(Product) private productRepository: Repository<Product>,
     @InjectRepository(Order) private orderRepository: Repository<Order>,
     @InjectRepository(User) private userRepository: Repository<User>,
     private configService: ConfigService,
@@ -80,6 +82,14 @@ export class OrderService {
     orderId: number,
   ): Promise<Order> {
     const order = await this.orderRepository.findOne(orderId);
+    order.orderItems.map(async (item) => {
+      const product = await this.productRepository.findOne({
+        where: { id: item.productId },
+      });
+      product.countInStock = product.countInStock - item.qty;
+
+      await this.productRepository.save(product);
+    });
 
     order.paymentResult = paymentResult;
     order.isPaid = true;
