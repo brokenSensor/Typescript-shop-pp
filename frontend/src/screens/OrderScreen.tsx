@@ -1,4 +1,4 @@
-import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js'
+import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js'
 import React, { useEffect } from 'react'
 import { Button, Card, Col, Image, ListGroup, Row } from 'react-bootstrap'
 import { Link, useHistory, useParams } from 'react-router-dom'
@@ -6,6 +6,7 @@ import { useUpdateOrderToDeliveredMutation } from '../api/adminApi'
 import {
 	useCreatePayPalOrderMutation,
 	useGetOrderByIdQuery,
+	useGetPayPalConfigQuery,
 	useUpdateOrderToPayedMutation,
 } from '../api/orderApi'
 import CheckoutSteps from '../components/CheckoutSteps'
@@ -19,7 +20,6 @@ const OrderScreen = () => {
 		id: string
 	}>()
 
-	const [{ isPending }] = usePayPalScriptReducer()
 	const [createPayPalOrder] = useCreatePayPalOrderMutation()
 	const [updateToDelivered] = useUpdateOrderToDeliveredMutation()
 
@@ -33,6 +33,8 @@ const OrderScreen = () => {
 		isLoading,
 		refetch: refetchOrder,
 	} = useGetOrderByIdQuery(parseInt(orderId))
+
+	const { data: PayPalConfig } = useGetPayPalConfigQuery()
 
 	const [updateToPayed, { isLoading: loadingPay, isSuccess: orderPaySuccess }] =
 		useUpdateOrderToPayedMutation()
@@ -174,30 +176,34 @@ const OrderScreen = () => {
 									</ListGroup.Item>
 									{!data?.isPaid && (
 										<ListGroup.Item id='paypal-button-container'>
-											{(loadingPay || isPending) && <Loader />}
-											{data && (
-												<PayPalButtons
-													createOrder={async () => {
-														const PayPalOrderId = createPayPalOrder(
-															data.id
-														).unwrap()
+											{loadingPay && <Loader />}
+											{data && PayPalConfig && (
+												<PayPalScriptProvider
+													options={{ 'client-id': PayPalConfig.clientId }}
+												>
+													<PayPalButtons
+														createOrder={async () => {
+															const PayPalOrderId = createPayPalOrder(
+																data.id
+															).unwrap()
 
-														return (await PayPalOrderId).orderId
-													}}
-													onApprove={(ppData, actions) => {
-														return actions.order.capture().then(details => {
-															updateToPayed({
-																orderId: data.id,
-																paymentResult: {
-																	email_address: details.payer.email_address,
-																	status: details.status,
-																	update_time: details.update_time,
-																},
+															return (await PayPalOrderId).orderId
+														}}
+														onApprove={(ppData, actions) => {
+															return actions.order.capture().then(details => {
+																updateToPayed({
+																	orderId: data.id,
+																	paymentResult: {
+																		email_address: details.payer.email_address,
+																		status: details.status,
+																		update_time: details.update_time,
+																	},
+																})
+																refetchOrder()
 															})
-															refetchOrder()
-														})
-													}}
-												/>
+														}}
+													/>
+												</PayPalScriptProvider>
 											)}
 										</ListGroup.Item>
 									)}

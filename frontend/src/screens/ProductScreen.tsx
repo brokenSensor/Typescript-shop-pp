@@ -60,24 +60,8 @@ const ProductScreen = () => {
 							<Col md={6}>
 								<Image src={data.product.image} alt={data.product.name} fluid />
 							</Col>
-							<Col md={3}>
-								<ListGroup variant='flush'>
-									<ListGroup.Item>
-										<h3>{data.product.name}</h3>
-									</ListGroup.Item>
-									<ListGroup.Item>
-										<Rating
-											value={parseFloat(data.product.rating)}
-											text={`(${data.product.numReviews})`}
-										/>
-									</ListGroup.Item>
-									<ListGroup.Item>Price: ${data.product.price}</ListGroup.Item>
-									<ListGroup.Item>
-										Description: {data.product.description}
-									</ListGroup.Item>
-								</ListGroup>
-							</Col>
-							<Col md={3}>
+
+							<Col md={{ span: 3, offset: 3 }}>
 								<Card>
 									<ListGroup variant='flush'>
 										<ListGroup.Item>
@@ -162,6 +146,26 @@ const ProductScreen = () => {
 						</Row>
 						<Row>
 							<Col md={6}>
+								<ListGroup variant='flush'>
+									<ListGroup.Item>
+										<h3>{data.product.name}</h3>
+									</ListGroup.Item>
+									<ListGroup.Item>
+										<Rating
+											value={parseFloat(data.product.rating)}
+											text={`(${data.product.numReviews})`}
+										/>
+									</ListGroup.Item>
+									<ListGroup.Item>Price: ${data.product.price}</ListGroup.Item>
+									<ListGroup.Item>
+										Description: {data.product.description}
+									</ListGroup.Item>
+								</ListGroup>
+							</Col>
+						</Row>
+						<hr />
+						<Row>
+							<Col md={{ span: 6, offset: 3 }}>
 								<h2>Reviews</h2>
 								{data.product.reviews.length === 0 && (
 									<Message>No Reviews</Message>
