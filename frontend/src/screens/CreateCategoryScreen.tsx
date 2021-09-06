@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Col, Form, Row } from 'react-bootstrap'
+import { Alert, Button, Col, Form, Row } from 'react-bootstrap'
 import { useHistory } from 'react-router-dom'
 import { useCreateCategoryMutation } from '../api/adminApi'
-import Message from '../components/Message'
 import Meta from '../components/Meta'
 import { useAppSelector } from '../hooks'
 
@@ -42,7 +41,7 @@ const CreateCategoryScreen = () => {
 			<Row className='justify-content-md-center'>
 				<Col md={5}>
 					<h2>Create Category</h2>
-					{message && <Message variant='danger'>{message}</Message>}
+					{message && <Alert variant='danger'>{message}</Alert>}
 					<Form onSubmit={submitHandler}>
 						<Form.Group controlId='name'>
 							<Form.Label>Name</Form.Label>

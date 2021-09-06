@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react'
-import { Button, Col, Form, Row } from 'react-bootstrap'
+import { Alert, Button, Col, Form, Row } from 'react-bootstrap'
 import { useHistory } from 'react-router-dom'
 import {
 	useGetUserQuery,
 	useResendActivationMutation,
 	useUpdateUserMutation,
 } from '../api/authApi'
-import Message from '../components/Message'
 import Meta from '../components/Meta'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { setUser } from '../slices/authSlice'
@@ -65,16 +64,16 @@ const ProfileScreen = () => {
 			/>
 			<Row className='justify-content-md-center'>
 				{data && !data.isActivated && (
-					<Message variant='warning'>
+					<Alert variant='warning'>
 						Your email has not been confirmed yet!{' '}
 						<Button variant='warning' onClick={resendActivationHandler}>
 							Resend activation link
 						</Button>
-					</Message>
+					</Alert>
 				)}
 				<Col md={5}>
 					<h2>User Profile</h2>
-					{message && <Message variant='danger'>{message}</Message>}
+					{message && <Alert variant='danger'>{message}</Alert>}
 					<Form onSubmit={submitHandler}>
 						<Form.Group controlId='name'>
 							<Form.Label>Name</Form.Label>

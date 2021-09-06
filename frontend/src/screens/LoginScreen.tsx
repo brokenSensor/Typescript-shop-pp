@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react'
-import { Button, Col, Form, Row } from 'react-bootstrap'
+import { Alert, Button, Col, Form, Row } from 'react-bootstrap'
 import { Link, useHistory, useLocation } from 'react-router-dom'
 import {
 	useGetGoogleClientIdQuery,
@@ -8,7 +8,6 @@ import {
 	useLoginUserMutation,
 } from '../api/authApi'
 import FormContainer from '../components/FormContainer'
-import Message from '../components/Message'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { setCredentials } from '../slices/authSlice'
 import { LoginRequest } from '../types'
@@ -19,7 +18,7 @@ import {
 } from 'react-google-login'
 import Meta from '../components/Meta'
 
-const LoginScreen: React.FC = () => {
+const LoginScreen = () => {
 	const dispatch = useAppDispatch()
 	const history = useHistory()
 	const location = useLocation()
@@ -55,7 +54,7 @@ const LoginScreen: React.FC = () => {
 			const res = await login(formState).unwrap()
 			dispatch(setCredentials(res))
 			history.push(redirect)
-		} catch (error) {
+		} catch (error: any) {
 			if (Array.isArray(error.data.message)) {
 				setError(error.data.message.join(' '))
 			} else {
@@ -95,7 +94,7 @@ const LoginScreen: React.FC = () => {
 			/>
 			<FormContainer>
 				<h1>Sign In</h1>
-				{error && <Message variant='danger'>{error}</Message>}
+				{error && <Alert variant='danger'>{error}</Alert>}
 				<Form>
 					<Form.Group controlId='email'>
 						<Form.Label>Email Address</Form.Label>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Col, Form, Row } from 'react-bootstrap'
+import { Alert, Button, Col, Form, Row } from 'react-bootstrap'
 import { Link, useHistory, useLocation } from 'react-router-dom'
 import {
 	useGetGoogleClientIdQuery,
@@ -7,7 +7,6 @@ import {
 	useRegisterUserMutation,
 } from '../api/authApi'
 import FormContainer from '../components/FormContainer'
-import Message from '../components/Message'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { setCredentials } from '../slices/authSlice'
 import { RegisterRequest } from '../types'
@@ -56,7 +55,7 @@ const RegisterScreen = () => {
 			const res = await register(formState).unwrap()
 			dispatch(setCredentials(res))
 			history.push('/')
-		} catch (error) {
+		} catch (error: any) {
 			if (Array.isArray(error.data.message)) {
 				setError(error.data.message.join(' '))
 			} else {
@@ -96,7 +95,7 @@ const RegisterScreen = () => {
 			/>
 			<FormContainer>
 				<h1>Sign Up</h1>
-				{error && <Message variant='danger'>{error}</Message>}
+				{error && <Alert variant='danger'>{error}</Alert>}
 				<Form>
 					<Form.Group controlId='name'>
 						<Form.Label>Full Name</Form.Label>

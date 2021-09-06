@@ -1,24 +1,23 @@
 import React from 'react'
-import { Carousel, Image } from 'react-bootstrap'
+import { Alert, Carousel, Image } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useGetTopProductsQuery } from '../api/productApi'
 import Loader from './Loader'
-import Message from './Message'
 
 const CustomCarousel = () => {
 	const { data, isLoading, error } = useGetTopProductsQuery()
 	return isLoading ? (
 		<Loader />
 	) : error ? (
-		<Message variant='danger'>{error}</Message>
+		<Alert variant='danger'>{error}</Alert>
 	) : (
 		<Carousel pause='hover'>
 			{data &&
 				data.map(product => (
 					<Carousel.Item key={product.id}>
-						<Link to={`/product/${product.id}/page/1`}>
+						<Link to={`/product/${product.id}`}>
 							<Image src={product.image} alt={product.name} fluid />
-							<Carousel.Caption className='carousel-caption'>
+							<Carousel.Caption>
 								<h2>
 									{product.name} (${product.price})
 								</h2>

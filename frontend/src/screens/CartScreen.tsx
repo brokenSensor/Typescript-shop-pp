@@ -1,7 +1,15 @@
 import React from 'react'
-import { Button, Card, Col, Form, Image, ListGroup, Row } from 'react-bootstrap'
+import {
+	Alert,
+	Button,
+	Card,
+	Col,
+	Form,
+	Image,
+	ListGroup,
+	Row,
+} from 'react-bootstrap'
 import { Link, useHistory } from 'react-router-dom'
-import Message from '../components/Message'
 import Meta from '../components/Meta'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { addToCart, removeFromCartByIndex } from '../slices/cartSlice'
@@ -25,7 +33,7 @@ const CartScreen = () => {
 				<Col md={8}>
 					<h1>Shopping Cart</h1>
 					{cartItems.length === 0 ? (
-						<Message>Your cart is empty</Message>
+						<Alert variant='info'>Your cart is empty</Alert>
 					) : (
 						<ListGroup variant='flush'>
 							{cartItems.map((item, index) => (
@@ -94,9 +102,9 @@ const CartScreen = () => {
 							</ListGroup.Item>
 							<ListGroup.Item className='d-grid gap-2'>
 								{!userInfo?.isActivated && (
-									<Message variant='warning'>
+									<Alert variant='warning'>
 										Please confirm your email to make a purchase!
-									</Message>
+									</Alert>
 								)}
 								<Button
 									type='button'

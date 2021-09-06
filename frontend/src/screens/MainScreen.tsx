@@ -1,15 +1,14 @@
 import React from 'react'
-import { Col, Row } from 'react-bootstrap'
+import { Alert, Col, Row } from 'react-bootstrap'
 import { useLocation } from 'react-router-dom'
 import { useGetAllProductsQuery } from '../api/productApi'
 import CustomCarousel from '../components/CustomCarousel'
 import Loader from '../components/Loader'
-import Message from '../components/Message'
 import Meta from '../components/Meta'
 import Paginate from '../components/Paginate'
 import Product from '../components/Product'
 
-const MainScreen: React.FC = () => {
+const MainScreen = () => {
 	const search = useLocation().search
 
 	const keyword = new URLSearchParams(search).get('keyword')
@@ -34,7 +33,7 @@ const MainScreen: React.FC = () => {
 					{isLoading ? (
 						<Loader />
 					) : error ? (
-						<Message variant='danger'>{error}</Message>
+						<Alert variant='danger'>{error}</Alert>
 					) : (
 						<>
 							<Row>

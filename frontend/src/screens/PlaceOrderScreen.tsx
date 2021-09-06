@@ -1,11 +1,18 @@
 import React from 'react'
 import { useState } from 'react'
 import { useEffect } from 'react'
-import { Button, Card, Col, Image, ListGroup, Row } from 'react-bootstrap'
+import {
+	Alert,
+	Button,
+	Card,
+	Col,
+	Image,
+	ListGroup,
+	Row,
+} from 'react-bootstrap'
 import { Link, useHistory } from 'react-router-dom'
 import { useCreateOrderMutation } from '../api/orderApi'
 import CheckoutSteps from '../components/CheckoutSteps'
-import Message from '../components/Message'
 import Meta from '../components/Meta'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { clearCart } from '../slices/cartSlice'
@@ -89,7 +96,7 @@ const PlaceOrderScreen = () => {
 						<ListGroup.Item>
 							<h2>Order Items</h2>
 							{cart.items.length === 0 ? (
-								<Message>Your card is empty</Message>
+								<Alert variant='info'>Your card is empty</Alert>
 							) : (
 								<ListGroup variant='flush'>
 									{cart.items.map((item, index) => (
@@ -153,9 +160,7 @@ const PlaceOrderScreen = () => {
 								</Row>
 							</ListGroup.Item>
 							<ListGroup.Item>
-								{errorMassage && (
-									<Message variant='danger'>{errorMassage}</Message>
-								)}
+								{errorMassage && <Alert variant='danger'>{errorMassage}</Alert>}
 							</ListGroup.Item>
 							<ListGroup.Item className='d-grid gap-2'>
 								<Button

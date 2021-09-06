@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Col, Form, Row } from 'react-bootstrap'
+import { Alert, Button, Col, Form, Row } from 'react-bootstrap'
 import { useHistory } from 'react-router-dom'
 import { useCreateProductMutation } from '../api/adminApi'
 import { useGetAllCategoriesQuery } from '../api/categoryApi'
 import Loader from '../components/Loader'
-import Message from '../components/Message'
 import Meta from '../components/Meta'
 import { useAppSelector } from '../hooks'
 
@@ -88,7 +87,7 @@ const CreateProductScreen = () => {
 			<Row className='justify-content-md-center'>
 				<Col md={5}>
 					<h2>Create product</h2>
-					{message && <Message variant='danger'>{message}</Message>}
+					{message && <Alert variant='danger'>{message}</Alert>}
 					<Form onSubmit={submitHandler} name='productForm'>
 						<Form.Group controlId='name'>
 							<Form.Label>Name</Form.Label>

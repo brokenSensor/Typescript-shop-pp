@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react'
-import { Button, Table } from 'react-bootstrap'
+import { Alert, Button, Table } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 import { useHistory } from 'react-router-dom'
 import { useGetAllUserOrdersQuery } from '../api/orderApi'
 import Loader from '../components/Loader'
-import Message from '../components/Message'
 import Meta from '../components/Meta'
 import { useAppSelector } from '../hooks'
 
@@ -31,7 +30,7 @@ const OrderListScreen = () => {
 			{isLoading ? (
 				<Loader />
 			) : error ? (
-				<Message variant='danger'>{error}</Message>
+				<Alert variant='danger'>{error}</Alert>
 			) : (
 				<Table striped bordered hover responsive className='table-sm'>
 					<thead>

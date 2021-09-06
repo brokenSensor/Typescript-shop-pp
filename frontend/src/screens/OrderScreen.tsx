@@ -1,6 +1,14 @@
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js'
-import React, { useEffect } from 'react'
-import { Button, Card, Col, Image, ListGroup, Row } from 'react-bootstrap'
+import React, { useEffect, useState } from 'react'
+import {
+	Alert,
+	Button,
+	Card,
+	Col,
+	Image,
+	ListGroup,
+	Row,
+} from 'react-bootstrap'
 import { Link, useHistory, useParams } from 'react-router-dom'
 import { useUpdateOrderToDeliveredMutation } from '../api/adminApi'
 import {
@@ -11,7 +19,6 @@ import {
 } from '../api/orderApi'
 import CheckoutSteps from '../components/CheckoutSteps'
 import Loader from '../components/Loader'
-import Message from '../components/Message'
 import Meta from '../components/Meta'
 import { useAppSelector } from '../hooks'
 
@@ -19,6 +26,8 @@ const OrderScreen = () => {
 	const { id: orderId } = useParams<{
 		id: string
 	}>()
+
+	const [ppButtonLoading, setPpButtonLoading] = useState(true)
 
 	const [createPayPalOrder] = useCreatePayPalOrderMutation()
 	const [updateToDelivered] = useUpdateOrderToDeliveredMutation()
@@ -60,7 +69,7 @@ const OrderScreen = () => {
 			{isLoading ? (
 				<Loader />
 			) : error ? (
-				<Message variant='danger'>{error}</Message>
+				<Alert variant='danger'>{error}</Alert>
 			) : (
 				<>
 					<CheckoutSteps step={data?.isDelivered ? 7 : data?.isPaid ? 6 : 5} />
@@ -86,11 +95,11 @@ const OrderScreen = () => {
 										{data?.shippingAddress.country}
 									</p>
 									{data?.isDelivered ? (
-										<Message variant='success'>
+										<Alert variant='success'>
 											Delivered on {data.deliveredAt}
-										</Message>
+										</Alert>
 									) : (
-										<Message variant='danger'> Not Delivered </Message>
+										<Alert variant='danger'> Not Delivered </Alert>
 									)}
 								</ListGroup.Item>
 
@@ -101,16 +110,16 @@ const OrderScreen = () => {
 										{data?.paymentMethod}
 									</p>
 									{data?.isPaid ? (
-										<Message variant='success'>Paid on {data.paidAt}</Message>
+										<Alert variant='success'>Paid on {data.paidAt}</Alert>
 									) : (
-										<Message variant='danger'>Not Paid</Message>
+										<Alert variant='danger'>Not Paid</Alert>
 									)}
 								</ListGroup.Item>
 
 								<ListGroup.Item>
 									<h2>Order Items</h2>
 									{data?.orderItems.length === 0 ? (
-										<Message>Order is empty</Message>
+										<Alert variant='info'>Order is empty</Alert>
 									) : (
 										<ListGroup variant='flush'>
 											{data?.orderItems.map((item, index) => (
@@ -176,12 +185,15 @@ const OrderScreen = () => {
 									</ListGroup.Item>
 									{!data?.isPaid && (
 										<ListGroup.Item id='paypal-button-container'>
-											{loadingPay && <Loader />}
+											{loadingPay || (ppButtonLoading && <Loader />)}
 											{data && PayPalConfig && (
 												<PayPalScriptProvider
 													options={{ 'client-id': PayPalConfig.clientId }}
 												>
 													<PayPalButtons
+														onInit={() => {
+															setPpButtonLoading(false)
+														}}
 														createOrder={async () => {
 															const PayPalOrderId = createPayPalOrder(
 																data.id

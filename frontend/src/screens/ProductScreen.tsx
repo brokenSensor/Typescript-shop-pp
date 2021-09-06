@@ -1,10 +1,18 @@
 import React, { useState } from 'react'
-import { Button, Card, Col, Form, Image, ListGroup, Row } from 'react-bootstrap'
+import {
+	Alert,
+	Button,
+	Card,
+	Col,
+	Form,
+	Image,
+	ListGroup,
+	Row,
+} from 'react-bootstrap'
 import { Link, useParams, useLocation } from 'react-router-dom'
 import { useGetProductByIdQuery } from '../api/productApi'
 import { useCreateReviewMutation } from '../api/reviewApi'
 import Loader from '../components/Loader'
-import Message from '../components/Message'
 import Meta from '../components/Meta'
 import Paginate from '../components/Paginate'
 import Rating from '../components/Rating'
@@ -46,7 +54,7 @@ const ProductScreen = () => {
 			{isLoading ? (
 				<Loader />
 			) : error ? (
-				<Message variant='danger'>{error}</Message>
+				<Alert variant='danger'>{error}</Alert>
 			) : (
 				data && (
 					<>
@@ -111,7 +119,7 @@ const ProductScreen = () => {
 											</ListGroup.Item>
 										)}
 										<ListGroup.Item className='d-grid gap-2'>
-											{message && <Message>{message}</Message>}
+											{message && <Alert variant='info'>{message}</Alert>}
 											<Button
 												onClick={() => {
 													dispatch(
@@ -167,9 +175,7 @@ const ProductScreen = () => {
 						<Row>
 							<Col md={{ span: 6, offset: 3 }}>
 								<h2>Reviews</h2>
-								{data.product.reviews.length === 0 && (
-									<Message>No Reviews</Message>
-								)}
+								{data.product.reviews.length === 0 && <Alert>No Reviews</Alert>}
 								<ListGroup variant='flush'>
 									{data.product.reviews.map(review => (
 										<ListGroup.Item key={review.id}>
@@ -187,7 +193,7 @@ const ProductScreen = () => {
 									<ListGroup.Item>
 										<h2>Write a Customer Review</h2>
 										{reviewError && (
-											<Message variant='danger'>{reviewError}</Message>
+											<Alert variant='danger'>{reviewError}</Alert>
 										)}
 										{userInfo ? (
 											<Form
@@ -243,9 +249,9 @@ const ProductScreen = () => {
 													></Form.Control>
 												</Form.Group>
 												{!userInfo.isActivated && (
-													<Message variant='warning'>
+													<Alert variant='warning'>
 														Please confirm your email to leave a review!
-													</Message>
+													</Alert>
 												)}
 												<Button
 													disabled={!userInfo.isActivated}
@@ -256,10 +262,10 @@ const ProductScreen = () => {
 												</Button>
 											</Form>
 										) : (
-											<Message>
+											<Alert variant='info'>
 												Please <Link to='/login'>sign in</Link> to write a
 												review
-											</Message>
+											</Alert>
 										)}
 									</ListGroup.Item>
 								</ListGroup>
