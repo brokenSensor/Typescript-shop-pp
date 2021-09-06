@@ -52,14 +52,22 @@ const AdminScreen = () => {
 							Products
 						</Nav.Link>
 
+						{activeTab === 'products' && (
+							<>
+								<Nav.Link className='bg-success' as={Link} to='/product/new'>
+									Create new product
+								</Nav.Link>
+							</>
+						)}
+
 						<Nav.Link eventKey='categories' onClick={tabHandler}>
 							Categories
 						</Nav.Link>
 
-						{activeTab === 'products' && (
+						{activeTab === 'categories' && (
 							<>
-								<Nav.Link as={Link} to='/product/new'>
-									Create new product
+								<Nav.Link className='bg-success' as={Link} to='/category/new'>
+									Create new category
 								</Nav.Link>
 							</>
 						)}

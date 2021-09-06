@@ -22,6 +22,7 @@ import EditProductScreen from './screens/EditProductScreen'
 import EmailActivationResultScreen from './screens/EmailActivationResultScreen'
 import CreateProductScreen from './screens/CreateProductScreen'
 import EditCategoryScreen from './screens/EditCategoryScreen'
+import CreateCategoryScreen from './screens/CreateCategoryScreen'
 
 function App() {
 	const { data: PayPalConfig } = useGetPayPalConfigQuery()
@@ -47,6 +48,11 @@ function App() {
 									<Route
 										path='/product/edit/:id'
 										component={EditProductScreen}
+										exact
+									/>
+									<Route
+										path='/category/new'
+										component={CreateCategoryScreen}
 										exact
 									/>
 									<Route
