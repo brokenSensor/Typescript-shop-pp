@@ -183,17 +183,6 @@ export class AuthService {
     }
   }
 
-  async googleLogin(req) {
-    if (!req.user) {
-      return 'No user from google';
-    }
-
-    return {
-      message: 'User information from google',
-      user: req.user,
-    };
-  }
-
   async googleAuth(profile: GoogleProfile): Promise<TokensAndUser> {
     const user = await this.userRepository.findOne({
       where: { email: profile.email },

@@ -7,9 +7,11 @@ import { useCreateOrderMutation } from '../api/orderApi'
 import CheckoutSteps from '../components/CheckoutSteps'
 import Message from '../components/Message'
 import Meta from '../components/Meta'
-import { useAppSelector } from '../hooks'
+import { useAppDispatch, useAppSelector } from '../hooks'
+import { clearCart } from '../slices/cartSlice'
 
 const PlaceOrderScreen = () => {
+	const dispatch = useAppDispatch()
 	const history = useHistory()
 
 	const cart = useAppSelector(state => state.cartReducer)
@@ -32,9 +34,10 @@ const PlaceOrderScreen = () => {
 
 	useEffect(() => {
 		if (isSuccess) {
+			dispatch(clearCart())
 			history.push(`/order/${data?.id}`)
 		}
-	}, [data?.id, history, isSuccess])
+	}, [data?.id, dispatch, history, isSuccess])
 
 	const placeOrderHandler = async () => {
 		try {

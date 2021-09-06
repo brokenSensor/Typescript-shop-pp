@@ -64,7 +64,7 @@ export class UsersService {
     } else {
       if (dto.password) user.password = await bcrypt.hash(dto.password, 10);
       if (dto.name) user.name = dto.name;
-      if (dto.email) {
+      if (dto.email && user.email !== dto.email) {
         user.email = dto.email;
         user.isActivated = false;
         user.activationLink = v4();
