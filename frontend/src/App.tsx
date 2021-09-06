@@ -21,6 +21,7 @@ import EditUserScreen from './screens/EditUserScreen'
 import EditProductScreen from './screens/EditProductScreen'
 import EmailActivationResultScreen from './screens/EmailActivationResultScreen'
 import CreateProductScreen from './screens/CreateProductScreen'
+import EditCategoryScreen from './screens/EditCategoryScreen'
 
 function App() {
 	const { data: PayPalConfig } = useGetPayPalConfigQuery()
@@ -48,23 +49,12 @@ function App() {
 										component={EditProductScreen}
 										exact
 									/>
+									<Route
+										path='/category/edit/:id'
+										component={EditCategoryScreen}
+										exact
+									/>
 									<Route path='/user/edit/:id' component={EditUserScreen} />
-									{/* <Route
-										path='/admin/:panel/search/:keyword'
-										component={AdminScreen}
-										exact
-									/>
-									<Route
-										path='/admin/:panel/page/:pageNumber'
-										component={AdminScreen}
-										exact
-									/>
-									<Route
-										path='/admin/:panel/search/:keyword/page/:pageNumber'
-										component={AdminScreen}
-										exact
-									/>
-									<Route path='/admin/:panel' component={AdminScreen} exact /> */}
 									<Route path='/admin' component={AdminScreen} exact />
 									<Route path='/profile' component={ProfileScreen} />
 									<Route path='/order/:id' component={OrderScreen} />
@@ -80,17 +70,6 @@ function App() {
 									/>
 									<Route path='/login' component={LoginScreen} />
 									<Route path='/register' component={RegisterScreen} />
-									{/* <Route path='/search/:keyword' component={MainScreen} exact />
-									<Route
-										path='/page/:pageNumber'
-										component={MainScreen}
-										exact
-									/>
-									<Route
-										path='/search/:keyword/page/:pageNumber'
-										component={MainScreen}
-										exact
-									/> */}
 									<Route path='/' component={MainScreen} exact />
 								</Switch>
 							</Container>

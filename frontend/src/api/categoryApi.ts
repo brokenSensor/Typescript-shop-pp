@@ -6,8 +6,11 @@ const categoryApi = shopApi.injectEndpoints({
 		getAllCategories: build.query<Category[], void>({
 			query: () => `/category`,
 		}),
+		getCategoryById: build.query<Category, number>({
+			query: id => `/category/${id}`,
+		}),
 	}),
 	overrideExisting: false,
 })
 
-export const { useGetAllCategoriesQuery } = categoryApi
+export const { useGetAllCategoriesQuery, useGetCategoryByIdQuery } = categoryApi

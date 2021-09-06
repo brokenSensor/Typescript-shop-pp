@@ -108,7 +108,7 @@ export class ProductController {
   }
 
   @ApiOperation({ summary: 'Update product by id. Admin only' })
-  @ApiResponse({ status: HttpStatus.OK, type: Product })
+  @ApiResponse({ status: HttpStatus.OK })
   @UseGuards(JwtAuthGuard, IsAdminGuard)
   @Put()
   updateProduct(@Body() updateProductDto: UpdateProductDto) {

@@ -1,42 +1,41 @@
 import React from 'react'
 import { Button, Table } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
-import { Link, useLocation } from 'react-router-dom'
-import { useDeleteProductByIdMutation } from '../../api/adminApi'
-import { useGetAllProductsQuery } from '../../api/productApi'
+import { useLocation } from 'react-router-dom'
+import {
+	useDeleteCategoryByIdMutation,
+	useGetAllCategoriesForAdminQuery,
+} from '../../api/adminApi'
 import Loader from '../Loader'
 import Paginate from '../Paginate'
 
-const ProductsPanel = () => {
+const CategoryPanel = () => {
 	const search = useLocation().search
 
 	const keyword = new URLSearchParams(search).get('keyword')
 	const pageNumber = new URLSearchParams(search).get('pageNumber')
 	const panel = new URLSearchParams(search).get('panel')
 
-	const { data, isLoading, refetch } = useGetAllProductsQuery({
+	const { data, isLoading, refetch } = useGetAllCategoriesForAdminQuery({
 		keyword: keyword ? keyword : undefined,
 		pageNumber: pageNumber ? pageNumber : undefined,
 	})
 
-	const [deleteProduct] = useDeleteProductByIdMutation()
+	const [deleteCategory] = useDeleteCategoryByIdMutation()
 
 	return (
 		<>
 			{isLoading ? (
 				<Loader />
 			) : (
-				data?.products && (
+				data && (
 					<>
 						<Table striped bordered hover responsive className='table-sm'>
 							<thead>
 								<tr>
 									<th>ID</th>
 									<th>NAME</th>
-									<th>CATEGORY</th>
-									<th>PRICE</th>
-									<th>COUNT IN STOCK</th>
-									<th>RATING</th>
+									<th>CREATOR</th>
 									<th>CREATED AT</th>
 									<th>UPDATED AT</th>
 									<th></th>
@@ -44,20 +43,15 @@ const ProductsPanel = () => {
 								</tr>
 							</thead>
 							<tbody>
-								{data.products?.map(product => (
-									<tr key={product.id}>
-										<td>{product.id}</td>
-										<td>
-											<Link to={`/product/${product.id}`}>{product.name}</Link>
-										</td>
-										<td>{product.category.name}</td>
-										<td>{product.price}</td>
-										<td>{product.countInStock}</td>
-										<td>{product.rating}</td>
-										<td>{new Date(product.createdAt).toUTCString()}</td>
-										<td>{new Date(product.updatedAt).toUTCString()}</td>
+								{data.categories.map(category => (
+									<tr key={category.id}>
+										<td>{category.id}</td>
+										<td>{category.name}</td>
+										<td>{category.user.name}</td>
+										<td>{new Date(category.createdAt).toUTCString()}</td>
+										<td>{new Date(category.updatedAt).toUTCString()}</td>
 										<td className='text-center'>
-											<LinkContainer to={`/product/edit/${product.id}`}>
+											<LinkContainer to={`/category/edit/${category.id}`}>
 												<Button variant='light' size='sm'>
 													Edit
 												</Button>
@@ -70,10 +64,10 @@ const ProductsPanel = () => {
 												onClick={() => {
 													if (
 														window.confirm(
-															"Product will be permanently deleted! Only possible if all related entity's already deleted! Are you sure?"
+															"Category will be permanently deleted! Only possible if all related entity's already deleted! Are you sure?"
 														)
 													) {
-														deleteProduct(product.id)
+														deleteCategory(category.id)
 														refetch()
 													}
 												}}
@@ -98,4 +92,4 @@ const ProductsPanel = () => {
 	)
 }
 
-export default ProductsPanel
+export default CategoryPanel

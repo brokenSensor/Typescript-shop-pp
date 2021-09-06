@@ -24,10 +24,13 @@ const MainScreen: React.FC = () => {
 	return (
 		<>
 			<Meta description='Shops main page' keywords='shop, best products' />
-			{!keyword && <CustomCarousel />}
+			{!keyword && !pageNumber && !category && <CustomCarousel />}
 			{
 				<>
-					<h1>Latest Products</h1>
+					{!keyword && !pageNumber && !category && <h1>Latest Products</h1>}
+					{category && <h1>{category}</h1>}
+					{keyword && <h1>Search: {keyword}</h1>}
+					{pageNumber && <h1>Page: {pageNumber}</h1>}
 					{isLoading ? (
 						<Loader />
 					) : error ? (
@@ -44,10 +47,11 @@ const MainScreen: React.FC = () => {
 							</Row>
 							{data && (
 								<Paginate
-									from=''
+									from='/'
 									pages={data.pages}
 									page={data.page}
 									keyword={keyword ? keyword : ''}
+									category={category ? category : ''}
 								/>
 							)}
 						</>

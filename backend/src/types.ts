@@ -1,3 +1,4 @@
+import { Category } from './category/category.model';
 import { Order } from './order/order.model';
 import { Product } from './product/product.model';
 import { User } from './users/users.model';
@@ -24,6 +25,12 @@ export type PaginatedOrders = {
   pages: number;
   page: number;
   orders: Order[];
+};
+
+export type PaginatedCategories = {
+  pages: number;
+  page: number;
+  categories: Category[];
 };
 
 export interface OrderItem {

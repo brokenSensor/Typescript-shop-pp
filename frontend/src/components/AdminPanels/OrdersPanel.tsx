@@ -84,7 +84,7 @@ const OrdersPanel = () => {
 												onClick={() => {
 													if (
 														window.confirm(
-															'Order will be permanently deleted! Are you sure?'
+															"Order will be permanently deleted! Only possible if all related entity's already deleted! Are you sure?"
 														)
 													) {
 														deleteOrder(order.id)

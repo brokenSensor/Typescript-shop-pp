@@ -92,7 +92,7 @@ const UsersPanel = () => {
 												onClick={() => {
 													if (
 														window.confirm(
-															'User will be permanently deleted! Are you sure?'
+															"User will be permanently deleted! Only possible if all related entity's already deleted! Are you sure?"
 														)
 													) {
 														deleteUser(user.id)

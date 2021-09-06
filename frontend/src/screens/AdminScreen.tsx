@@ -2,6 +2,7 @@ import React from 'react'
 import { useState } from 'react'
 import { Col, Nav, Row } from 'react-bootstrap'
 import { Link, useHistory, useLocation } from 'react-router-dom'
+import CategoryPanel from '../components/AdminPanels/CategoryPanel'
 import OrdersPanel from '../components/AdminPanels/OrdersPanel'
 import ProductsPanel from '../components/AdminPanels/ProductsPanel'
 import UsersPanel from '../components/AdminPanels/UsersPanel'
@@ -51,6 +52,10 @@ const AdminScreen = () => {
 							Products
 						</Nav.Link>
 
+						<Nav.Link eventKey='categories' onClick={tabHandler}>
+							Categories
+						</Nav.Link>
+
 						{activeTab === 'products' && (
 							<>
 								<Nav.Link as={Link} to='/product/new'>
@@ -66,6 +71,7 @@ const AdminScreen = () => {
 					{activeTab === 'users' && <UsersPanel />}
 					{activeTab === 'orders' && <OrdersPanel />}
 					{activeTab === 'products' && <ProductsPanel />}
+					{activeTab === 'categories' && <CategoryPanel />}
 				</Col>
 			</Row>
 		</>

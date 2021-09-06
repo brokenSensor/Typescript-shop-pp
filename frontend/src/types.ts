@@ -272,3 +272,14 @@ export type CreateCategoryDto = {
 	name: string
 	userId: number
 }
+
+export type UpdateCategoryDto = {
+	id: number
+	name: string
+}
+
+export type PaginatedCategories = {
+	pages: number
+	page: number
+	categories: Category[]
+}

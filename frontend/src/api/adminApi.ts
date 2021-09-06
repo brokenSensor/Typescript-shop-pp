@@ -2,8 +2,10 @@ import { shopApi } from '.'
 import {
 	CreateCategoryDto,
 	CreateProductDto,
+	PaginatedCategories,
 	PaginatedOrders,
 	PaginatedUsers,
+	UpdateCategoryDto,
 	UpdateProductDto,
 	UpdateUserDto,
 	User,
@@ -28,6 +30,13 @@ const adminApi = shopApi.injectEndpoints({
 		getUserById: build.query<User, string>({
 			query: id => `/users/id/${id}`,
 		}),
+		getAllCategoriesForAdmin: build.query<
+			PaginatedCategories,
+			{ pageNumber?: string; keyword?: string }
+		>({
+			query: ({ keyword, pageNumber }) =>
+				`/category/admin?keyword=${keyword}&pageNumber=${pageNumber}`,
+		}),
 		updateUserById: build.mutation<void, UpdateUserDto>({
 			query: updateUserDto => ({
 				url: `/users/admin/`,
@@ -41,6 +50,14 @@ const adminApi = shopApi.injectEndpoints({
 				url: `/product`,
 				method: 'PUT',
 				body: updateProductDto,
+				credentials: 'include',
+			}),
+		}),
+		updateCategoryById: build.mutation<void, UpdateCategoryDto>({
+			query: updateCategoryDto => ({
+				url: `/category`,
+				method: 'PUT',
+				body: updateCategoryDto,
 				credentials: 'include',
 			}),
 		}),
@@ -88,6 +105,13 @@ const adminApi = shopApi.injectEndpoints({
 				credentials: 'include',
 			}),
 		}),
+		deleteCategoryById: build.mutation<void, number>({
+			query: id => ({
+				url: `/category/${id}`,
+				method: 'DELETE',
+				credentials: 'include',
+			}),
+		}),
 	}),
 	overrideExisting: false,
 })
@@ -104,4 +128,7 @@ export const {
 	useDeleteProductByIdMutation,
 	useDeleteUserByIdMutation,
 	useCreateCategoryMutation,
+	useGetAllCategoriesForAdminQuery,
+	useDeleteCategoryByIdMutation,
+	useUpdateCategoryByIdMutation,
 } = adminApi
