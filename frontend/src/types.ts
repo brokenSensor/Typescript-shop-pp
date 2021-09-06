@@ -230,10 +230,10 @@ export type PaginatedProducts = {
 	products: Product[]
 }
 
-export type PaginatedProduct = {
+export type PaginatedReviews = {
 	pages: number
 	page: number
-	product: Product
+	reviews: Review[]
 }
 
 export type PaginatedOrders = {

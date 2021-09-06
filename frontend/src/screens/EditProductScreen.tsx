@@ -29,7 +29,6 @@ const EditProductScreen = () => {
 	const [updateProduct] = useUpdateProductByIdMutation()
 	const { data, refetch: refetchProduct } = useGetProductByIdQuery({
 		productId,
-		reviewPageNumber: '1',
 	})
 	const { data: categories } = useGetAllCategoriesQuery()
 
@@ -38,15 +37,13 @@ const EditProductScreen = () => {
 			history.push('/')
 		} else {
 			if (data && categories) {
-				setName(data.product.name)
-				setImage(data.product.image)
-				setBrand(data.product.brand)
-				setCategory(
-					`${categories.findIndex(v => v.id === data.product.category.id)}`
-				)
-				setDescription(data.product.description)
-				setPrice(data.product.price)
-				setCountInStock(data.product.countInStock)
+				setName(data.name)
+				setImage(data.image)
+				setBrand(data.brand)
+				setCategory(`${categories.findIndex(v => v.id === data.category.id)}`)
+				setDescription(data.description)
+				setPrice(data.price)
+				setCountInStock(data.countInStock)
 			}
 		}
 	}, [categories, data, history, userDetails])
@@ -83,7 +80,7 @@ const EditProductScreen = () => {
 			try {
 				if (data)
 					await updateProduct({
-						id: data.product.id,
+						id: data.id,
 						name,
 						brand,
 						image,
@@ -102,12 +99,12 @@ const EditProductScreen = () => {
 	return (
 		<>
 			<Meta
-				title={`Admin Panel | Edit Product ${data?.product.id}`}
+				title={`Admin Panel | Edit Product ${data?.id}`}
 				description={`Edit product page`}
 			/>
 			<Row className='justify-content-md-center'>
 				<Col md={5}>
-					<h2>Edit Product {data?.product.id}</h2>
+					<h2>Edit Product {data?.id}</h2>
 					{message && <Alert variant='danger'>{message}</Alert>}
 					<Form onSubmit={submitHandler} name='productForm'>
 						<Form.Group controlId='name'>

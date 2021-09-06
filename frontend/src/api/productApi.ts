@@ -1,5 +1,5 @@
 import { shopApi } from '.'
-import { PaginatedProduct, PaginatedProducts, Product } from '../types'
+import { PaginatedProducts, Product } from '../types'
 
 const productApi = shopApi.injectEndpoints({
 	endpoints: build => ({
@@ -10,12 +10,8 @@ const productApi = shopApi.injectEndpoints({
 			query: ({ keyword, pageNumber, category }) =>
 				`/product?keyword=${keyword}&pageNumber=${pageNumber}&category=${category}`,
 		}),
-		getProductById: build.query<
-			PaginatedProduct,
-			{ productId: string; reviewPageNumber: string }
-		>({
-			query: ({ productId, reviewPageNumber }) =>
-				`/product/${productId}?reviewPageNumber=${reviewPageNumber}`,
+		getProductById: build.query<Product, { productId: string }>({
+			query: ({ productId }) => `/product/${productId}`,
 		}),
 		getTopProducts: build.query<Product[], void>({
 			query: () => `/product/top5`,

@@ -1,6 +1,7 @@
 import { Category } from './category/category.model';
 import { Order } from './order/order.model';
 import { Product } from './product/product.model';
+import { Review } from './review/review.model';
 import { User } from './users/users.model';
 
 export type PaginatedUsers = {
@@ -15,10 +16,10 @@ export type PaginatedProducts = {
   products: Product[];
 };
 
-export type PaginatedProduct = {
+export type PaginatedReviews = {
   pages: number;
   page: number;
-  product: Product;
+  reviews: Review[];
 };
 
 export type PaginatedOrders = {

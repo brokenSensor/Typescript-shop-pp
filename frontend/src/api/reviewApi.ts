@@ -1,5 +1,10 @@
 import { shopApi } from '.'
-import { CreateReviewDto, DeleteReviewDto, Product } from '../types'
+import {
+	CreateReviewDto,
+	DeleteReviewDto,
+	PaginatedReviews,
+	Product,
+} from '../types'
 
 const reviewApi = shopApi.injectEndpoints({
 	endpoints: build => ({
@@ -22,8 +27,18 @@ const reviewApi = shopApi.injectEndpoints({
 				credentials: 'include',
 			}),
 		}),
+		getAllReviewsById: build.query<
+			PaginatedReviews,
+			{ productId: number; page?: string }
+		>({
+			query: ({ productId, page }) => `/review/${productId}?page=${page}`,
+		}),
 	}),
 	overrideExisting: false,
 })
 
-export const { useCreateReviewMutation, useDeleteReviewMutation } = reviewApi
+export const {
+	useCreateReviewMutation,
+	useDeleteReviewMutation,
+	useGetAllReviewsByIdQuery,
+} = reviewApi

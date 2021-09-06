@@ -102,9 +102,8 @@ export class ProductController {
       new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
     )
     id: number,
-    @Query('reviewPageNumber') reviewPageNumber: number,
   ) {
-    return this.productService.getProductById(id, reviewPageNumber);
+    return this.productService.getProductById(id);
   }
 
   @ApiOperation({ summary: 'Update product by id. Admin only' })

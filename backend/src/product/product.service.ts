@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from 'src/category/category.model';
 import { Review } from 'src/review/review.model';
-import { PaginatedProduct, PaginatedProducts } from 'src/types';
+import { PaginatedProducts } from 'src/types';
 import { User } from 'src/users/users.model';
 import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
@@ -56,29 +56,12 @@ export class ProductService {
     return { page, pages: Math.ceil(count / pageSize), products };
   }
 
-  async getProductById(
-    id: number,
-    reviewPageNumber: number | 'undefined' | '',
-  ): Promise<PaginatedProduct> {
-    const pageSize = 4;
-    const page =
-      reviewPageNumber === 'undefined' || reviewPageNumber === ''
-        ? 1
-        : reviewPageNumber;
+  async getProductById(id: number): Promise<Product> {
     const product = await this.productRepository.findOne({
       where: { id },
       relations: ['category'],
     });
-    const [reviews, count] = await this.reviewRepository
-      .createQueryBuilder('review')
-      .where('review.productId = :productId', { productId: id })
-      .take(pageSize)
-      .skip(pageSize * (page - 1))
-      .orderBy('review.createdAt')
-      .getManyAndCount();
-
-    product.reviews = reviews;
-    return { page, pages: Math.ceil(count / pageSize), product };
+    return product;
   }
 
   async updateProduct(dto: UpdateProductDto): Promise<void> {

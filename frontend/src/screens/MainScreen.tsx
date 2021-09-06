@@ -26,7 +26,7 @@ const MainScreen = () => {
 			{!keyword && !pageNumber && !category && <CustomCarousel />}
 			{
 				<>
-					{!keyword && !pageNumber && !category && <h1>Latest Products</h1>}
+					{!keyword && !pageNumber && !category && <h1>Our Products</h1>}
 					{category && <h1>{category}</h1>}
 					{keyword && <h1>Search: {keyword}</h1>}
 					{pageNumber && <h1>Page: {pageNumber}</h1>}

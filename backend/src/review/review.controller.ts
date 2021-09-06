@@ -7,6 +7,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Query,
   Req,
   UseGuards,
   ValidationPipe,
@@ -35,6 +36,20 @@ export class ReviewController {
     productId: number,
   ) {
     return this.reviewService.createReview(reviewDto, req.user.id, productId);
+  }
+
+  @ApiOperation({ summary: 'Get reviews by product id' })
+  @ApiResponse({ status: HttpStatus.OK })
+  @Get('/:productId')
+  async getReviewsByProductId(
+    @Query('page') page: number,
+    @Param(
+      'productId',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    productId: number,
+  ) {
+    return this.reviewService.getReviewsByProductId(productId, page);
   }
 
   @ApiOperation({ summary: 'Delete review' })

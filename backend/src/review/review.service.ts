@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from 'src/product/product.model';
 import { ProductService } from 'src/product/product.service';
+import { PaginatedReviews } from 'src/types';
 import { User } from 'src/users/users.model';
 import { Repository } from 'typeorm';
 import { CreateReviewDto } from './dto/create-review.dto';
@@ -153,5 +154,23 @@ export class ReviewService {
         );
       });
     });
+  }
+
+  async getReviewsByProductId(
+    productId: number,
+    page: number | 'undefined' | '',
+  ): Promise<PaginatedReviews> {
+    const pageSize = 4;
+    page = page === 'undefined' || page === '' ? 1 : page;
+
+    const [reviews, count] = await this.reviewRepository
+      .createQueryBuilder('review')
+      .where('review.productId = :productId', { productId })
+      .take(pageSize)
+      .skip(pageSize * (page - 1))
+      .orderBy('review.createdAt')
+      .getManyAndCount();
+
+    return { page, pages: Math.ceil(count / pageSize), reviews };
   }
 }
