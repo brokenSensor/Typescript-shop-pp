@@ -185,12 +185,12 @@ const OrderScreen = () => {
 									</ListGroup.Item>
 									{!data?.isPaid && (
 										<ListGroup.Item id='paypal-button-container'>
-											{loadingPay || (ppButtonLoading && <Loader />)}
 											{data && PayPalConfig && (
 												<PayPalScriptProvider
 													options={{ 'client-id': PayPalConfig.clientId }}
 												>
 													<PayPalButtons
+														disabled={loadingPay || ppButtonLoading}
 														onInit={() => {
 															setPpButtonLoading(false)
 														}}

@@ -41,18 +41,12 @@ const ProductScreen = () => {
 
 	const pageNumber = new URLSearchParams(search).get('pageNumber')
 
-	const {
-		data,
-		error,
-		isLoading,
-		refetch: refetchProduct,
-	} = useGetProductByIdQuery({
+	const { data, error, isLoading } = useGetProductByIdQuery({
 		productId: id,
 	})
 
 	const {
 		data: paginatedReviews,
-		error: reviewsError,
 		isLoading: reviewsLoading,
 		refetch: refetchReviews,
 	} = useGetAllReviewsByIdQuery({
