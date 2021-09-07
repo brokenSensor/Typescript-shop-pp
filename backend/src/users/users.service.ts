@@ -30,7 +30,8 @@ export class UsersService {
       newUser.activationLink = activationLink;
       newUser.isActivated = dto.strategy === 'local' ? false : true;
 
-      return await this.userRepository.save(newUser);
+      const savedUser = await this.userRepository.save(newUser);
+      return savedUser;
     }
     throw new BadRequestException({
       statusCode: HttpStatus.BAD_REQUEST,

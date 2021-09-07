@@ -6,7 +6,7 @@ import { PaginatedProducts } from 'src/types';
 import { User } from 'src/users/users.model';
 import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
-import { products, users } from './dbseed';
+import { products, users } from '../seeder/dbseed';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './product.model';
@@ -106,43 +106,6 @@ export class ProductService {
     );
     product.rating = parseFloat((sumRating / product.numReviews).toFixed(1));
     await this.productRepository.save(product);
-  }
-
-  async seed(): Promise<void> {
-    users.forEach(async (user) => {
-      await this.usersService.createUser({ ...user, strategy: 'local' });
-    });
-
-    const notAdmin = await this.userRepository.findOne({
-      email: 'bobAdmin@mail.com',
-    });
-
-    notAdmin.isAdmin = true;
-
-    await this.userRepository.save(notAdmin);
-
-    const admin = await this.usersService.getUserByEmail('bobAdmin@mail.com');
-
-    async function asyncForEach(array, callback) {
-      for (let index = 0; index < array.length; index++) {
-        await callback(array[index], index, array);
-      }
-    }
-
-    asyncForEach(products, async (product) => {
-      let category = await this.categoryRepository.findOne({
-        where: { name: product.category },
-      });
-
-      if (!category) {
-        category = new Category();
-        category.name = product.category;
-        category.user = admin;
-
-        category = await this.categoryRepository.save(category);
-      }
-      await this.createProduct({ ...product, category: category }, admin.id);
-    });
   }
 
   async getTopProducts(): Promise<Product[]> {

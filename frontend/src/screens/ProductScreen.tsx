@@ -183,7 +183,7 @@ const ProductScreen = () => {
 										<>
 											<h2>Reviews</h2>
 											{paginatedReviews.reviews.length === 0 && (
-												<Alert>No Reviews</Alert>
+												<Alert variant='info'>No Reviews</Alert>
 											)}
 											<ListGroup variant='flush'>
 												{paginatedReviews.reviews.map(review => (
@@ -202,7 +202,7 @@ const ProductScreen = () => {
 													pages={paginatedReviews.pages}
 												/>
 												<ListGroup.Item>
-													<h2>Write a Customer Review</h2>
+													<h2>Write a Review</h2>
 													{reviewError && (
 														<Alert variant='danger'>{reviewError}</Alert>
 													)}
@@ -220,6 +220,7 @@ const ProductScreen = () => {
 																			rating: Number(rating),
 																		}).unwrap()
 																		refetchReviews()
+																		setReviewError('Thank you for your review!')
 																	} catch (error: any) {
 																		if (Array.isArray(error.data.message)) {
 																			setReviewError(

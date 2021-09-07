@@ -78,6 +78,19 @@ const OrderScreen = () => {
 						<Col md={8}>
 							<ListGroup variant='flush'>
 								<ListGroup.Item>
+									<h2>Payment Method</h2>
+									<p>
+										<strong>Method: </strong>
+										{data?.paymentMethod}
+									</p>
+									{data?.isPaid ? (
+										<Alert variant='success'>Paid on {data.paidAt}</Alert>
+									) : (
+										<Alert variant='danger'>Not Paid</Alert>
+									)}
+								</ListGroup.Item>
+
+								<ListGroup.Item>
 									<h2>Shipping</h2>
 									<p>
 										<strong>Name: {data?.user.name}</strong>
@@ -100,19 +113,6 @@ const OrderScreen = () => {
 										</Alert>
 									) : (
 										<Alert variant='danger'> Not Delivered </Alert>
-									)}
-								</ListGroup.Item>
-
-								<ListGroup.Item>
-									<h2>Payment Method</h2>
-									<p>
-										<strong>Method: </strong>
-										{data?.paymentMethod}
-									</p>
-									{data?.isPaid ? (
-										<Alert variant='success'>Paid on {data.paidAt}</Alert>
-									) : (
-										<Alert variant='danger'>Not Paid</Alert>
 									)}
 								</ListGroup.Item>
 

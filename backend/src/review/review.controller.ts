@@ -71,9 +71,4 @@ export class ReviewController {
   ) {
     return this.reviewService.deleteReview(productId, reviewId, req.user.id);
   }
-
-  @Get('/seedreviews')
-  seed() {
-    this.reviewService.seedReviews();
-  }
 }

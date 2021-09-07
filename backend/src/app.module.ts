@@ -13,6 +13,7 @@ import { Order } from './order/order.model';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { CategoryModule } from './category/category.module';
+import { SeederModule } from './seeder/seeder.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { CategoryModule } from './category/category.module';
       exclude: ['/auth*', '/order*', '/product*', '/review*', '/users*'],
     }),
     CategoryModule,
+    SeederModule,
   ],
   controllers: [],
   providers: [],

@@ -88,11 +88,6 @@ export class ProductController {
     return this.productService.getTopProducts();
   }
 
-  @Get('/seedproducts')
-  seed() {
-    this.productService.seed();
-  }
-
   @ApiOperation({ summary: 'Get product by id' })
   @ApiResponse({ status: HttpStatus.OK, type: Product })
   @Get('/:id')
