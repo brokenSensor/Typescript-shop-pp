@@ -32,7 +32,7 @@ import * as path from 'path';
       entities: [User, Product, Review, Order],
       synchronize: false,
       autoLoadEntities: true,
-      ssl: true,
+      ssl: { rejectUnauthorized: false },
     }),
     UsersModule,
     AuthModule,
