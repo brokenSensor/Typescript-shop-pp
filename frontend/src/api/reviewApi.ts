@@ -10,7 +10,7 @@ const reviewApi = shopApi.injectEndpoints({
 	endpoints: build => ({
 		createReview: build.mutation<Product, CreateReviewDto>({
 			query: ReviewDto => ({
-				url: `/review/${ReviewDto.productId}`,
+				url: `/api/review/${ReviewDto.productId}`,
 				method: 'POST',
 				credentials: 'include',
 				body: {
@@ -22,7 +22,7 @@ const reviewApi = shopApi.injectEndpoints({
 		}),
 		deleteReview: build.mutation<Product, DeleteReviewDto>({
 			query: ReviewDto => ({
-				url: `/review/${ReviewDto.productId}/${ReviewDto.reviewId}`,
+				url: `/api/review/${ReviewDto.productId}/${ReviewDto.reviewId}`,
 				method: 'DELETE',
 				credentials: 'include',
 			}),
@@ -31,7 +31,7 @@ const reviewApi = shopApi.injectEndpoints({
 			PaginatedReviews,
 			{ productId: number; page?: string }
 		>({
-			query: ({ productId, page }) => `/review/${productId}?page=${page}`,
+			query: ({ productId, page }) => `/api/review/${productId}?page=${page}`,
 		}),
 	}),
 	overrideExisting: false,

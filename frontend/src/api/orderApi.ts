@@ -5,27 +5,27 @@ const orderApi = shopApi.injectEndpoints({
 	endpoints: build => ({
 		createOrder: build.mutation<Order, CreateOrderDto>({
 			query: createOrderDto => ({
-				url: '/order',
+				url: '/api/order',
 				method: 'POST',
 				body: createOrderDto,
 				credentials: 'include',
 			}),
 		}),
 		getPayPalConfig: build.query<{ clientId: string }, void>({
-			query: () => `/order/paypalconfig`,
+			query: () => `/api/order/paypalconfig`,
 		}),
 		getOrderById: build.query<Order, number>({
-			query: id => `/order/${id}`,
+			query: id => `/api/order/${id}`,
 		}),
 		getAllUserOrders: build.query<Order[], void>({
-			query: () => `/order/me`,
+			query: () => `/api/order/me`,
 		}),
 		updateOrderToPayed: build.mutation<
 			Order,
 			{ orderId: number; paymentResult: PaymentResult }
 		>({
 			query: arg => ({
-				url: `/order/pay/${arg.orderId}`,
+				url: `/api/order/pay/${arg.orderId}`,
 				method: 'PUT',
 				body: arg.paymentResult,
 				credentials: 'include',
@@ -33,7 +33,7 @@ const orderApi = shopApi.injectEndpoints({
 		}),
 		createPayPalOrder: build.mutation<{ orderId: string }, number>({
 			query: orderId => ({
-				url: '/order/PayPalOrder',
+				url: '/api/order/PayPalOrder',
 				method: 'POST',
 				body: { orderId },
 				credentials: 'include',

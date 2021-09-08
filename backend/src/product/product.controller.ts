@@ -30,7 +30,7 @@ import { validMimeTypes } from 'src/types';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @ApiTags('Product')
-@Controller('product')
+@Controller('api/product')
 export class ProductController {
   constructor(private productService: ProductService) {}
 

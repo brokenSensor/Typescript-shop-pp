@@ -56,7 +56,7 @@ const EditProductScreen = () => {
 			formData.append('image', file)
 			setUploading(true)
 			try {
-				const res = await fetch('/product/upload', {
+				const res = await fetch('/api/product/upload', {
 					body: formData,
 					method: 'post',
 				})

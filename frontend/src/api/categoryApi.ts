@@ -4,10 +4,10 @@ import { Category } from '../types'
 const categoryApi = shopApi.injectEndpoints({
 	endpoints: build => ({
 		getAllCategories: build.query<Category[], void>({
-			query: () => `/category`,
+			query: () => `/api/category`,
 		}),
 		getCategoryById: build.query<Category, number>({
-			query: id => `/category/${id}`,
+			query: id => `/api/category/${id}`,
 		}),
 	}),
 	overrideExisting: false,

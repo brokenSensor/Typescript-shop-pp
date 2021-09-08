@@ -18,28 +18,28 @@ const adminApi = shopApi.injectEndpoints({
 			{ pageNumber?: string; keyword?: string }
 		>({
 			query: ({ keyword, pageNumber }) =>
-				`/users?keyword=${keyword}&pageNumber=${pageNumber}`,
+				`/api/users?keyword=${keyword}&pageNumber=${pageNumber}`,
 		}),
 		getAllOrders: build.query<
 			PaginatedOrders,
 			{ pageNumber?: string; keyword?: string }
 		>({
 			query: ({ keyword, pageNumber }) =>
-				`/order?keyword=${keyword}&pageNumber=${pageNumber}`,
+				`/api/order?keyword=${keyword}&pageNumber=${pageNumber}`,
 		}),
 		getUserById: build.query<User, string>({
-			query: id => `/users/id/${id}`,
+			query: id => `/api/users/id/${id}`,
 		}),
 		getAllCategoriesForAdmin: build.query<
 			PaginatedCategories,
 			{ pageNumber?: string; keyword?: string }
 		>({
 			query: ({ keyword, pageNumber }) =>
-				`/category/admin?keyword=${keyword}&pageNumber=${pageNumber}`,
+				`/api/category/admin?keyword=${keyword}&pageNumber=${pageNumber}`,
 		}),
 		updateUserById: build.mutation<void, UpdateUserDto>({
 			query: updateUserDto => ({
-				url: `/users/admin/`,
+				url: `/api/users/admin/`,
 				method: 'PUT',
 				body: updateUserDto,
 				credentials: 'include',
@@ -47,7 +47,7 @@ const adminApi = shopApi.injectEndpoints({
 		}),
 		updateProductById: build.mutation<void, UpdateProductDto>({
 			query: updateProductDto => ({
-				url: `/product`,
+				url: `/api/product`,
 				method: 'PUT',
 				body: updateProductDto,
 				credentials: 'include',
@@ -55,7 +55,7 @@ const adminApi = shopApi.injectEndpoints({
 		}),
 		updateCategoryById: build.mutation<void, UpdateCategoryDto>({
 			query: updateCategoryDto => ({
-				url: `/category`,
+				url: `/api/category`,
 				method: 'PUT',
 				body: updateCategoryDto,
 				credentials: 'include',
@@ -63,7 +63,7 @@ const adminApi = shopApi.injectEndpoints({
 		}),
 		createProduct: build.mutation<void, CreateProductDto>({
 			query: createProductDto => ({
-				url: `/product`,
+				url: `/api/product`,
 				method: 'POST',
 				body: createProductDto,
 				credentials: 'include',
@@ -71,7 +71,7 @@ const adminApi = shopApi.injectEndpoints({
 		}),
 		createCategory: build.mutation<void, CreateCategoryDto>({
 			query: createCategoryDto => ({
-				url: `/category`,
+				url: `/api/category`,
 				method: 'POST',
 				body: createCategoryDto,
 				credentials: 'include',
@@ -79,35 +79,35 @@ const adminApi = shopApi.injectEndpoints({
 		}),
 		updateOrderToDelivered: build.mutation<void, number>({
 			query: id => ({
-				url: `/order/delivered/${id}`,
+				url: `/api/order/delivered/${id}`,
 				method: 'PUT',
 				credentials: 'include',
 			}),
 		}),
 		deleteUserById: build.mutation<void, number>({
 			query: id => ({
-				url: `/users/${id}`,
+				url: `/api/users/${id}`,
 				method: 'DELETE',
 				credentials: 'include',
 			}),
 		}),
 		deleteOrderById: build.mutation<void, number>({
 			query: id => ({
-				url: `/order/${id}`,
+				url: `/api/order/${id}`,
 				method: 'DELETE',
 				credentials: 'include',
 			}),
 		}),
 		deleteProductById: build.mutation<void, number>({
 			query: id => ({
-				url: `/product/${id}`,
+				url: `/api/product/${id}`,
 				method: 'DELETE',
 				credentials: 'include',
 			}),
 		}),
 		deleteCategoryById: build.mutation<void, number>({
 			query: id => ({
-				url: `/category/${id}`,
+				url: `/api/category/${id}`,
 				method: 'DELETE',
 				credentials: 'include',
 			}),

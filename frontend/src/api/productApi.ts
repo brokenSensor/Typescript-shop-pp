@@ -8,13 +8,13 @@ const productApi = shopApi.injectEndpoints({
 			{ keyword?: string; pageNumber?: string; category?: string }
 		>({
 			query: ({ keyword, pageNumber, category }) =>
-				`/product?keyword=${keyword}&pageNumber=${pageNumber}&category=${category}`,
+				`/api/product?keyword=${keyword}&pageNumber=${pageNumber}&category=${category}`,
 		}),
 		getProductById: build.query<Product, { productId: string }>({
-			query: ({ productId }) => `/product/${productId}`,
+			query: ({ productId }) => `/api/product/${productId}`,
 		}),
 		getTopProducts: build.query<Product[], void>({
-			query: () => `/product/top5`,
+			query: () => `/api/product/top5`,
 		}),
 	}),
 	overrideExisting: false,

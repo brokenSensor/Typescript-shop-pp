@@ -4,7 +4,7 @@ const seederApi = shopApi.injectEndpoints({
 	endpoints: build => ({
 		reseedDB: build.mutation<void, void>({
 			query: () => ({
-				url: `/seeder`,
+				url: `/api/seeder`,
 				method: 'GET',
 				credentials: 'include',
 			}),

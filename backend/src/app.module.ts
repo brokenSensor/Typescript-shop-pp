@@ -45,13 +45,12 @@ const config: TypeOrmModuleOptions = {
     SeederModule,
     ServeStaticModule.forRoot({
       rootPath: path.join(__dirname, '..', '..', 'frontend', 'build'),
-      serveRoot: '*',
-      exclude: ['/auth*', '/order*', '/product*', '/review*', '/users*'],
+      exclude: ['/api*'],
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'client', 'images'),
       serveRoot: '/images',
-      exclude: ['/auth*', '/order*', '/product*', '/review*', '/users*'],
+      exclude: ['/api*'],
     }),
   ],
   controllers: [],

@@ -12,7 +12,7 @@ const authApi = shopApi.injectEndpoints({
 	endpoints: build => ({
 		loginUser: build.mutation<TokensAndUser, LoginRequest>({
 			query: loginCredentials => ({
-				url: '/auth/login',
+				url: '/api/auth/login',
 				method: 'POST',
 				body: loginCredentials,
 				credentials: 'include',
@@ -20,7 +20,7 @@ const authApi = shopApi.injectEndpoints({
 		}),
 		registerUser: build.mutation<TokensAndUser, RegisterRequest>({
 			query: registerCredentials => ({
-				url: '/auth/register',
+				url: '/api/auth/register',
 				method: 'POST',
 				body: registerCredentials,
 				credentials: 'include',
@@ -28,7 +28,7 @@ const authApi = shopApi.injectEndpoints({
 		}),
 		googleAuth: build.mutation<TokensAndUser, GoogleProfile>({
 			query: googleProfile => ({
-				url: `/auth/google/`,
+				url: `/api/auth/google/`,
 				method: 'POST',
 				credentials: 'include',
 				body: googleProfile,
@@ -36,27 +36,27 @@ const authApi = shopApi.injectEndpoints({
 		}),
 		logoutUser: build.mutation<void, void>({
 			query: () => ({
-				url: '/auth/logout',
+				url: '/api/auth/logout',
 				method: 'POST',
 				credentials: 'include',
 			}),
 		}),
 		updateUser: build.mutation<void, UpdateUserDto>({
 			query: updateUserDto => ({
-				url: '/users/me',
+				url: '/api/users/me',
 				method: 'PUT',
 				body: updateUserDto,
 				credentials: 'include',
 			}),
 		}),
 		getUser: build.query<UserDto, void>({
-			query: () => `/users/me`,
+			query: () => `/api/users/me`,
 		}),
 		getGoogleClientId: build.query<{ googleClientId: string }, void>({
-			query: () => `/auth/googleId`,
+			query: () => `/api/auth/googleId`,
 		}),
 		resendActivation: build.mutation<void, void>({
-			query: () => `/auth/emailActivation`,
+			query: () => `/api/auth/emailActivation`,
 		}),
 	}),
 	overrideExisting: false,

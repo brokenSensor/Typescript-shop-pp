@@ -22,7 +22,7 @@ import { Order } from './order.model';
 import { OrderService } from './order.service';
 
 @ApiTags('Order')
-@Controller('order')
+@Controller('api/order')
 export class OrderController {
   constructor(private orderService: OrderService) {}
 
