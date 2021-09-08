@@ -11,6 +11,7 @@ const EditUserScreen = () => {
 	const [name, setName] = useState('')
 	const [email, setEmail] = useState('')
 	const [isAdmin, setIsAdmin] = useState(false)
+	const [isActivated, setIsActivated] = useState(false)
 	const [password, setPassword] = useState('')
 	const [confirmPassword, setConfirmPassword] = useState('')
 	const [message, setMessage] = useState<string | null>(null)
@@ -31,6 +32,7 @@ const EditUserScreen = () => {
 				setName(data.name)
 				setEmail(data.email)
 				setIsAdmin(data.isAdmin)
+				setIsActivated(data.isActivated)
 			}
 		}
 	}, [data, dispatch, history, userDetails])
@@ -42,7 +44,14 @@ const EditUserScreen = () => {
 		} else {
 			try {
 				if (data)
-					await updateUser({ id: data.id, name, email, password, isAdmin })
+					await updateUser({
+						id: data.id,
+						name,
+						email,
+						password,
+						isAdmin,
+						isActivated,
+					})
 				refetchUser()
 				setMessage('Profile Edited')
 			} catch (error) {
@@ -87,6 +96,15 @@ const EditUserScreen = () => {
 								label='Is Admin'
 								checked={isAdmin}
 								onChange={() => setIsAdmin(!isAdmin)}
+							/>
+						</Form.Group>
+
+						<Form.Group controlId='isActivated'>
+							<Form.Check
+								type='checkbox'
+								label='Is Activated'
+								checked={isActivated}
+								onChange={() => setIsActivated(!isActivated)}
 							/>
 						</Form.Group>
 

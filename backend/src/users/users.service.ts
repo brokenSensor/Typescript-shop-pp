@@ -75,6 +75,9 @@ export class UsersService {
         if (dto.isAdmin !== undefined) {
           user.isAdmin = dto.isAdmin;
         }
+        if (dto.isActivated !== undefined) {
+          user.isActivated = dto.isActivated;
+        }
       }
 
       await this.userRepository.update(userId, user);

@@ -182,6 +182,7 @@ export type UpdateUserDto = {
 	email?: string
 	password?: string
 	isAdmin?: boolean
+	isActivated?: boolean
 }
 
 export type User = {

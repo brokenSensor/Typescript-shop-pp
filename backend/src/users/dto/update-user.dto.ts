@@ -33,4 +33,11 @@ export class UpdateUserDto {
   })
   @IsBoolean()
   isAdmin?: boolean;
+
+  @ApiProperty({
+    example: 'false',
+    description: 'Is this user email is confirmed',
+  })
+  @IsBoolean()
+  isActivated?: boolean;
 }
