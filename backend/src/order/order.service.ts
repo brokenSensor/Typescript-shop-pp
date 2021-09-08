@@ -115,10 +115,10 @@ export class OrderService {
   }
 
   async createPayPalOrder(orderId: number): Promise<{ orderId: string }> {
-    const Environment =
-      process.env.NODE_ENV === 'production'
-        ? paypal.core.LiveEnvironment
-        : paypal.core.SandboxEnvironment;
+    const Environment = paypal.core.SandboxEnvironment;
+    // process.env.NODE_ENV === 'production'
+    //   ? paypal.core.LiveEnvironment
+    //   : paypal.core.SandboxEnvironment;
 
     const paypalClient = new paypal.core.PayPalHttpClient(
       new Environment(
