@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import 'bootswatch/dist/quartz/bootstrap.min.css'
 import './index.sass'
 import App from './App'
 import { Provider } from 'react-redux'
