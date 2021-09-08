@@ -30,7 +30,7 @@ import * as path from 'path';
       // password: process.env.POSTGRES_PASSWORD,
       // database: process.env.POSTGRES_DB,
       entities: [User, Product, Review, Order],
-      synchronize: false,
+      synchronize: true,
       autoLoadEntities: true,
       ssl: { rejectUnauthorized: false },
     }),
