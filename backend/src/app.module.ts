@@ -45,7 +45,7 @@ const config: TypeOrmModuleOptions = {
     SeederModule,
     ServeStaticModule.forRoot({
       rootPath: path.join(__dirname, '..', '..', 'frontend', 'build'),
-      serveRoot: '/*',
+      serveRoot: '*',
       exclude: ['/auth*', '/order*', '/product*', '/review*', '/users*'],
     }),
     ServeStaticModule.forRoot({
