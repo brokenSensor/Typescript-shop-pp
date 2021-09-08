@@ -12,8 +12,6 @@ const EditUserScreen = () => {
 	const [email, setEmail] = useState('')
 	const [isAdmin, setIsAdmin] = useState(false)
 	const [isActivated, setIsActivated] = useState(false)
-	const [password, setPassword] = useState('')
-	const [confirmPassword, setConfirmPassword] = useState('')
 	const [message, setMessage] = useState<string | null>(null)
 
 	const history = useHistory()
@@ -39,24 +37,20 @@ const EditUserScreen = () => {
 
 	const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
-		if (password !== confirmPassword) {
-			setMessage('Passwords do not match')
-		} else {
-			try {
-				if (data)
-					await updateUser({
-						id: data.id,
-						name,
-						email,
-						password,
-						isAdmin,
-						isActivated,
-					})
-				refetchUser()
-				setMessage('Profile Edited')
-			} catch (error) {
-				setMessage('Something went wrong. Please try again')
-			}
+
+		try {
+			if (data)
+				await updateUser({
+					id: data.id,
+					name,
+					email,
+					isAdmin,
+					isActivated,
+				})
+			refetchUser()
+			setMessage('Profile Edited')
+		} catch (error) {
+			setMessage('Something went wrong. Please try again')
 		}
 	}
 	return (
@@ -106,26 +100,6 @@ const EditUserScreen = () => {
 								checked={isActivated}
 								onChange={() => setIsActivated(!isActivated)}
 							/>
-						</Form.Group>
-
-						<Form.Group controlId='password'>
-							<Form.Label>Password</Form.Label>
-							<Form.Control
-								type='password'
-								placeholder='Enter password'
-								value={password}
-								onChange={e => setPassword(e.target.value)}
-							></Form.Control>
-						</Form.Group>
-
-						<Form.Group controlId='confirmPassword'>
-							<Form.Label>Confirm Password</Form.Label>
-							<Form.Control
-								type='password'
-								placeholder='Confirm Password'
-								value={confirmPassword}
-								onChange={e => setConfirmPassword(e.target.value)}
-							></Form.Control>
 						</Form.Group>
 
 						<Button type='submit' variant='primary'>
