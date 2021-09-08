@@ -14,6 +14,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { CategoryModule } from './category/category.module';
 import { SeederModule } from './seeder/seeder.module';
+import * as path from 'path';
 
 @Module({
   imports: [
@@ -37,12 +38,18 @@ import { SeederModule } from './seeder/seeder.module';
     ProductModule,
     ReviewModule,
     OrderModule,
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'client'),
-      exclude: ['/auth*', '/order*', '/product*', '/review*', '/users*'],
-    }),
     CategoryModule,
     SeederModule,
+    ServeStaticModule.forRoot({
+      rootPath: path.join(__dirname, '..', '..', 'frontend', 'build'),
+      serveRoot: '/',
+      exclude: ['/auth*', '/order*', '/product*', '/review*', '/users*'],
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'client', 'images'),
+      serveRoot: '/images',
+      exclude: ['/auth*', '/order*', '/product*', '/review*', '/users*'],
+    }),
   ],
   controllers: [],
   providers: [],
