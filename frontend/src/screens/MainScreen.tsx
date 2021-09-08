@@ -48,6 +48,12 @@ const MainScreen = () => {
 						<Button variant='danger' onClick={resetHandler}>
 							Reset
 						</Button>
+						<br />
+						Credential for PayPal payment:
+						<br />
+						Email: sb-ldnj17543667@personal.example.com
+						<br />
+						Password: )d$5AKv7
 					</Alert>
 					<CustomCarousel />
 				</>
