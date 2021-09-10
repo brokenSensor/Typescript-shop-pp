@@ -10,6 +10,6 @@ export class SeederController {
   }
   @Delete()
   clearDB() {
-    this.seederService.clearDB();
+    this.seederService.clearImages();
   }
 }

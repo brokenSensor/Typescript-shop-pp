@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as fs from 'fs';
+import * as path from 'path';
 import { Category } from 'src/category/category.model';
 import { Order } from 'src/order/order.model';
 import { Product } from 'src/product/product.model';
@@ -34,6 +36,7 @@ export class SeederService {
 
   async seed(): Promise<void> {
     await this.clearDB();
+    await this.clearImages();
     await this.seedUsers();
     await this.seedAdmin();
     await this.seedProductsAndCategories();
@@ -64,6 +67,36 @@ export class SeederService {
     const users = await this.userRepository.find();
     if (users.length > 0)
       await this.userRepository.delete(users.map((user) => user.id));
+  }
+
+  async clearImages() {
+    const defaulImages = [
+      'acer.jpg',
+      'amd.jpg',
+      'amdg.jpg',
+      'asus.jpg',
+      'favicon.ico',
+      'honor.jpg',
+      'huav.jpg',
+      'intel.jpg',
+      'iphone12.jpg',
+      'mac.jpg',
+      'nintendo.jpg',
+      'ps5.jpg',
+      'ss21.jpg',
+      'xbox.jpg',
+      'xiomi.jpg',
+      '.DS_Store',
+    ];
+    const pathToImages = path.join(__dirname, '..', '..', 'client', 'images');
+
+    fs.readdir(pathToImages, (err, files) => {
+      files.forEach((file) => {
+        if (!defaulImages.includes(file)) {
+          fs.unlinkSync(path.join(pathToImages, file));
+        }
+      });
+    });
   }
 
   async seedUsers() {
