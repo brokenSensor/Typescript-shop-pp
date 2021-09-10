@@ -1,6 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import {
+  TypeOrmModule,
+  TypeOrmModuleAsyncOptions,
+  TypeOrmModuleOptions,
+} from '@nestjs/typeorm';
 import { User } from './users/users.model';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
@@ -16,25 +20,26 @@ import { CategoryModule } from './category/category.module';
 import { SeederModule } from './seeder/seeder.module';
 import * as path from 'path';
 
-const config: TypeOrmModuleOptions = {
-  type: 'postgres',
-  url: process.env.DATABASE_URL,
-  // host: process.env.POSTGRES_HOST,
-  // port: Number(process.env.POSTGRES_PORT),
-  // username: process.env.POSTGRES_USER,
-  // password: process.env.POSTGRES_PASSWORD,
-  // database: process.env.POSTGRES_DB,
-  entities: [User, Product, Review, Order],
-  synchronize: true,
-  autoLoadEntities: true,
-  ssl: { rejectUnauthorized: false },
-};
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: `.${process.env.NODE_ENV}.env`,
     }),
-    TypeOrmModule.forRoot(config),
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      ...(process.env.DATABASE_URL
+        ? { url: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } }
+        : {
+            host: process.env.POSTGRES_HOST,
+            port: Number(process.env.POSTGRES_PORT),
+            username: process.env.POSTGRES_USER,
+            password: process.env.POSTGRES_PASSWORD,
+            database: process.env.POSTGRES_DB,
+          }),
+      entities: [User, Product, Review, Order],
+      synchronize: true,
+      autoLoadEntities: true,
+    }),
     UsersModule,
     AuthModule,
     ConfigModule,
