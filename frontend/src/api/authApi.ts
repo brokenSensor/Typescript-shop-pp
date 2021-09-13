@@ -1,6 +1,5 @@
 import { shopApi } from '.'
 import {
-	GoogleProfile,
 	LoginRequest,
 	RegisterRequest,
 	TokensAndUser,
@@ -24,14 +23,6 @@ const authApi = shopApi.injectEndpoints({
 				method: 'POST',
 				body: registerCredentials,
 				credentials: 'include',
-			}),
-		}),
-		googleAuth: build.mutation<TokensAndUser, GoogleProfile>({
-			query: googleProfile => ({
-				url: `/api/auth/google/`,
-				method: 'POST',
-				credentials: 'include',
-				body: googleProfile,
 			}),
 		}),
 		logoutUser: build.mutation<void, void>({
@@ -58,6 +49,9 @@ const authApi = shopApi.injectEndpoints({
 		resendActivation: build.mutation<void, void>({
 			query: () => `/api/auth/emailActivation`,
 		}),
+		getGoogleLoginURL: build.query<{ URL: string }, void>({
+			query: () => `/api/auth/googleURL`,
+		}),
 	}),
 	overrideExisting: false,
 })
@@ -69,6 +63,6 @@ export const {
 	useUpdateUserMutation,
 	useGetUserQuery,
 	useResendActivationMutation,
-	useGoogleAuthMutation,
+	useGetGoogleLoginURLQuery,
 	useGetGoogleClientIdQuery,
 } = authApi

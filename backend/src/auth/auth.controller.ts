@@ -3,22 +3,19 @@ import {
   Controller,
   Get,
   HttpStatus,
-  Next,
   Param,
   Post,
   Req,
   Res,
-  UnauthorizedException,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { NextFunction, Request, Response } from 'express';
-import { authenticate, AuthenticateOptions } from 'passport';
-import { AuthProvider, GoogleProfile } from 'src/types';
+import { Request, Response } from 'express';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { AuthService } from './auth.service';
+import { GoogleAuthGuard } from './guards/google-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 
@@ -88,30 +85,6 @@ export class AuthController {
     }
   }
 
-  @ApiOperation({ summary: 'Google auth' })
-  @ApiResponse({
-    status: HttpStatus.CREATED,
-    schema: {
-      properties: {
-        token: { type: 'string', description: 'Users JWT Token' },
-      },
-    },
-  })
-  @Post('/google')
-  async googleAuth(
-    @Body(new ValidationPipe()) googleProfile: GoogleProfile,
-    @Res({ passthrough: true }) response: Response,
-  ) {
-    const body = await this.authService.googleAuth(googleProfile);
-    if (body) {
-      response.cookie('refreshToken', body.refresh_token, {
-        httpOnly: true,
-        maxAge: 30 * 24 * 60 * 60 * 1000,
-      });
-      return body;
-    }
-  }
-
   @ApiOperation({ summary: 'Refresh access token' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -169,5 +142,31 @@ export class AuthController {
   @Get('/googleId')
   async getGoogleClientId() {
     return { googleClientId: this.configService.get('GOOGLE_CLIENT_ID') };
+  }
+
+  @Get('/google')
+  @UseGuards(GoogleAuthGuard)
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  async googleAuth(@Req() req) {}
+
+  @Get('/google/callback')
+  @UseGuards(GoogleAuthGuard)
+  async googleAuthRedirect(@Req() req, @Res() response: Response) {
+    const tokensAndUser = await this.authService.login(req.user);
+    response.cookie('refreshToken', tokensAndUser.refresh_token, {
+      httpOnly: true,
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+    });
+    response.redirect(
+      `${this.configService.get(
+        'SITE_URL',
+      )}/login?tokensAndUser=${JSON.stringify(tokensAndUser)}`,
+    );
+    return req.user;
+  }
+
+  @Get('googleURL')
+  googleURL() {
+    return { URL: `${this.configService.get('API_URL')}/api/auth/google` };
   }
 }

@@ -2,47 +2,44 @@ import React, { useState } from 'react'
 import { useEffect } from 'react'
 import { Alert, Button, Col, Form, Row } from 'react-bootstrap'
 import { Link, useHistory, useLocation } from 'react-router-dom'
-import {
-	useGetGoogleClientIdQuery,
-	useGoogleAuthMutation,
-	useLoginUserMutation,
-} from '../api/authApi'
+import { useGetGoogleLoginURLQuery, useLoginUserMutation } from '../api/authApi'
 import FormContainer from '../components/FormContainer'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { setCredentials } from '../slices/authSlice'
-import { LoginRequest } from '../types'
-import {
-	GoogleLogin,
-	GoogleLoginResponse,
-	GoogleLoginResponseOffline,
-} from 'react-google-login'
+import { LoginRequest, TokensAndUser } from '../types'
 import Meta from '../components/Meta'
+import { GoogleLoginButton } from 'react-social-login-buttons'
 
 const LoginScreen = () => {
 	const dispatch = useAppDispatch()
 	const history = useHistory()
-	const location = useLocation()
+	const search = useLocation().search
 	const [error, setError] = useState('')
 
 	const userInfo = useAppSelector(state => state.authReducer.user)
 
-	const redirect = location.search ? location.search.split('=')[1] : '/'
+	const redirect = new URLSearchParams(search).get('panel') || '/'
+
+	const tokensAndUser = new URLSearchParams(search).get('tokensAndUser')
+
+	const { data: googleLogin } = useGetGoogleLoginURLQuery()
 
 	useEffect(() => {
+		if (tokensAndUser !== null) {
+			const parsedTokensAndUser: TokensAndUser = JSON.parse(tokensAndUser)
+			dispatch(setCredentials(parsedTokensAndUser))
+		}
 		if (userInfo) {
 			history.push(redirect)
 		}
-	}, [history, redirect, userInfo])
+	}, [dispatch, history, redirect, tokensAndUser, userInfo])
 
 	const [formState, setFormState] = useState<LoginRequest>({
 		email: '',
 		password: '',
 	})
 
-	const { data } = useGetGoogleClientIdQuery()
-
 	const [login, { isLoading }] = useLoginUserMutation()
-	const [google] = useGoogleAuthMutation()
 
 	const handleChange = ({
 		target: { name, value },
@@ -65,27 +62,6 @@ const LoginScreen = () => {
 			}, 10000)
 		}
 	}
-
-	const googleAuthSuccessHandler = async (
-		response: GoogleLoginResponse | GoogleLoginResponseOffline
-	) => {
-		const res = await google(
-			(response as GoogleLoginResponse).profileObj
-		).unwrap()
-		dispatch(setCredentials(res))
-		history.push(redirect)
-	}
-
-	const googleAuthFailureHandler = (response: {
-		error: string
-		details: string
-	}) => {
-		setError(response.details)
-		setTimeout(() => {
-			setError('')
-		}, 10000)
-	}
-
 	return (
 		<>
 			<Meta
@@ -124,17 +100,6 @@ const LoginScreen = () => {
 						</>
 					)}
 					<Row className='py-3'>
-						<Col md={8}>
-							{data && (
-								<GoogleLogin
-									clientId={data.googleClientId}
-									buttonText='Log in with Google'
-									onSuccess={googleAuthSuccessHandler}
-									onFailure={googleAuthFailureHandler}
-									cookiePolicy={'single_host_origin'}
-								/>
-							)}
-						</Col>
 						<Col md={4}>
 							New Customer?{' '}
 							<Link
@@ -142,6 +107,15 @@ const LoginScreen = () => {
 							>
 								Register
 							</Link>
+						</Col>
+					</Row>
+					<Row>
+						<Col md={{ span: 6, offset: 3 }}>
+							{googleLogin && (
+								<a href={googleLogin.URL}>
+									<GoogleLoginButton />
+								</a>
+							)}
 						</Col>
 					</Row>
 				</Form>

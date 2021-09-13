@@ -2,20 +2,15 @@ import React, { useEffect, useState } from 'react'
 import { Alert, Button, Col, Form, Row } from 'react-bootstrap'
 import { Link, useHistory, useLocation } from 'react-router-dom'
 import {
-	useGetGoogleClientIdQuery,
-	useGoogleAuthMutation,
+	useGetGoogleLoginURLQuery,
 	useRegisterUserMutation,
 } from '../api/authApi'
 import FormContainer from '../components/FormContainer'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { setCredentials } from '../slices/authSlice'
 import { RegisterRequest } from '../types'
-import {
-	GoogleLogin,
-	GoogleLoginResponse,
-	GoogleLoginResponseOffline,
-} from 'react-google-login'
 import Meta from '../components/Meta'
+import { GoogleLoginButton } from 'react-social-login-buttons'
 
 const RegisterScreen = () => {
 	const dispatch = useAppDispatch()
@@ -40,10 +35,9 @@ const RegisterScreen = () => {
 		strategy: 'local',
 	})
 
-	const { data } = useGetGoogleClientIdQuery()
+	const { data: googleLogin } = useGetGoogleLoginURLQuery()
 
 	const [register, { isLoading }] = useRegisterUserMutation()
-	const [google] = useGoogleAuthMutation()
 
 	const handleChange = ({
 		target: { name, value },
@@ -66,27 +60,6 @@ const RegisterScreen = () => {
 			}, 10000)
 		}
 	}
-
-	const googleAuthSuccessHandler = async (
-		response: GoogleLoginResponse | GoogleLoginResponseOffline
-	) => {
-		const res = await google(
-			(response as GoogleLoginResponse).profileObj
-		).unwrap()
-		dispatch(setCredentials(res))
-		history.push(redirect)
-	}
-
-	const googleAuthFailureHandler = (response: {
-		error: string
-		details: string
-	}) => {
-		setError(response.details)
-		setTimeout(() => {
-			setError('')
-		}, 10000)
-	}
-
 	return (
 		<>
 			<Meta
@@ -132,22 +105,20 @@ const RegisterScreen = () => {
 						</Button>
 					)}
 					<Row className='py-3'>
-						<Col md={8}>
-							{data && (
-								<GoogleLogin
-									clientId={data.googleClientId}
-									buttonText='Register with Google'
-									onSuccess={googleAuthSuccessHandler}
-									onFailure={googleAuthFailureHandler}
-									cookiePolicy={'single_host_origin'}
-								/>
-							)}
-						</Col>
 						<Col md={4}>
 							Have an Account?{' '}
 							<Link to={redirect ? `/login?redirect=${redirect}` : '/login'}>
 								Login
 							</Link>
+						</Col>
+					</Row>
+					<Row>
+						<Col md={{ span: 6, offset: 3 }}>
+							{googleLogin && (
+								<a href={googleLogin.URL}>
+									<GoogleLoginButton>Sign up with Google</GoogleLoginButton>
+								</a>
+							)}
 						</Col>
 					</Row>
 				</Form>

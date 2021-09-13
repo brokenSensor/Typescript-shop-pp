@@ -10,10 +10,11 @@ import { User } from 'src/users/users.model';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { GoogleProfile, TokensAndUser, UserDTO } from 'src/types';
+import { TokensAndUser, UserDTO } from 'src/types';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
 import { emailHTMLMaker } from './emailHTML';
+import { Profile } from 'passport-google-oauth20';
 
 @Injectable()
 export class AuthService {
@@ -183,23 +184,20 @@ export class AuthService {
     }
   }
 
-  async googleAuth(profile: GoogleProfile): Promise<TokensAndUser> {
+  async googleAuth(profile: Profile): Promise<UserDTO> {
     const user = await this.userRepository.findOne({
-      where: { email: profile.email },
+      where: { email: profile.emails[0].value },
     });
 
     if (user) {
-      return await this.login({ ...new UserDTO(user) });
+      return { ...new UserDTO(user) };
     } else {
-      const user = await this.usersService.createUser({
-        email: profile.email,
-        name: `${profile.givenName} ${profile.familyName}`,
+      const newUser = await this.usersService.createUser({
+        email: profile.emails[0].value,
+        name: profile.displayName,
         strategy: 'google',
       });
-
-      if (user) {
-        return await this.login({ ...new UserDTO(user) });
-      }
+      return { ...new UserDTO(newUser) };
     }
   }
 }
